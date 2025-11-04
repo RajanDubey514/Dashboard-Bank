@@ -14,15 +14,10 @@ import { NavLink } from "react-router-dom";
 
 const menuItems = [
   { name: "Dashboard", icon: Home, path: "/" },
-  { name: "Analytics", icon: BarChart2, path: "/analytics" },
-  { name: "eCommerce", icon: ShoppingCart, path: "/ecommerce" },
+  { name: "Reports", icon: BarChart2, path: "/reports" },
+  { name: "Setting", icon: ShoppingCart, path: "/settings" },
 ];
 
-const appItems = [
-  { name: "Email", icon: Mail },
-  { name: "Chat", icon: MessageSquare },
-  { name: "Calendar", icon: Calendar },
-];
 
 export default function Sidebar({ open, onClose, sidebarWidth = "w-52" }) {
   const SidebarContent = () => (
@@ -31,7 +26,7 @@ export default function Sidebar({ open, onClose, sidebarWidth = "w-52" }) {
     >
       {/* Logo */}
       <div className="flex items-center justify-center h-14 text-lg font-semibold border-b border-slate-800 tracking-wide">
-        TPro Admin
+        Dashboard
       </div>
 
       {/* Menu */}
@@ -52,19 +47,6 @@ export default function Sidebar({ open, onClose, sidebarWidth = "w-52" }) {
               <item.icon size={18} />
               {item.name}
             </NavLink>
-          ))}
-        </div>
-
-        <div className="mt-4 text-xs uppercase text-slate-400 px-3">Apps</div>
-        <div className="mt-2 space-y-1">
-          {appItems.map((item, index) => (
-            <div
-              key={index}
-              className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-300 hover:bg-slate-700 cursor-pointer"
-            >
-              <item.icon size={18} />
-              {item.name}
-            </div>
           ))}
         </div>
       </div>
