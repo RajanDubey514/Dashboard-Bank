@@ -110,7 +110,7 @@ const CustomerBasic = () => {
   return (
     <div className="p-2 md:p-2 space-y-5 w-full">
       {/* ✅ Top Section - Add + Search */}
-      <div className="flex flex-col sm:flex-row justify-end items-center gap-3">
+      <div className="flex  justify-end items-center gap-3">
         {/* <div className="w-full sm:w-1/2">
           <SearchBar
             searchQuery={searchQuery}

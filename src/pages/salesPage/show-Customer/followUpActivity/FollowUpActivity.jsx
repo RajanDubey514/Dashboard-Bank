@@ -110,7 +110,7 @@ const FollowUpActivity = () => {
   return (
     <div className="p-2 md:p-2 space-y-5 w-full">
       {/* 🔍 Search + Add Button */}
-      <div className="flex flex-col sm:flex-row justify-end items-center gap-3">
+      <div className="flex justify-end items-center gap-3">
         <button
           onClick={openAddModal}
           className="flex items-center gap-2 hover:bg-slate-800 bg-blue-600 text-white text-sm font-semibold px-4 py-1 rounded-lg shadow transition"

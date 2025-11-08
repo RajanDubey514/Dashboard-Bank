@@ -4,6 +4,7 @@ import CustomerBasic from "./show-Customer/customerBasic/CustomerBasic";
 import BranchsDetail from "./show-Customer/branchsDetail/BranchsDetail";
 import IntrestedProduct from "./show-Customer/intrestedProduct/IntrestedProduct";
 import FollowUpActivity from "./show-Customer/followUpActivity/FollowUpActivity";
+import Tooltip from "../../components/tooltip/Tooltip";
 
 // ✅ Map tabs to components
 const componentsMap = {
@@ -37,8 +38,8 @@ const CustomerUrl = () => {
       {/* ✅ Tabs Navigation */}
       <div className="flex flex-wrap justify-start gap-2 bg-gray-100 p-1 rounded-lg shadow-sm ">
         {Object.keys(componentsMap).map((key) => (
+         
           <button
-            key={key}
             onClick={() => setActiveTab(key)}
             className={`flex items-center gap-2 px-4 py-1 rounded-lg text-[13px] font-semibold transition-all duration-300 ease-in-out
               ${
@@ -48,7 +49,9 @@ const CustomerUrl = () => {
               }`}
           >
             {tabIcons[key]}
-            <span className="hidden sm:inline">{formatKey(key)}</span>
+             <Tooltip key={key} text={formatKey(key)}>
+               <span className="hidden sm:inline">{formatKey(key)}</span>
+             </Tooltip>
           </button>
         ))}
       </div>

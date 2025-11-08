@@ -53,7 +53,7 @@ const EditableTable = ({
       >
         <table className="w-full table-auto border-collapse text-sm sm:text-base">
           {/* ===== HEADER ===== */}
-          <thead className="bg-gray-600 text-white uppercase text-xs sticky top-0 z-20">
+          <thead className="bg-gray-500 text-white uppercase text-xs sticky top-0 z-20">
             <tr>
               {headers.map((header, index) => (
                 <th
