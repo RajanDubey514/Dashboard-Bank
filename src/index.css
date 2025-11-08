@@ -1,1 +1,37 @@
 @import "tailwindcss";
+
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+
+/* 🌍 GLOBAL SCROLLBAR STYLING */
+* {
+  scrollbar-width: thin;               /* For Firefox */
+  scrollbar-color: #94a3b8 #f1f5f9;    /* thumb color | track color */
+}
+
+/* 🧠 For Chrome, Edge, Safari */
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #f1f5f9;                 /* light gray background */
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #94a3b8;           /* slate-400 thumb */
+  border-radius: 9999px;               /* full round */
+  border: 2px solid #f1f5f9;           /* adds padding effect */
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #64748b;           /* slate-500 on hover */
+}

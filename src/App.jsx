@@ -1,19 +1,76 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import MainLayout from "./layoutWraper/MainLayout";
+import React, { useState, useEffect } from "react";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import Login from "./pages/loginPage/Login";
+import Signup from "./pages/loginPage/Signup"; // ✅ Added Signup Page
 import Dashboard from "./pages/Dashboard";
-import Reports from "./pages/Reports";
+import CustomerUrl from "./pages/salesPage/CustomerUrl";
+import MainLayout from "./layoutWraper/MainLayout";
 import Settings from "./pages/Settings";
 
-export default function App() {
+// 🔒 PrivateRoute wrapper
+const PrivateRoute = ({ children }) => {
+  const token = localStorage.getItem("authToken");
+  const location = useLocation();
+  return token ? (
+    children
+  ) : (
+    <Navigate to="/login" state={{ from: location }} replace />
+  );
+};
+
+const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // ✅ Check login status on app load
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    setIsLoggedIn(!!token);
+  }, []);
+
   return (
     <Routes>
-      {/* All pages share MainLayout */}
-      <Route path="/" element={<MainLayout />}>
+      {/* 🔓 Public routes */}
+      <Route
+        path="/login"
+        element={
+          !isLoggedIn ? (
+            <Login setIsLoggedIn={setIsLoggedIn} />
+          ) : (
+            <Navigate to="/" replace />
+          )
+        }
+      />
+
+      <Route
+        path="/signup"
+        element={
+          !isLoggedIn ? (
+            <Signup />
+          ) : (
+            <Navigate to="/" replace />
+          )
+        }
+      />
+
+      {/* 🔒 Protected routes under MainLayout */}
+      <Route
+        path="/"
+        element={
+          <PrivateRoute>
+            <MainLayout />
+          </PrivateRoute>
+        }
+      >
+        {/* Nested routes inside layout */}
         <Route index element={<Dashboard />} />
-        <Route path="reports" element={<Reports />} />
-        <Route path="settings" element={<Settings />} />
+        <Route path="/sale-add" element={<CustomerUrl />} />
+        <Route path="/setting" element={<Settings />} />
       </Route>
+
+      {/* 🔁 Catch-all redirect */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
-}
+};
+
+export default App;

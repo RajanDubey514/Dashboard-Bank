@@ -51,32 +51,33 @@ const deviceData = [
 
 export default function Dashboard() {
   return (
-    <div className="p-3 space-y-3 overflow-hidden">
-      {/* Stat Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div className="p-2 md:p-4 space-y-4 overflow-hidden">
+      {/* 🔹 Stat Cards Section */}
+      <div className="flex flex-wrap justify-center gap-3 md:gap-4">
         {statData.map((s, i) => (
-          <StatCard key={i} {...s} />
+          <div
+            key={i}
+            className="w-[48%] sm:w-[45%] md:w-[22%] lg:w-[23%] min-w-[150px]"
+          >
+            <StatCard {...s} />
+          </div>
         ))}
       </div>
 
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+      {/* 🔸 Charts Section */}
+      <div className="flex flex-col lg:flex-row gap-4">
         {/* Revenue Overview */}
-        <div className="col-span-2 bg-white p-4 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300">
-          <h2 className="text-sm font-semibold text-slate-700 mb-2">
-            Revenue Overview
-          </h2>
-          <div className="h-48">
+        <div className="flex-1 bg-white p-3 md:p-4 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300">
+         
+          <div className="h-44 sm:h-56 md:h-64">
             <LineOverviewChart data={revenueData} />
           </div>
         </div>
 
         {/* User Devices */}
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300">
-          <h2 className="text-sm font-semibold text-slate-700 mb-2">
-            User Devices
-          </h2>
-          <div className="h-48">
+        <div className="flex-1 lg:max-w-[35%] bg-white p-3 md:p-4 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300">
+         
+          <div className="h-44 sm:h-56 md:h-64">
             <PieDeviceChart data={deviceData} />
           </div>
         </div>

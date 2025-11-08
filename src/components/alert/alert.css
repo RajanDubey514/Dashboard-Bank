@@ -1,0 +1,110 @@
+:root {
+  --swalColor: var(--green_Main, #28a745);
+}
+
+.swal2-container {
+  z-index: 1000000;
+}
+
+/* Popup box */
+.swal2-popup {
+  border-radius: 10px;
+  min-width: fit-content !important;
+}
+
+/* Title */
+.swal2-title {
+  font-size: 1.1em !important;
+  color: var(--swalColor);
+}
+
+/* Buttons */
+.swal2-confirm,
+.swal2-deny,
+.swal2-cancel {
+  font-size: 0.8em !important;
+  border-radius: 5px;
+  color: #fff !important;
+}
+
+.swal2-confirm {
+  background-color: var(--swalColor) !important;
+}
+
+.swal2-deny {
+  background-color: #dc3545 !important;
+}
+
+.swal2-cancel {
+  background-color: #6c757d !important;
+}
+
+/* Icons */
+.swal2-icon {
+  color: var(--swalColor);
+  font-size: 0.7em;
+}
+
+.swal2-icon.swal2-error {
+  color: #dc3545 !important;
+}
+
+/* Text content */
+.swal2-html-container {
+  font-size: 0.9em !important;
+  color: #555 !important;
+  font-weight: 600;
+}
+
+/* Progress bar */
+.swal2-timer-progress-bar {
+  background-color: var(--swalColor);
+}
+
+/* Success tick mark */
+.swal2-success-line-tip,
+.swal2-success-line-long {
+  background-color: var(--swalColor) !important;
+}
+
+.swal2-success-ring,
+.swal2-icon.swal2-success {
+  border-color: var(--swalColor) !important;
+}
+
+/* Input box */
+.swal2-input {
+  height: 30px !important;
+  font-size: 1em !important;
+}
+
+/* Toast animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+}
+
+.toastShow {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.toastHide {
+  animation: slideOut 0.3s ease-in forwards;
+}
