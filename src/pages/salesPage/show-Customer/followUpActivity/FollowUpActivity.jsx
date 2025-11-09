@@ -17,6 +17,7 @@ const FollowUpActivity = () => {
   const [selectedData, setSelectedData] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  
 
   // 🔹 Inline edit state (optional)
   const [editRowId, setEditRowId] = useState(null);
@@ -26,7 +27,8 @@ const FollowUpActivity = () => {
   // 🔹 Sorting & Pagination
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 5;
+  const [rowsPerPage, setRowsPerPage] = useState(2);
+
 
   // ✅ Load mock data
   useEffect(() => {
@@ -67,10 +69,10 @@ const FollowUpActivity = () => {
 
   // ✅ Pagination logic
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
-  );
+const paginatedData = filteredData.slice(
+  (currentPage - 1) * rowsPerPage,
+  currentPage * rowsPerPage
+);
 
   // ✅ Modal handlers
   const openAddModal = () => setIsAddModalOpen(true);
@@ -113,8 +115,18 @@ const FollowUpActivity = () => {
       <div className="flex justify-end items-center gap-3">
         <button
           onClick={openAddModal}
-          className="flex items-center gap-2 hover:bg-slate-800 bg-blue-600 text-white text-sm font-semibold px-4 py-1 rounded-lg shadow transition"
-        >
+           className="flex items-center gap-2 px-4 py-1.5 rounded-lg text-white text-sm font-semibold shadow 
+                     transition-all duration-300 hover:shadow-lg"
+          style={{
+            backgroundColor: "var(--color-primary)",
+          }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.backgroundColor =
+              "var(--color-primary-hover)")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.backgroundColor = "var(--color-primary)")
+          }  >
           <PlusCircle size={12} />
           Add Follow-Up Activity
         </button>
@@ -139,8 +151,12 @@ const FollowUpActivity = () => {
       <div className="flex justify-center pt-2">
         <Pagination
           currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          totalPages={totalPages}
+        setCurrentPage={setCurrentPage}
+        totalPages={totalPages}
+         totalRecords={dataList.length}
+        rowsPerPage={rowsPerPage}
+        setRowsPerPage={setRowsPerPage}
+
         />
       </div>
 

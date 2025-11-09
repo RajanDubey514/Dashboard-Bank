@@ -31,10 +31,11 @@ const AddIntrestedProduct = ({ dataList, setDataList }) => {
   });
 
   return (
-    <div className="bg-gray-100 rounded-lg flex flex-col h-[60vh]">
+    <div className="bg-gray-100 rounded-lg flex flex-col h-full">
       <form
+       id="addForm"
         onSubmit={formik.handleSubmit}
-        className="flex-1 overflow-y-auto p-6 space-y-4"
+        className="flex-1 overflow-y-auto space-y-4  p-2 bg-[#eaeaeb]"
       >
         {/* Product Name */}
         <div className="flex flex-col">
@@ -75,24 +76,24 @@ const AddIntrestedProduct = ({ dataList, setDataList }) => {
             className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500"
           />
         </div>
-
+      </form>
         {/* Footer Buttons */}
-        <div className="flex justify-center gap-4 mt-4">
+        <div className="p-2 bg-white flex justify-end gap-4 sticky -bottom-4">
           <button
             type="submit"
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-md text-sm font-medium transition"
+            form="addForm"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6  rounded-md text-sm font-medium transition"
           >
             Submit
           </button>
           <button
             type="button"
             onClick={() => formik.resetForm()}
-            className="border border-red-500 text-red-600 hover:bg-red-50 px-6 py-2 rounded-md text-sm font-medium transition"
+            className="border border-red-500 text-red-600 hover:bg-red-50 px-6  rounded-md text-sm font-medium transition"
           >
             Reset
           </button>
         </div>
-      </form>
     </div>
   );
 };

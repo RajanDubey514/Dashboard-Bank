@@ -16,17 +16,17 @@ const BranchsDetail = () => {
   const [selectedData, setSelectedData] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(2);
 
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 5;
 
   // ✅ Load fake data
   useEffect(() => {
     setDataList(FakeBranchData);
     setFilteredData(FakeBranchData);
   }, []);
-
+   
   // ✅ Search filter
   useEffect(() => {
     if (!searchQuery.trim()) {
@@ -58,12 +58,13 @@ const BranchsDetail = () => {
     setFilteredData(sortedData);
   };
 
+
   // ✅ Pagination
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
-  );
+const paginatedData = filteredData.slice(
+  (currentPage - 1) * rowsPerPage,
+  currentPage * rowsPerPage
+);
 
   // ✅ Modal Handlers
   const openAddModal = () => setIsAddModalOpen(true);
@@ -115,7 +116,17 @@ const BranchsDetail = () => {
 
         <button
           onClick={openAddModal}
-          className="flex items-center gap-2 hover:bg-slate-800 bg-blue-600 text-white text-sm font-semibold px-4 py-1 rounded-lg shadow transition"
+           className="flex items-center gap-2 px-4 py-1.5 rounded-lg text-white text-sm font-semibold shadow transition-all duration-300 hover:shadow-lg"
+          style={{
+            backgroundColor: "var(--color-primary)",
+          }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.backgroundColor =
+              "var(--color-primary-hover)")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.backgroundColor = "var(--color-primary)")
+          }
         >
           <PlusCircle size={12} />
           Add Branch
@@ -136,12 +147,15 @@ const BranchsDetail = () => {
 
       {/* 📄 Pagination */}
       <div className="flex justify-center pt-2">
-        <Pagination
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          totalPages={totalPages}
-        />
-      </div>
+     <Pagination
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        totalPages={totalPages}
+         totalRecords={dataList.length}
+        rowsPerPage={rowsPerPage}
+        setRowsPerPage={setRowsPerPage}
+      />
+      </div>  
 
       {/* ➕ Add Modal */}
       <ModalCom

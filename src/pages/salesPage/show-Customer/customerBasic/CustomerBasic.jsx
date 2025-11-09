@@ -24,7 +24,8 @@ const CustomerBasic = () => {
 
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 5;
+    const [rowsPerPage, setRowsPerPage] = useState(2);
+  
 
   // ✅ Load fake data
   useEffect(() => {
@@ -66,10 +67,11 @@ const CustomerBasic = () => {
 
   // ✅ Pagination
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
-  );
+const paginatedData = filteredData.slice(
+  (currentPage - 1) * rowsPerPage,
+  currentPage * rowsPerPage
+);
+
 
   // ✅ Modal Handlers
   const openAddModal = () => setIsAddModalOpen(true);
@@ -85,14 +87,17 @@ const CustomerBasic = () => {
     setIsEditModalOpen(false);
   };
 
-  // ✅ Delete with confirmation
+  // ✅ Delete with confirmation (theme-colored buttons)
   const handleDelete = (id) => {
     Swal.fire({
       title: "Are you sure?",
       text: "This record will be permanently deleted!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#16a34a",
+      confirmButtonColor:
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--color-primary")
+          .trim() || "#16a34a",
       cancelButtonColor: "#dc2626",
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
@@ -108,9 +113,10 @@ const CustomerBasic = () => {
   const headers = filteredData.length > 0 ? Object.keys(filteredData[0]) : [];
 
   return (
-    <div className="p-2 md:p-2 space-y-5 w-full">
+    <div className="p-2 md:p-3 space-y-5 w-full">
       {/* ✅ Top Section - Add + Search */}
-      <div className="flex  justify-end items-center gap-3">
+      <div className="flex justify-end items-center gap-3">
+        {/* Optional SearchBar */}
         {/* <div className="w-full sm:w-1/2">
           <SearchBar
             searchQuery={searchQuery}
@@ -119,12 +125,23 @@ const CustomerBasic = () => {
           />
         </div> */}
 
+        {/* ✅ Add Button (Theme colored) */}
         <button
           onClick={openAddModal}
-          className="flex items-center gap-2 hover:bg-slate-800 bg-blue-600 text-white text-sm font-semibold px-4 py-1 rounded-lg shadow transition"
+          className="flex items-center gap-2 px-4 py-1.5 rounded-lg text-white text-sm font-semibold shadow 
+                     transition-all duration-300 hover:shadow-lg"
+          style={{
+            backgroundColor: "var(--color-primary)",
+          }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.backgroundColor =
+              "var(--color-primary-hover)")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.backgroundColor = "var(--color-primary)")
+          }
         >
-        
-          <PlusCircle size={12} />
+          <PlusCircle size={16} />
           Add Customer
         </button>
       </div>
@@ -145,9 +162,12 @@ const CustomerBasic = () => {
       {/* ✅ Pagination */}
       <div className="flex justify-center pt-2">
         <Pagination
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          totalPages={totalPages}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        totalPages={totalPages}
+         totalRecords={dataList.length}
+        rowsPerPage={rowsPerPage}
+        setRowsPerPage={setRowsPerPage}
         />
       </div>
 
@@ -156,6 +176,7 @@ const CustomerBasic = () => {
         isOpen={isAddModalOpen}
         onClose={closeAddModal}
         title="Add Customer"
+        iconType="success"
         content={
           <AddCustomerBasic dataList={dataList} setDataList={setDataList} />
         }
@@ -166,6 +187,7 @@ const CustomerBasic = () => {
         isOpen={isEditModalOpen}
         onClose={closeEditModal}
         title="Edit Customer"
+        iconType="info"
         content={
           <EditCustomerBasic
             selectedData={selectedData}

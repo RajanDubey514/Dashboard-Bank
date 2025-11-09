@@ -1,94 +1,32 @@
 import React from "react";
-import { Box, Typography, Link, Divider } from "@mui/material";
 
 const Footer = () => {
   return (
-    <Box
-      component="footer"
-      sx={{
-        bgcolor: "#000", // Black background
-        color: "#fff",
-        py: 2,
-        px: { xs: 2, sm: 4 },
-        mt: "auto",
-        borderTop: "1px solid #222",
-      }}
-    >
-      {/* Main Footer Content */}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
-          justifyContent: "space-between",
-          alignItems: "center",
-          textAlign: { xs: "center", sm: "left" },
-          gap: 1,
-        }}
-      >
+    <footer className="bg-black text-white  border-gray-800 ">
+      <div className="flex flex-col sm:flex-row justify-between items-center text-center sm:text-left gap-1 sm:gap-0 px-2">
         {/* Left Section */}
-        <Box
-          sx={{
-            display: "flex",
-            gap: 3,
-            flexWrap: "wrap",
-            justifyContent: { xs: "center", sm: "flex-start" },
-          }}
-        >
-          <Link
-            href="#"
-            underline="hover"
-            color="inherit"
-            sx={{
-              fontSize: "0.9rem",
-              transition: "color 0.3s",
-              "&:hover": { color: "#bbb" },
-            }}
-          >
+        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1 sm:gap-3 text-[11px] sm:text-[13px] font-semibold">
+          <a href="#" className="hover:text-gray-400 transition-colors">
             Terms & Services
-          </Link>
-          <Divider
-            orientation="vertical"
-            flexItem
-            sx={{ borderColor: "#555", display: { xs: "none", sm: "block" } }}
-          />
-          <Link
-            href="#"
-            underline="hover"
-            color="inherit"
-            sx={{
-              fontSize: "0.9rem",
-              transition: "color 0.3s",
-              "&:hover": { color: "#bbb" },
-            }}
-          >
+          </a>
+          <span className="hidden sm:inline border-l border-gray-600 h-3"></span>
+          <a href="#" className="hover:text-gray-400 transition-colors">
             Privacy Policy
-          </Link>
-        </Box>
+          </a>
+        </div>
 
         {/* Right Section */}
-        <Typography
-          variant="body2"
-          sx={{
-            fontSize: "0.85rem",
-            mt: { xs: 1, sm: 0 },
-          }}
-        >
+        <p className="text-[10px] sm:text-[12px] font-medium mt-0 break-words">
           © {new Date().getFullYear()} All Rights Reserved |{" "}
-          <Link
+          <a
             href="mailto:contacttocare@gmail.com"
-            color="inherit"
-            underline="hover"
-            sx={{
-              fontWeight: 500,
-              transition: "color 0.3s",
-              "&:hover": { color: "#bbb" },
-            }}
+            className="font-semibold hover:text-gray-400 transition-colors"
           >
             contacttocare@gmail.com
-          </Link>
-        </Typography>
-      </Box>
-    </Box>
+          </a>
+        </p>
+      </div>
+    </footer>
   );
 };
 

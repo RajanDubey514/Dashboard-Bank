@@ -9,27 +9,29 @@ const menuItems = [
 ];
 
 export default function Sidebar({ open, onClose, sidebarWidth = "w-60" }) {
-  // Extract numeric width for inline styles if needed (eg for box-shadow offsets)
-  // But we rely mostly on Tailwind classes like md:ml-60 for shifting main content.
-
   return (
     <>
-      {/* Desktop & Mobile Drawer Panel */}
-      {/* Container fixed left so sticky header/footers inside behave properly */}
+      {/* Sidebar Drawer */}
       <aside
         className={`
           fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out
-          ${/* Desktop: slide in/out using translate-x with md breakpoint */ ""}
           ${open ? "translate-x-0" : "-translate-x-full"}
           md:translate-x-0 md:static md:flex md:h-full
-          ${sidebarWidth} bg-[#0f172a] text-white flex flex-col shadow-xl
+          ${sidebarWidth}
+          flex flex-col shadow-xl
         `}
+        style={{
+          backgroundColor: "var(--theme-bg)",
+          color: "var(--theme-text)",
+        }}
         aria-hidden={!open}
       >
         {/* Header */}
-        <div className="flex items-center justify-between h-14 px-4 border-b border-slate-700">
+        <div
+          className="flex items-center justify-between h-14 px-4 border-b"
+          style={{ borderColor: "var(--theme-hover)" }}
+        >
           <div className="text-lg font-semibold">Project</div>
-          {/* show close only on mobile */}
           <button
             onClick={onClose}
             className="md:hidden text-slate-300 hover:text-white p-1 rounded"
@@ -46,14 +48,18 @@ export default function Sidebar({ open, onClose, sidebarWidth = "w-60" }) {
               key={idx}
               to={item.path}
               end
-              onClick={onClose} // on mobile this will close drawer when navigating
+              onClick={onClose}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-1.5 space-x-1  rounded-lg text-[15px] font-medium transition-all duration-200 ${
+                `flex items-center gap-3 px-4 py-1.5 rounded-lg text-[15px] font-medium transition-all duration-200 ${
                   isActive
-                    ? "bg-indigo-600 text-white shadow-md"
-                    : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                    ? "shadow-md"
+                    : "hover:opacity-90"
                 }`
               }
+              style={({ isActive }) => ({
+                backgroundColor: isActive ? "var(--theme-accent)" : "transparent",
+                color: isActive ? "#fff" : "var(--theme-text)",
+              })}
             >
               <item.icon size={18} />
               <span className="truncate">{item.name}</span>
@@ -62,8 +68,13 @@ export default function Sidebar({ open, onClose, sidebarWidth = "w-60" }) {
         </nav>
 
         {/* Footer */}
-        <div className="border-t border-slate-700 px-4 py-3 flex items-center justify-between text-slate-300">
-          <button className="flex items-center gap-2 text-sm hover:text-indigo-400 transition">
+        <div
+          className="border-t px-4 py-3 flex items-center justify-between text-slate-300"
+          style={{ borderColor: "var(--theme-hover)" }}
+        >
+          <button className="flex items-center gap-2 text-sm hover:opacity-80 transition"
+            style={{ color: "var(--theme-text)" }}
+          >
             <Settings size={16} /> <span className="hidden sm:inline">Settings</span>
           </button>
           <button
@@ -79,7 +90,7 @@ export default function Sidebar({ open, onClose, sidebarWidth = "w-60" }) {
         </div>
       </aside>
 
-      {/* Mobile overlay (only active when drawer open and on mobile) */}
+      {/* Mobile overlay */}
       <div
         className={`fixed inset-0 z-40 bg-black/40 transition-opacity duration-300 md:hidden ${
           open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"

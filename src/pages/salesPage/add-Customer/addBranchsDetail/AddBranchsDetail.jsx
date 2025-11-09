@@ -59,10 +59,11 @@ const AddBranchsDetail = ({ dataList, setDataList }) => {
   });
 
   return (
-    <div className="bg-white rounded-md p-4 h-full flex flex-col">
+    <div className="bg-white rounded-md  h-full flex flex-col">
       <form
         onSubmit={formik.handleSubmit}
-        className="overflow-y-auto flex-1 space-y-4 pr-2"
+        id="addBranch"
+        className="overflow-y-auto flex-1 space-y-4  p-2 bg-[#eaeaeb]"
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Text Inputs */}
@@ -285,23 +286,24 @@ const AddBranchsDetail = ({ dataList, setDataList }) => {
           </div>
         </div>
 
+      </form>
         {/* Footer Buttons */}
-        <div className="flex justify-center gap-3 py-3 mt-2 bg-white sticky bottom-0">
+        <div className="p-2 bg-white flex justify-end gap-4 sticky -bottom-4">
           <button
             type="submit"
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition"
+            form="addBranch"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4  rounded-md text-sm font-medium transition"
           >
             Submit
           </button>
           <button
             type="button"
             onClick={() => formik.resetForm()}
-            className="border border-red-500 text-red-600 hover:bg-red-50 px-4 py-2 rounded-md text-sm font-medium transition"
+            className="border border-red-500 text-red-600 hover:bg-red-50 px-4  rounded-md text-sm font-medium transition"
           >
             Reset
           </button>
         </div>
-      </form>
     </div>
   );
 };

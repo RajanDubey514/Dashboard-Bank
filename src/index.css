@@ -1,6 +1,148 @@
 @import "tailwindcss";
 
+/* =========================
+   🌈 THEME COLOR VARIABLES
+   ========================= */
+:root {
+  /* Default Theme (Indigo Professional) */
+  --color-primary: #6366f1;
+  --color-primary-hover: #4f46e5;
+  --color-secondary: #06b6d4;
+  --color-bg: #ffffff;
+  --color-surface: #f8fafc;
+  --color-text: #0f172a;
+  --color-text-light: #64748b;
 
+  /* Status colors */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+
+  /* Radius & shadows */
+  --radius: 6px;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* =========================
+   🌐 GLOBAL STYLES
+   ========================= */
+body {
+  font-family: "Inter", system-ui, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  margin: 0;
+  padding: 0;
+}
+
+/* Text & background helpers */
+.text-primary {
+  color: var(--color-primary);
+}
+.text-light {
+  color: var(--color-text-light);
+}
+
+.bg-primary {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+.bg-surface {
+  background-color: var(--color-surface);
+}
+.bg-success {
+  background-color: var(--color-success);
+  color: white;
+}
+.bg-error {
+  background-color: var(--color-error);
+  color: white;
+}
+
+/* =========================
+   🧱 BUTTONS
+   ========================= */
+button {
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+button.primary {
+  background-color: var(--color-primary);
+  color: white;
+}
+button.primary:hover {
+  background-color: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+
+button.secondary {
+  background-color: var(--color-secondary);
+  color: white;
+}
+button.secondary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* =========================
+   🧭 HEADER / FOOTER
+   ========================= */
+header {
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow);
+  padding: 0.75rem 1rem;
+}
+
+footer {
+  background-color: var(--color-primary);
+  color: white;
+  text-align: center;
+  padding: 0.25rem 0.25rem;
+}
+
+/* =========================
+   🧮 TABLE STYLING
+   ========================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+th, td {
+  /* padding: 0.6rem 0.8rem; */
+  border: 1px solid #e2e8f0;
+  text-align: left;
+}
+thead {
+  background-color: var(--color-primary);
+  color: white;
+}
+tbody tr:nth-child(even) {
+  /* background-color: var(--color-surface); */
+}
+tbody tr:hover {
+  background-color: #eef2ff;
+}
+
+/* =========================
+   💻 CARDS
+   ========================= */
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem;
+}
+
+/* =========================
+   🔄 SCROLLBAR STYLING (Your Code)
+   ========================= */
+
+/* Hide scrollbar completely when needed */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -8,7 +150,6 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-
 
 /* 🌍 GLOBAL SCROLLBAR STYLING */
 * {
@@ -34,4 +175,183 @@
 
 *::-webkit-scrollbar-thumb:hover {
   background-color: #64748b;           /* slate-500 on hover */
+}
+
+/* =========================
+   🎨 OPTIONAL COLOR THEMES
+   ========================= */
+
+
+   /* 🎨 THEME COLORS */
+:root {
+  --theme-bg: #0f172a; /* default dark blue */
+  --theme-accent: #6366f1; /* indigo */
+  --theme-hover: #1e293b;
+  --theme-text: #ffffff;
+}
+
+.theme-indigo {
+  --color-primary: #6366f1;
+  --color-primary-hover: #4f46e5;
+  --color-secondary: #06b6d4;
+  --color-bg: #ffffff;
+  --color-surface: #f8fafc;
+  --color-text: #0f172a;
+  --color-text-light: #64748b;
+}
+
+
+/* 🌈 THEME VARIANTS */
+.theme-teal {
+  --theme-bg: #0f2f2e;
+  --theme-accent: #0d9488;
+  --theme-hover: #134e4a;
+}
+
+.theme-orange {
+  --theme-bg: #3b1d0a;
+  --theme-accent: #f97316;
+  --theme-hover: #7c2d12;
+}
+
+.theme-emerald {
+  --theme-bg: #072c21;
+  --theme-accent: #047857;
+  --theme-hover: #064e3b;
+}
+
+.theme-dark {
+  --theme-bg: #111827;
+  --theme-accent: #0ea5e9;
+  --theme-hover: #1e293b;
+}
+
+/* 🧱 Smooth transition */
+body, aside, .topbar {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+
+
+/* 🌿 Teal Fresh */
+.theme-teal {
+  --color-primary: #0d9488;
+  --color-primary-hover: #0f766e;
+  --color-secondary: #14b8a6;
+  --color-bg: #f0fdfa;
+  --color-surface: #ffffff;
+  --color-text: #042f2e;
+  --color-text-light: #115e59;
+}
+
+/* ☀️ Warm Orange */
+.theme-orange {
+  --color-primary: #f97316;
+  --color-primary-hover: #ea580c;
+  --color-secondary: #fbbf24;
+  --color-bg: #fff7ed;
+  --color-surface: #ffffff;
+  --color-text: #1c1917;
+  --color-text-light: #78716c;
+}
+
+/* 💼 Emerald Corporate */
+.theme-emerald {
+  --color-primary: #047857;
+  --color-primary-hover: #065f46;
+  --color-secondary: #10b981;
+  --color-bg: #f0fdf4;
+  --color-surface: #ffffff;
+  --color-text: #052e16;
+  --color-text-light: #166534;
+}
+
+/* 🌚 Dark Slate */
+.theme-dark {
+  --color-primary: #0ea5e9;
+  --color-primary-hover: #0284c7;
+  --color-secondary: #6366f1;
+  --color-bg: #0f172a;
+  --color-surface: #1e293b;
+  --color-text: #e2e8f0;
+  --color-text-light: #94a3b8;
+}
+
+
+/* =========================
+   🧩 THEME BUTTON COLORS
+   ========================= */
+
+/* Default Indigo Theme */
+.theme-indigo {
+  --btn-primary-bg: #6366f1;
+  --btn-primary-hover: #4f46e5;
+  --btn-secondary-bg: #06b6d4;
+  --btn-secondary-hover: #0891b2;
+  --btn-text-color: #ffffff;
+}
+
+/* 🟢 Teal Theme */
+.theme-teal {
+  --btn-primary-bg: #0d9488;
+  --btn-primary-hover: #0f766e;
+  --btn-secondary-bg: #14b8a6;
+  --btn-secondary-hover: #0d9488;
+  --btn-text-color: #ffffff;
+}
+
+/* 🟠 Orange Theme */
+.theme-orange {
+  --btn-primary-bg: #f97316;
+  --btn-primary-hover: #ea580c;
+  --btn-secondary-bg: #fb923c;
+  --btn-secondary-hover: #f97316;
+  --btn-text-color: #ffffff;
+}
+
+/* 💚 Emerald Theme */
+.theme-emerald {
+  --btn-primary-bg: #047857;
+  --btn-primary-hover: #065f46;
+  --btn-secondary-bg: #10b981;
+  --btn-secondary-hover: #059669;
+  --btn-text-color: #ffffff;
+}
+
+/* ⚫ Dark Theme */
+.theme-dark {
+  --btn-primary-bg: #0ea5e9;
+  --btn-primary-hover: #0284c7;
+  --btn-secondary-bg: #6366f1;
+  --btn-secondary-hover: #4f46e5;
+  --btn-text-color: #ffffff;
+}
+
+/* 🌈 Base button styles */
+button {
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* 🧠 Theme-aware buttons */
+button.theme-primary {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-text-color);
+}
+button.theme-primary:hover {
+  background-color: var(--btn-primary-hover);
+  transform: translateY(-1px);
+}
+
+button.theme-secondary {
+  background-color: var(--btn-secondary-bg);
+  color: var(--btn-text-color);
+}
+button.theme-secondary:hover {
+  background-color: var(--btn-secondary-hover);
+  transform: translateY(-1px);
 }

@@ -61,10 +61,10 @@ const AddFollowUpActivity = ({ dataList, setDataList }) => {
   ];
 
   return (
-    <div className="flex flex-col bg-gray-100 rounded-lg h-[75vh]">
+    <div className="flex flex-col bg-gray-100 rounded-lg h-full">
       {/* Form Container */}
-      <div className="flex-1 overflow-y-auto p-4">
-        <form onSubmit={formik.handleSubmit} id="addFollowUpForm" className="space-y-4">
+      <div className="flex-1 overflow-y-auto ">
+        <form onSubmit={formik.handleSubmit} id="addFollowUpForm" className="space-y-4  p-2 bg-[#eaeaeb]">
           
           {/* Due Date/Time */}
           <div>
@@ -224,18 +224,18 @@ const AddFollowUpActivity = ({ dataList, setDataList }) => {
       </div>
 
       {/* Footer Buttons */}
-      <div className="p-4 border-t bg-white flex justify-center gap-4 sticky bottom-0">
+      <div className="p-2 bg-white flex justify-end gap-4 sticky -bottom-4">
         <button
           type="submit"
           form="addFollowUpForm"
-          className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+          className="px-6  bg-blue-600 text-white rounded hover:bg-blue-700 transition"
         >
           Submit
         </button>
         <button
           type="button"
           onClick={() => formik.resetForm()}
-          className="px-6 py-2 border border-red-600 text-red-600 rounded hover:bg-red-50 transition"
+          className="px-6  border border-red-600 text-red-600 rounded hover:bg-red-50 transition"
         >
           Reset
         </button>

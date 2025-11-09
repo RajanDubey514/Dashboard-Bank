@@ -14,7 +14,7 @@ const componentsMap = {
   Follow_Up_Activity: FollowUpActivity,
 };
 
-// ✅ Optional icons for visual enhancement
+// ✅ Icons for each tab
 const tabIcons = {
   Customer_Basic_info: <UserCircle size={16} />,
   "Branch(S)_Detail": <Building2 size={16} />,
@@ -25,39 +25,73 @@ const tabIcons = {
 const CustomerUrl = () => {
   const [activeTab, setActiveTab] = useState("Customer_Basic_info");
 
-  // ✅ Format key names to readable text
-  const formatKey = (key) => {
-    const formatted = key.replace(/_/g, " ").trim();
-    return formatted.replace(/\b([a-z])/g, (char) => char.toUpperCase());
-  };
+  // ✅ Format readable tab labels
+  const formatKey = (key) =>
+    key.replace(/_/g, " ").replace(/\b([a-z])/g, (c) => c.toUpperCase());
 
   const ActiveComponent = componentsMap[activeTab];
 
   return (
-    <div className=" space-y-4 h-full w-full overflow-hidden">
+    <div className="space-y-4 h-full w-full overflow-hidden transition-colors duration-300">
       {/* ✅ Tabs Navigation */}
-      <div className="flex flex-wrap justify-start gap-2 bg-gray-100 p-1 rounded-lg shadow-sm ">
+      <div
+        className="flex flex-wrap justify-start gap-2 p-1 rounded-lg "
+        style={{
+          backgroundColor: "var(--color-surface)",
+          // borderColor: "var(--color-primary)",
+        }}
+      >
         {Object.keys(componentsMap).map((key) => (
-         
           <button
+            key={key}
             onClick={() => setActiveTab(key)}
-            className={`flex items-center gap-2 px-4 py-1 rounded-lg text-[13px] font-semibold transition-all duration-300 ease-in-out
-              ${
+            className="flex items-center gap-2 px-4 py-1 rounded-lg text-[13px] font-semibold transition-all duration-300 ease-in-out"
+            style={{
+              backgroundColor:
                 activeTab === key
-                  ? "bg-blue-600 text-white shadow-md scale-105"
-                  : "bg-gray-200 text-gray-800 hover:bg-blue-500 hover:text-white hover:shadow-md hover:scale-105"
-              }`}
+                  ? "var(--color-primary)"
+                  : "var(--color-surface)",
+              color:
+                activeTab === key
+                  ? "#fff"
+                  : "var(--color-text)",
+              boxShadow:
+                activeTab === key
+                  ? "0 2px 6px rgba(0,0,0,0.2)"
+                  : "0 1px 3px rgba(0,0,0,0.05)",
+              transform: activeTab === key ? "scale(1.05)" : "scale(1)",
+            }}
+            onMouseEnter={(e) => {
+              if (activeTab !== key) {
+                e.currentTarget.style.backgroundColor =
+                  "var(--color-primary-hover)";
+                e.currentTarget.style.color = "#fff";
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (activeTab !== key) {
+                e.currentTarget.style.backgroundColor =
+                  "var(--color-surface)";
+                e.currentTarget.style.color = "var(--color-text)";
+              }
+            }}
           >
             {tabIcons[key]}
-             <Tooltip key={key} text={formatKey(key)}>
-               <span className="hidden sm:inline">{formatKey(key)}</span>
-             </Tooltip>
+            <Tooltip text={formatKey(key)}>
+              <span className="hidden sm:inline">{formatKey(key)}</span>
+            </Tooltip>
           </button>
         ))}
       </div>
 
       {/* ✅ Active Tab Content */}
-      <div className="rounded-lg bg-white shadow-sm  overflow-y-auto overflow-x-hidden scrollbar-hide transition-all duration-300 ease-in-out">
+      <div
+        className="rounded-lg shadow-sm overflow-y-auto overflow-x-hidden scrollbar-hide transition-all duration-300 ease-in-out"
+        style={{
+          backgroundColor: "var(--color-bg)",
+          color: "var(--color-text)",
+        }}
+      >
         {ActiveComponent ? <ActiveComponent /> : null}
       </div>
     </div>

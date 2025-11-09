@@ -61,6 +61,7 @@ const EditIntrestedProduct = ({ selectedData, dataList, setDataList, closeEditMo
     <div className="bg-gray-100 rounded-lg flex flex-col h-[60vh]">
       <form
         onSubmit={formik.handleSubmit}
+         id="addForm"
         className="flex-1 overflow-y-auto p-6 space-y-4"
       >
         {/* Product Name */}
@@ -103,10 +104,12 @@ const EditIntrestedProduct = ({ selectedData, dataList, setDataList, closeEditMo
           />
         </div>
 
+      </form>
         {/* Footer Buttons */}
-        <div className="flex justify-center gap-4 mt-4">
+        <div className="p-4 border-t bg-white flex justify-center gap-4 sticky bottom-0">
           <button
             type="submit"
+            form="addForm"
             className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-md text-sm font-medium transition"
           >
             Update
@@ -119,7 +122,6 @@ const EditIntrestedProduct = ({ selectedData, dataList, setDataList, closeEditMo
             Reset
           </button>
         </div>
-      </form>
     </div>
   );
 };

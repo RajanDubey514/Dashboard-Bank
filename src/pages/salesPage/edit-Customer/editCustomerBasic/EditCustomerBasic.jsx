@@ -90,7 +90,9 @@ const EditCustomerBasic = ({ selectedData, dataList, setDataList, closeEditModal
 
   return (
     <div className="bg-white rounded-md p-4 h-full flex flex-col">
-      <form onSubmit={formik.handleSubmit} className="overflow-y-auto flex-1 space-y-4 pr-2">
+      <form onSubmit={formik.handleSubmit}
+       id="addForm"
+       className="overflow-y-auto flex-1 space-y-4 pr-2">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Text Fields */}
           <div className="flex flex-col gap-1">
@@ -329,10 +331,12 @@ const EditCustomerBasic = ({ selectedData, dataList, setDataList, closeEditModal
           </div>
         </div>
 
+      </form>
         {/* Footer Buttons */}
-        <div className="flex justify-center gap-4 py-3 mt-2 bg-white sticky bottom-0">
+        <div className="p-4 border-t bg-white flex justify-center gap-4 sticky bottom-0">
           <button
             type="submit"
+            form="addForm"
             className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition"
           >
             Update
@@ -345,7 +349,6 @@ const EditCustomerBasic = ({ selectedData, dataList, setDataList, closeEditModal
             Reset
           </button>
         </div>
-      </form>
     </div>
   );
 };
