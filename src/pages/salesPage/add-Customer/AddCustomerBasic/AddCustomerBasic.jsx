@@ -86,10 +86,10 @@ const AddCustomerBasic = ({ dataList = [], setDataList }) => {
         id="addForm"
         className="overflow-y-auto flex-1 space-y-4  p-2 bg-[#eaeaeb]"
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
           {/* Text Fields */}
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">
               Customer Name <span className="text-red-600">(*)</span>
             </label>
@@ -106,7 +106,7 @@ const AddCustomerBasic = ({ dataList = [], setDataList }) => {
             )}
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">
               Customer Code <span className="text-red-600">(*)</span>
             </label>
@@ -123,7 +123,7 @@ const AddCustomerBasic = ({ dataList = [], setDataList }) => {
             )}
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">
               Contact Person <span className="text-red-600">(*)</span>
             </label>
@@ -141,7 +141,7 @@ const AddCustomerBasic = ({ dataList = [], setDataList }) => {
           </div>
 
           {/* Number Fields with yellow background */}
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">
               Mobile Number <span className="text-red-600">(*)</span>
             </label>
@@ -158,7 +158,7 @@ const AddCustomerBasic = ({ dataList = [], setDataList }) => {
             )}
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Contact Number</label>
             <input
               type="number"
@@ -170,7 +170,7 @@ const AddCustomerBasic = ({ dataList = [], setDataList }) => {
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">FAX</label>
             <input
               type="number"
@@ -182,7 +182,7 @@ const AddCustomerBasic = ({ dataList = [], setDataList }) => {
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Pincode</label>
             <input
               type="number"
@@ -194,7 +194,7 @@ const AddCustomerBasic = ({ dataList = [], setDataList }) => {
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Credit Limit</label>
             <input
               type="number"
@@ -206,7 +206,7 @@ const AddCustomerBasic = ({ dataList = [], setDataList }) => {
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Credit Days(s)</label>
             <input
               type="number"
@@ -219,7 +219,7 @@ const AddCustomerBasic = ({ dataList = [], setDataList }) => {
           </div>
 
           {/* React Select Fields */}
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">
               Customer Type <span className="text-red-600">(*)</span>
             </label>
@@ -234,7 +234,7 @@ const AddCustomerBasic = ({ dataList = [], setDataList }) => {
             )}
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">
               State <span className="text-red-600">(*)</span>
             </label>
@@ -249,7 +249,7 @@ const AddCustomerBasic = ({ dataList = [], setDataList }) => {
             )}
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">
               Country <span className="text-red-600">(*)</span>
             </label>

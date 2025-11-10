@@ -1,11 +1,12 @@
 import React from "react";
-import { Home, BarChart2, ShoppingCart, Settings, LogOut, X } from "lucide-react";
+import { Home, BarChart2, ShoppingCart, Settings, LogOut, X , BriefcaseBusiness } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 const menuItems = [
   { name: "Dashboard", icon: Home, path: "/" },
-  { name: "Add Accounts", icon: BarChart2, path: "/sale-add" },
-  { name: "Settings", icon: ShoppingCart, path: "/setting" },
+  {name : "Product" , icon :  BriefcaseBusiness , path : "/product"},
+  { name: "Account", icon: BarChart2, path: "/sale-add" },
+  { name: "Setting", icon: ShoppingCart, path: "/setting" },
 ];
 
 export default function Sidebar({ open, onClose, sidebarWidth = "w-60" }) {

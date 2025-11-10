@@ -65,9 +65,9 @@ const AddBranchsDetail = ({ dataList, setDataList }) => {
         id="addBranch"
         className="overflow-y-auto flex-1 space-y-4  p-2 bg-[#eaeaeb]"
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Text Inputs */}
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <RequiredLabel label="Branch Name" />
             <input
               type="text"
@@ -82,7 +82,7 @@ const AddBranchsDetail = ({ dataList, setDataList }) => {
             )}
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Contact Person</label>
             <input
               type="text"
@@ -94,7 +94,7 @@ const AddBranchsDetail = ({ dataList, setDataList }) => {
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Designation</label>
             <input
               type="text"
@@ -106,7 +106,7 @@ const AddBranchsDetail = ({ dataList, setDataList }) => {
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Email</label>
             <input
               type="email"
@@ -118,7 +118,7 @@ const AddBranchsDetail = ({ dataList, setDataList }) => {
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <RequiredLabel label="City" />
             <input
               type="text"
@@ -133,7 +133,7 @@ const AddBranchsDetail = ({ dataList, setDataList }) => {
             )}
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">CST Number</label>
             <input
               type="text"
@@ -145,7 +145,7 @@ const AddBranchsDetail = ({ dataList, setDataList }) => {
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">PAN Number</label>
             <input
               type="text"
@@ -157,7 +157,7 @@ const AddBranchsDetail = ({ dataList, setDataList }) => {
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">TIN Number</label>
             <input
               type="text"
@@ -169,7 +169,7 @@ const AddBranchsDetail = ({ dataList, setDataList }) => {
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">GST Number</label>
             <input
               type="text"
@@ -181,7 +181,7 @@ const AddBranchsDetail = ({ dataList, setDataList }) => {
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Annual Turnover</label>
             <input
               type="text"
@@ -194,7 +194,7 @@ const AddBranchsDetail = ({ dataList, setDataList }) => {
           </div>
 
           {/* Number Fields */}
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Mobile Number</label>
             <input
               type="number"
@@ -206,7 +206,7 @@ const AddBranchsDetail = ({ dataList, setDataList }) => {
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Contact Number</label>
             <input
               type="number"
@@ -218,7 +218,7 @@ const AddBranchsDetail = ({ dataList, setDataList }) => {
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">FAX</label>
             <input
               type="number"
@@ -230,7 +230,7 @@ const AddBranchsDetail = ({ dataList, setDataList }) => {
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Pincode</label>
             <input
               type="number"
@@ -243,7 +243,7 @@ const AddBranchsDetail = ({ dataList, setDataList }) => {
           </div>
 
           {/* Select Fields */}
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <RequiredLabel label="Country" />
             <Select
               options={countryOptions}
@@ -256,7 +256,7 @@ const AddBranchsDetail = ({ dataList, setDataList }) => {
             )}
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <RequiredLabel label="State" />
             <Select
               options={stateOptions}
@@ -270,7 +270,7 @@ const AddBranchsDetail = ({ dataList, setDataList }) => {
           </div>
 
           {/* Address */}
-          <div className="col-span-2 flex flex-col gap-1">
+          <div className=" col-span-2 sm:col-span-1 flex flex-col gap-1">
             <RequiredLabel label="Address" />
             <textarea
               name="address"

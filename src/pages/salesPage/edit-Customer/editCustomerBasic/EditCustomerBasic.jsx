@@ -333,7 +333,7 @@ const EditCustomerBasic = ({ selectedData, dataList, setDataList, closeEditModal
 
       </form>
         {/* Footer Buttons */}
-        <div className="p-4 border-t bg-white flex justify-center gap-4 sticky bottom-0">
+        <div className="p-2 bg-white flex justify-end gap-4 sticky -bottom-4">
           <button
             type="submit"
             form="addForm"
