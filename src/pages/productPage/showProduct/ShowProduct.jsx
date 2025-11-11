@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import { PlusCircle } from "lucide-react";
 import Swal from "sweetalert2";
 import ModalCom from "../../../components/modalComp/ModalCom";
-import AddCustomerBasic from "../../salesPage/add-Customer/AddCustomerBasic/AddCustomerBasic";
-import { FakeCustomerData } from "../../../components/FakeData";
+import { fakeMainProductData } from "../../../components/FakeData";
 import EditableTable from "../../../components/tablecomp/EditableTable";
 import Pagination from "../../../components/pagination/Pagination";
-import EditCustomerBasic from "../../salesPage/edit-Customer/editCustomerBasic/EditCustomerBasic";
-// import SearchBar from "../../../../components/searchComp/SearchBar";
+import AddProduct from "../addProduct/AddProduct";
+import UpdateProduct from "../updateProduct/UpdateProduct";
 
 const ShowProduct = () => {
   const [dataList, setDataList] = useState([]);
@@ -29,8 +28,8 @@ const ShowProduct = () => {
 
   // ✅ Load fake data
   useEffect(() => {
-    setDataList(FakeCustomerData);
-    setFilteredData(FakeCustomerData);
+    setDataList(fakeMainProductData);
+    setFilteredData(fakeMainProductData);
   }, []);
 
   // ✅ Search
@@ -178,7 +177,7 @@ const paginatedData = filteredData.slice(
         title="Add Product"
         iconType="success"
         content={
-          <AddCustomerBasic dataList={dataList} setDataList={setDataList} />
+          <AddProduct dataList={dataList} setDataList={setDataList} />
         }
       />
 
@@ -189,7 +188,7 @@ const paginatedData = filteredData.slice(
         title="Edit Product"
         iconType="info"
         content={
-          <EditCustomerBasic
+          <UpdateProduct
             selectedData={selectedData}
             dataList={dataList}
             setDataList={setDataList}
