@@ -6,7 +6,8 @@ import Dashboard from "./pages/Dashboard";
 import CustomerUrl from "./pages/salesPage/CustomerUrl";
 import MainLayout from "./layoutWraper/MainLayout";
 import Settings from "./pages/Settings";
-import ShowProduct from "./pages/productPage/showProduct/ShowProduct";
+// import ShowProduct from "./pages/productPage/showProduct/ShowProduct";
+import ProductUrl from "./pages/productPage/ProductUrl";
 
 // 🔒 PrivateRoute wrapper
 const PrivateRoute = ({ children }) => {
@@ -66,7 +67,7 @@ const App = () => {
         <Route index element={<Dashboard />} />
         <Route path="/sale-add" element={<CustomerUrl />} />
         <Route path="/setting" element={<Settings />} />
-        <Route path="/product" element={<ShowProduct />}/>
+        <Route path="/product" element={<ProductUrl />}/>
       </Route>
 
       {/* 🔁 Catch-all redirect */}

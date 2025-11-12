@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { PlusCircle } from "lucide-react";
 import Swal from "sweetalert2";
-import ModalCom from "../../../components/modalComp/ModalCom";
-import { fakeMainProductData } from "../../../components/FakeData";
-import EditableTable from "../../../components/tablecomp/EditableTable";
-import Pagination from "../../../components/pagination/Pagination";
-import AddProduct from "../addProduct/AddProduct";
-import UpdateProduct from "../updateProduct/UpdateProduct";
+import ModalCom from "../../../../components/modalComp/ModalCom";
+import { fakeMainProductData } from "../../../../components/FakeData";
+import EditableTable from "../../../../components/tablecomp/EditableTable";
+import Pagination from "../../../../components/pagination/Pagination";
+import AddProduct from "../../addProduct/AddProduct";
+import UpdateProduct from "../../updateProduct/UpdateProduct";
+import DownloadDataButton from "../../../../components/DownloadData/DownloadDataButton";
 
 const ShowProduct = () => {
   const [dataList, setDataList] = useState([]);
@@ -124,10 +125,15 @@ const paginatedData = filteredData.slice(
           />
         </div> */}
 
+        <DownloadDataButton
+          data={dataList} // ✅ all data
+          fileName="Product Detail"
+        />
+
         {/* ✅ Add Button (Theme colored) */}
         <button
           onClick={openAddModal}
-          className="flex items-center gap-2 px-4 py-1.5 rounded-lg text-white text-sm font-semibold shadow 
+          className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-sm font-semibold shadow 
                      transition-all duration-300 hover:shadow-lg"
           style={{
             backgroundColor: "var(--color-primary)",

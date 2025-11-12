@@ -2,15 +2,14 @@ import React, { useEffect, useState } from "react";
 import { PlusCircle } from "lucide-react";
 import Swal from "sweetalert2";
 import ModalCom from "../../../../components/modalComp/ModalCom";
-import AddCustomerBasic from "../../add-Customer/AddCustomerBasic/AddCustomerBasic";
-import { FakeCustomerData } from "../../../../components/FakeData";
+import { fakeMainProductData } from "../../../../components/FakeData";
 import EditableTable from "../../../../components/tablecomp/EditableTable";
 import Pagination from "../../../../components/pagination/Pagination";
-import EditCustomerBasic from "../../edit-Customer/editCustomerBasic/EditCustomerBasic";
-import SearchBar from "../../../../components/searchComp/SearchBar";
+import AddProduct from "../../addProduct/AddProduct";
+import UpdateProduct from "../../updateProduct/UpdateProduct";
 import DownloadDataButton from "../../../../components/DownloadData/DownloadDataButton";
 
-const CustomerBasic = () => {
+const ShowTypeProduct = () => {
   const [dataList, setDataList] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -30,8 +29,8 @@ const CustomerBasic = () => {
 
   // ✅ Load fake data
   useEffect(() => {
-    setDataList(FakeCustomerData);
-    setFilteredData(FakeCustomerData);
+    setDataList(fakeMainProductData);
+    setFilteredData(fakeMainProductData);
   }, []);
 
   // ✅ Search
@@ -126,10 +125,9 @@ const paginatedData = filteredData.slice(
           />
         </div> */}
 
-
-         <DownloadDataButton
+        <DownloadDataButton
           data={dataList} // ✅ all data
-          fileName="Customer Details"
+          fileName="Product Detail"
         />
 
         {/* ✅ Add Button (Theme colored) */}
@@ -149,7 +147,7 @@ const paginatedData = filteredData.slice(
           }
         >
           <PlusCircle size={16} />
-          Add Customer
+          Add Product
         </button>
       </div>
 
@@ -182,10 +180,10 @@ const paginatedData = filteredData.slice(
       <ModalCom
         isOpen={isAddModalOpen}
         onClose={closeAddModal}
-        title="Add Customer"
+        title="Add Product"
         iconType="success"
         content={
-          <AddCustomerBasic dataList={dataList} setDataList={setDataList} />
+          <AddProduct dataList={dataList} setDataList={setDataList} />
         }
       />
 
@@ -193,10 +191,10 @@ const paginatedData = filteredData.slice(
       <ModalCom
         isOpen={isEditModalOpen}
         onClose={closeEditModal}
-        title="Edit Customer"
+        title="Edit Product"
         iconType="info"
         content={
-          <EditCustomerBasic
+          <UpdateProduct
             selectedData={selectedData}
             dataList={dataList}
             setDataList={setDataList}
@@ -208,4 +206,4 @@ const paginatedData = filteredData.slice(
   );
 };
 
-export default CustomerBasic;
+export default ShowTypeProduct;

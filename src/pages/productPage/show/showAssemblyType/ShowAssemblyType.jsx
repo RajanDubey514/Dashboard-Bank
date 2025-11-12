@@ -2,60 +2,53 @@ import React, { useEffect, useState } from "react";
 import { PlusCircle } from "lucide-react";
 import Swal from "sweetalert2";
 import ModalCom from "../../../../components/modalComp/ModalCom";
-import AddCustomerBasic from "../../add-Customer/AddCustomerBasic/AddCustomerBasic";
-import { FakeCustomerData } from "../../../../components/FakeData";
+import AddBranchsDetail from "../../../salesPage/add-Customer/addBranchsDetail/AddBranchsDetail";
+import { FakeBranchData } from "../../../../components/FakeData";
 import EditableTable from "../../../../components/tablecomp/EditableTable";
 import Pagination from "../../../../components/pagination/Pagination";
-import EditCustomerBasic from "../../edit-Customer/editCustomerBasic/EditCustomerBasic";
-import SearchBar from "../../../../components/searchComp/SearchBar";
+import EditBranchsDetail from "../../../salesPage/edit-Customer/editBranchsDetail/EdiitBranchsDetail";
 import DownloadDataButton from "../../../../components/DownloadData/DownloadDataButton";
 
-const CustomerBasic = () => {
+
+const ShowAssemblyType = () => {
   const [dataList, setDataList] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-
   const [selectedData, setSelectedData] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
-  const [editRowId, setEditRowId] = useState(null);
-  const [editedData, setEditedData] = useState({});
-  const editableFields = [];
+  const [rowsPerPage, setRowsPerPage] = useState(2);
 
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [currentPage, setCurrentPage] = useState(1);
-    const [rowsPerPage, setRowsPerPage] = useState(2);
-  
 
   // ✅ Load fake data
   useEffect(() => {
-    setDataList(FakeCustomerData);
-    setFilteredData(FakeCustomerData);
+    setDataList(FakeBranchData);
+    setFilteredData(FakeBranchData);
   }, []);
-
-  // ✅ Search
+   
+  // ✅ Search filter
   useEffect(() => {
-    if (!searchQuery) {
+    if (!searchQuery.trim()) {
       setFilteredData(dataList);
     } else {
-      const lowerQuery = searchQuery.toLowerCase();
+      const query = searchQuery.toLowerCase();
       const filtered = dataList.filter((item) =>
         Object.values(item).some(
-          (val) =>
-            typeof val === "string" && val.toLowerCase().includes(lowerQuery)
+          (val) => val && val.toString().toLowerCase().includes(query)
         )
       );
       setFilteredData(filtered);
     }
+    setCurrentPage(1);
   }, [searchQuery, dataList]);
 
-  // ✅ Sorting
+  // ✅ Sorting logic
   const onSort = (key) => {
     let direction = "asc";
-    if (sortConfig.key === key && sortConfig.direction === "asc") {
+    if (sortConfig.key === key && sortConfig.direction === "asc")
       direction = "desc";
-    }
     setSortConfig({ key, direction });
 
     const sortedData = [...filteredData].sort((a, b) => {
@@ -66,13 +59,13 @@ const CustomerBasic = () => {
     setFilteredData(sortedData);
   };
 
+
   // ✅ Pagination
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
 const paginatedData = filteredData.slice(
   (currentPage - 1) * rowsPerPage,
   currentPage * rowsPerPage
 );
-
 
   // ✅ Modal Handlers
   const openAddModal = () => setIsAddModalOpen(true);
@@ -88,55 +81,48 @@ const paginatedData = filteredData.slice(
     setIsEditModalOpen(false);
   };
 
-  // ✅ Delete with confirmation (theme-colored buttons)
+  // ✅ Delete Confirmation
   const handleDelete = (id) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "This record will be permanently deleted!",
+      text: "This branch will be permanently deleted!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor:
-        getComputedStyle(document.documentElement)
-          .getPropertyValue("--color-primary")
-          .trim() || "#16a34a",
+      confirmButtonColor: "#16a34a",
       cancelButtonColor: "#dc2626",
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        setDataList((prev) => prev.filter((item) => item.id !== id));
-        setFilteredData((prev) => prev.filter((item) => item.id !== id));
-        Swal.fire("Deleted!", "Record has been removed.", "success");
+        const updated = dataList.filter((item) => item.id !== id);
+        setDataList(updated);
+        setFilteredData(updated);
+        Swal.fire("Deleted!", "Branch deleted successfully.", "success");
       }
     });
   };
 
-  // ✅ Table headers
   const headers = filteredData.length > 0 ? Object.keys(filteredData[0]) : [];
 
   return (
-    <div className="p-2 md:p-3 space-y-5 w-full">
-      {/* ✅ Top Section - Add + Search */}
-      <div className="flex justify-end items-center gap-3">
-        {/* Optional SearchBar */}
+    <div className="p-2 md:p-2 space-y-5 w-full">
+      {/* 🔍 Search + Add Button */}
+      <div className="flex  justify-end items-center gap-3">
         {/* <div className="w-full sm:w-1/2">
           <SearchBar
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
-            placeholder="Search by name, city, or email..."
+            placeholder="Search branch by name, city, or email..."
           />
         </div> */}
 
-
-         <DownloadDataButton
+        <DownloadDataButton 
           data={dataList} // ✅ all data
-          fileName="Customer Details"
+          fileName="BranchDetails"
         />
 
-        {/* ✅ Add Button (Theme colored) */}
         <button
           onClick={openAddModal}
-          className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-sm font-semibold shadow 
-                     transition-all duration-300 hover:shadow-lg"
+           className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-sm font-semibold shadow transition-all duration-300 hover:shadow-lg"
           style={{
             backgroundColor: "var(--color-primary)",
           }}
@@ -148,55 +134,52 @@ const paginatedData = filteredData.slice(
             (e.currentTarget.style.backgroundColor = "var(--color-primary)")
           }
         >
-          <PlusCircle size={16} />
-          Add Customer
+          <PlusCircle size={12} />
+          Add Branch
         </button>
       </div>
 
-      {/* ✅ Editable Table */}
-      <EditableTable
-        headers={headers}
-        rows={paginatedData}
-        editRowId={editRowId}
-        editedData={editedData}
-        handleEdit={openEditModal}
-        handleDelete={handleDelete}
-        editableFields={editableFields}
-        sortConfig={sortConfig}
-        onSort={onSort}
-      />
+      {/* 📋 Editable Table */}
+      <div className="overflow-x-auto">
+        <EditableTable
+          headers={headers}
+          rows={paginatedData}
+          handleEdit={openEditModal}
+          handleDelete={handleDelete}
+          sortConfig={sortConfig}
+          onSort={onSort}
+        />
+      </div>
 
-      {/* ✅ Pagination */}
+      {/* 📄 Pagination */}
       <div className="flex justify-center pt-2">
-        <Pagination
+     <Pagination
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         totalPages={totalPages}
          totalRecords={dataList.length}
         rowsPerPage={rowsPerPage}
         setRowsPerPage={setRowsPerPage}
-        />
-      </div>
+      />
+      </div>  
 
-      {/* ✅ Add Modal */}
+      {/* ➕ Add Modal */}
       <ModalCom
         isOpen={isAddModalOpen}
         onClose={closeAddModal}
-        title="Add Customer"
-        iconType="success"
+        title="Add Branch"
         content={
-          <AddCustomerBasic dataList={dataList} setDataList={setDataList} />
+          <AddBranchsDetail dataList={dataList} setDataList={setDataList} />
         }
       />
 
-      {/* ✅ Edit Modal */}
+      {/* ✏️ Edit Modal */}
       <ModalCom
         isOpen={isEditModalOpen}
         onClose={closeEditModal}
-        title="Edit Customer"
-        iconType="info"
+        title="Edit Branch"
         content={
-          <EditCustomerBasic
+          <EditBranchsDetail
             selectedData={selectedData}
             dataList={dataList}
             setDataList={setDataList}
@@ -208,4 +191,4 @@ const paginatedData = filteredData.slice(
   );
 };
 
-export default CustomerBasic;
+export default ShowAssemblyType;

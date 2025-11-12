@@ -5,13 +5,19 @@ import Topbar from "../components/layout/Topbar";
 import { IconButton } from "@mui/material"; // keep if you already use IconButton; else replace with button
 import { Menu } from "lucide-react";
 import Footer from "../components/footer/Footer";
+import { useLocation } from "react-router-dom";
 
 // If you don't want to import IconButton from MUI, replace with native button:
 // import { Menu } from "lucide-react";
 
 export default function MainLayout() {
+    const location = useLocation();
   const [open, setOpen] = useState(false);
   const drawerWidthClass = "md:w-60"; // must match sidebarWidth in Sidebar (w-60 default)
+  
+    let path = location.pathname === "/" ? "Dashboard" : location.pathname.replace("/", "");
+     // Capitalize first letter
+     const title = path.charAt(0).toUpperCase() + path.slice(1);
 
   return (
     <div className="flex h-screen w-screen bg-slate-50 overflow-hidden">
@@ -39,7 +45,7 @@ export default function MainLayout() {
                 <Menu size={18} />
               </button>
               <div className="text-base md:text-medium font-semibold text-slate-700 " style={{ color: "var(--color-primary)" }}>
-                Project
+                {title}
               </div>
             </div>
 

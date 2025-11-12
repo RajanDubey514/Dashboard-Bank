@@ -922,6 +922,82 @@ export const fakeMainProductData = [
   },
 ];
 
+// ✅ Fake Data for Groups
+export const FakeGroupData = [
+  { id: 1, groupName: "North Region Dealers", remark: "Handles all northern area clients" },
+  { id: 2, groupName: "South Zone Distributors", remark: "Focuses on southern distributors" },
+  { id: 3, groupName: "Premium Clients", remark: "Top-tier loyal customers" },
+  { id: 4, groupName: "Corporate Accounts", remark: "Large-scale B2B clients" },
+  { id: 5, groupName: "Retail Partners", remark: "Local store and franchise groups" },
+  { id: 6, groupName: "International Clients", remark: "Customers from overseas markets" },
+  { id: 7, groupName: "Online Vendors", remark: "Partners operating via e-commerce" },
+  { id: 8, groupName: "Seasonal Buyers", remark: "Active during festive and seasonal sales" },
+  { id: 9, groupName: "Testing Group", remark: "Used for internal QA and demo purposes" },
+  { id: 10, groupName: "Inactive Clients", remark: "Accounts with low or no recent activity" },
+];
+
+export const FakeSubMainGroupData = [
+  {
+    id: 1,
+    groupName: "North Region Dealers",
+    subGroupName: "Delhi Division",
+    remark: "Manages Delhi and NCR wholesale clients",
+  },
+  {
+    id: 2,
+    groupName: "South Zone Distributors",
+    subGroupName: "Tamil Nadu Subgroup",
+    remark: "Focus on Tamil Nadu state operations",
+  },
+  {
+    id: 3,
+    groupName: "Premium Clients",
+    subGroupName: "Gold Tier",
+    remark: "Top loyalty customers with >5 years association",
+  },
+  {
+    id: 4,
+    groupName: "Corporate Accounts",
+    subGroupName: "Government Contracts",
+    remark: "Public sector business clients",
+  },
+  {
+    id: 5,
+    groupName: "Retail Partners",
+    subGroupName: "Franchise Stores",
+    remark: "Small retail chains and outlets",
+  },
+  {
+    id: 6,
+    groupName: "International Clients",
+    subGroupName: "Middle East",
+    remark: "Serves clients in Dubai, UAE, and nearby countries",
+  },
+  {
+    id: 7,
+    groupName: "Online Vendors",
+    subGroupName: "Marketplace Sellers",
+    remark: "Sellers from Amazon and Flipkart",
+  },
+  {
+    id: 8,
+    groupName: "Seasonal Buyers",
+    subGroupName: "Festive Clients",
+    remark: "Clients active only during festive sales",
+  },
+  {
+    id: 9,
+    groupName: "Testing Group",
+    subGroupName: "Internal QA",
+    remark: "Used for test data and dummy transactions",
+  },
+  {
+    id: 10,
+    groupName: "Inactive Clients",
+    subGroupName: "Dormant Users",
+    remark: "Accounts not active for over a year",
+  },
+];
 
 
 

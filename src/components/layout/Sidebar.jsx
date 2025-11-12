@@ -1,6 +1,6 @@
 import React from "react";
 import { Home, BarChart2, ShoppingCart, Settings, LogOut, X , BriefcaseBusiness } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 
 const menuItems = [
   { name: "Dashboard", icon: Home, path: "/" },
@@ -10,6 +10,8 @@ const menuItems = [
 ];
 
 export default function Sidebar({ open, onClose, sidebarWidth = "w-60" }) {
+   const navigate = useNavigate();
+
   return (
     <>
       {/* Sidebar Drawer */}
@@ -32,7 +34,7 @@ export default function Sidebar({ open, onClose, sidebarWidth = "w-60" }) {
           className="flex items-center justify-between h-14 px-4 border-b"
           style={{ borderColor: "var(--theme-hover)" }}
         >
-          <div className="text-lg font-semibold">Project</div>
+          <div  onClick={() => navigate("/")} className="text-lg font-semibold cursor-pointer">Project</div>
           <button
             onClick={onClose}
             className="md:hidden text-slate-300 hover:text-white p-1 rounded"

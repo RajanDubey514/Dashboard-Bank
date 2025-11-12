@@ -8,6 +8,8 @@ import EditableTable from "../../../../components/tablecomp/EditableTable";
 import Pagination from "../../../../components/pagination/Pagination";
 import EditBranchsDetail from "../../edit-Customer/editBranchsDetail/EdiitBranchsDetail";
 import SearchBar from "../../../../components/searchComp/SearchBar";
+import DownloadDataButton from "../../../../components/DownloadData/DownloadDataButton";
+
 
 const BranchsDetail = () => {
   const [dataList, setDataList] = useState([]);
@@ -114,9 +116,14 @@ const paginatedData = filteredData.slice(
           />
         </div> */}
 
+        <DownloadDataButton 
+          data={dataList} // ✅ all data
+          fileName="BranchDetails"
+        />
+
         <button
           onClick={openAddModal}
-           className="flex items-center gap-2 px-4 py-1.5 rounded-lg text-white text-sm font-semibold shadow transition-all duration-300 hover:shadow-lg"
+           className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-sm font-semibold shadow transition-all duration-300 hover:shadow-lg"
           style={{
             backgroundColor: "var(--color-primary)",
           }}

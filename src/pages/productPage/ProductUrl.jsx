@@ -1,29 +1,37 @@
 import React, { useState } from "react";
 import { UserCircle, Building2, PackageSearch, Activity } from "lucide-react";
-import CustomerBasic from "./show-Customer/customerBasic/CustomerBasic";
-import BranchsDetail from "./show-Customer/branchsDetail/BranchsDetail";
-import IntrestedProduct from "./show-Customer/intrestedProduct/IntrestedProduct";
-import FollowUpActivity from "./show-Customer/followUpActivity/FollowUpActivity";
 import Tooltip from "../../components/tooltip/Tooltip";
+import ShowProduct from "./show/showProduct/ShowProduct";
+import MainGroup from "./show/showMainGroup/MainGroup";
+import SubGroup from "./show/showSubGroup/SubGroup";
+import ShowTypeProduct from "./show/showProductType/ShowTypeProduct";
+import ShowAssemblyType from "./show/showAssemblyType/ShowAssemblyType";
+import ShowUnitMaster from "./show/showUnitMaster/ShowUnitMaster";
 
 // ✅ Map tabs to components
 const componentsMap = {
-  Customer_Basic_info: CustomerBasic,
-  "Branch(S)_Detail": BranchsDetail,
-  "Intrested_Product(S)": IntrestedProduct,
-  Follow_Up_Activity: FollowUpActivity,
+  Product: ShowProduct,
+  Main_Group : MainGroup,
+  Sub_Group : SubGroup,
+  Product_Type : ShowTypeProduct,
+  Assembly_Type : ShowAssemblyType,
+  Unit_Master : ShowUnitMaster
+
+
 };
 
 // ✅ Icons for each tab
 const tabIcons = {
-  Customer_Basic_info: <UserCircle size={13} />,
-  "Branch(S)_Detail": <Building2 size={13} />,
-  "Intrested_Product(S)": <PackageSearch size={13} />,
-  Follow_Up_Activity: <Activity size={13} />,
+  Product: <UserCircle size={13} />,
+  "Main_Group": <Building2 size={13} />,
+  "Sub_Group": <PackageSearch size={13} />,
+  Product_Type: <Activity size={13} />,
+  "Assembly_Type": <Building2 size={13} />,
+  "Unit_Master": <PackageSearch size={13} />,
 };
 
-const CustomerUrl = () => {
-  const [activeTab, setActiveTab] = useState("Customer_Basic_info");
+const ProductUrl = () => {
+  const [activeTab, setActiveTab] = useState("Product");
 
   // ✅ Format readable tab labels
   const formatKey = (key) =>
@@ -98,4 +106,4 @@ const CustomerUrl = () => {
   );
 };
 
-export default CustomerUrl;
+export default ProductUrl;

@@ -8,6 +8,7 @@ import EditableTable from "../../../../components/tablecomp/EditableTable";
 import Pagination from "../../../../components/pagination/Pagination";
 import SearchBar from "../../../../components/searchComp/SearchBar";
 import { FakeInterestedProductData } from "../../../../components/FakeData";
+import DownloadDataButton from "../../../../components/DownloadData/DownloadDataButton";
 
 const IntrestedProduct = () => {
   // 🔹 State management
@@ -112,10 +113,15 @@ const paginatedData = filteredData.slice(
     <div className="p-2 md:p-2 space-y-5 w-full">
       {/* 🔍 Search + Add Button */}
       <div className="flex  justify-end items-center gap-3">
+       
+       <DownloadDataButton
+          data={dataList} // ✅ all data
+          fileName="Intrested Product"
+        />
 
         <button
           onClick={openAddModal}
-         className="flex items-center gap-2 px-4 py-1.5 rounded-lg text-white text-sm font-semibold shadow 
+         className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-sm font-semibold shadow 
                      transition-all duration-300 hover:shadow-lg"
           style={{
             backgroundColor: "var(--color-primary)",

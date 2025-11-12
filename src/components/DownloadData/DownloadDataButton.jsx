@@ -1,0 +1,143 @@
+import React, { useState, useRef, useEffect } from "react";
+import * as XLSX from "xlsx";
+import {
+  Document,
+  Packer,
+  Paragraph,
+  Table,
+  TableCell,
+  TableRow,
+  TextRun,
+} from "docx";
+import { saveAs } from "file-saver";
+import { Download, ChevronDown } from "lucide-react";
+
+const DownloadDataButton = ({ data = [], fileName = "data" }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // 🧠 Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // 📘 Download Excel
+  const handleDownloadExcel = () => {
+    if (!data || data.length === 0)
+      return alert("No data available to download");
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    const timestamp = new Date().toISOString().split("T")[0];
+    XLSX.writeFile(workbook, `${fileName}_${timestamp}.xlsx`);
+    setIsOpen(false);
+  };
+
+  // 📄 Download Word
+  const handleDownloadWord = async () => {
+    if (!data || data.length === 0)
+      return alert("No data available to download");
+
+    // Create Word table header
+    const headers = Object.keys(data[0]);
+    const headerRow = new TableRow({
+      children: headers.map(
+        (header) =>
+          new TableCell({
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: header, bold: true })],
+              }),
+            ],
+          })
+      ),
+    });
+
+    // Create table rows
+    const dataRows = data.map(
+      (item) =>
+        new TableRow({
+          children: headers.map(
+            (key) =>
+              new TableCell({
+                children: [new Paragraph(String(item[key] ?? ""))],
+              })
+          ),
+        })
+    );
+
+    // Create document
+    const doc = new Document({
+      sections: [
+        {
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun({ text: `${fileName} Data`, bold: true, size: 28 }),
+              ],
+              spacing: { after: 300 },
+            }),
+            new Table({
+              rows: [headerRow, ...dataRows],
+            }),
+          ],
+        },
+      ],
+    });
+
+    const blob = await Packer.toBlob(doc);
+    const timestamp = new Date().toISOString().split("T")[0];
+    saveAs(blob, `${fileName}_${timestamp}.docx`);
+    setIsOpen(false);
+  };
+
+  return (
+    <div className="relative inline-block text-left" ref={dropdownRef}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-sm font-semibold shadow transition-all duration-300 hover:shadow-lg"
+        style={{ backgroundColor: "var(--color-primary)" }}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.backgroundColor = "var(--color-primary-hover)")
+        }
+        onMouseLeave={(e) =>
+          (e.currentTarget.style.backgroundColor = "var(--color-primary)")
+        }
+      >
+        <Download size={14} />
+        Download
+        <ChevronDown size={14} />
+      </button>
+
+     {isOpen && (
+  <div
+    className="absolute right-0 mt-2 w-56 rounded-md shadow-lg z-50 overflow-hidden border border-gray-200"
+    style={{
+      backgroundColor: "var(--color-primary)",
+    }}
+  >
+    <button
+      onClick={handleDownloadExcel}
+      className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-opacity-90 hover:bg-[var(--color-primary-hover)] transition"
+    >
+      📘 Download in Excel (.xlsx)
+    </button>
+    <button
+      onClick={handleDownloadWord}
+      className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-opacity-90 hover:bg-[var(--color-primary-hover)] transition"
+    >
+      📝 Download in Word (.docx)
+    </button>
+  </div>
+)}
+    </div>
+  );
+};
+
+export default DownloadDataButton;
