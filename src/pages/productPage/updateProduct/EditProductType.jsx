@@ -4,29 +4,24 @@ import * as Yup from "yup";
 
 // ✅ Validation Schema
 const validationSchema = Yup.object({
-  groupName: Yup.string().required("Group Name is required"),
+  typeName: Yup.string().required("Product Type Name is required"),
   remark: Yup.string().max(200, "Remark must be less than 200 characters"),
   isActive: Yup.boolean(),
 });
 
-const EditGroupForm = ({ selectedData, dataList, setDataList, onClose }) => {
+const EditProductType = ({ selectedData, dataList, setDataList, onClose }) => {
   const formik = useFormik({
     initialValues: {
-      groupName: selectedData?.groupName || "",
+      typeName: selectedData?.typeName || "",
       remark: selectedData?.remark || "",
-      isActive: selectedData?.isActive || false, // ✅ Prefilled checkbox
+      isActive: selectedData?.isActive || false,
     },
     enableReinitialize: true,
     validationSchema,
     onSubmit: (values) => {
       const updatedList = dataList.map((item) =>
         item.id === selectedData.id
-          ? {
-              ...item,
-              groupName: values.groupName,
-              remark: values.remark,
-              isActive: values.isActive,
-            }
+          ? { ...item, ...values }
           : item
       );
       setDataList(updatedList);
@@ -39,25 +34,25 @@ const EditGroupForm = ({ selectedData, dataList, setDataList, onClose }) => {
       onSubmit={formik.handleSubmit}
       className="relative bg-white shadow-md rounded-lg border flex flex-col h-[300px]"
     >
-      {/* Scrollable Form Content */}
+      {/* 🧾 Scrollable Content */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {/* Group Name */}
+        {/* Product Type Name */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Group Name <span className="text-red-500">*</span>
+            Product Type Name <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
-            name="groupName"
-            value={formik.values.groupName}
+            name="typeName"
+            value={formik.values.typeName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring focus:ring-blue-100"
-            placeholder="Enter group name"
+            placeholder="Enter product type name"
           />
-          {formik.touched.groupName && formik.errors.groupName && (
+          {formik.touched.typeName && formik.errors.typeName && (
             <p className="text-red-500 text-xs mt-1">
-              {formik.errors.groupName}
+              {formik.errors.typeName}
             </p>
           )}
         </div>
@@ -72,9 +67,9 @@ const EditGroupForm = ({ selectedData, dataList, setDataList, onClose }) => {
             value={formik.values.remark}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
+            rows="3"
             className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring focus:ring-blue-100"
             placeholder="Enter remark (optional)"
-            rows="3"
           />
           {formik.touched.remark && formik.errors.remark && (
             <p className="text-red-500 text-xs mt-1">{formik.errors.remark}</p>
@@ -97,8 +92,8 @@ const EditGroupForm = ({ selectedData, dataList, setDataList, onClose }) => {
         </div>
       </div>
 
-      {/* ✅ Fixed Bottom Buttons */}
-      <div className="sticky -bottom-4 bg-white  flex justify-end gap-3 px-4 py-2">
+      {/* 📌 Fixed Footer Buttons */}
+      <div className="sticky -bottom-4 bg-white flex justify-end gap-3 px-4 py-1">
         <button
           type="button"
           onClick={() => onClose && onClose()}
@@ -118,4 +113,4 @@ const EditGroupForm = ({ selectedData, dataList, setDataList, onClose }) => {
   );
 };
 
-export default EditGroupForm;
+export default EditProductType;

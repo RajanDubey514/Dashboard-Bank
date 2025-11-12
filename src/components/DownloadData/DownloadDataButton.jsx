@@ -11,6 +11,8 @@ import {
 } from "docx";
 import { saveAs } from "file-saver";
 import { Download, ChevronDown } from "lucide-react";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const DownloadDataButton = ({ data = [], fileName = "data" }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,7 +29,7 @@ const DownloadDataButton = ({ data = [], fileName = "data" }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // 📘 Download Excel
+  // 📘 Excel Download
   const handleDownloadExcel = () => {
     if (!data || data.length === 0)
       return alert("No data available to download");
@@ -39,12 +41,11 @@ const DownloadDataButton = ({ data = [], fileName = "data" }) => {
     setIsOpen(false);
   };
 
-  // 📄 Download Word
+  // 📝 Word Download
   const handleDownloadWord = async () => {
     if (!data || data.length === 0)
       return alert("No data available to download");
 
-    // Create Word table header
     const headers = Object.keys(data[0]);
     const headerRow = new TableRow({
       children: headers.map(
@@ -59,7 +60,6 @@ const DownloadDataButton = ({ data = [], fileName = "data" }) => {
       ),
     });
 
-    // Create table rows
     const dataRows = data.map(
       (item) =>
         new TableRow({
@@ -72,7 +72,6 @@ const DownloadDataButton = ({ data = [], fileName = "data" }) => {
         })
     );
 
-    // Create document
     const doc = new Document({
       sections: [
         {
@@ -97,8 +96,48 @@ const DownloadDataButton = ({ data = [], fileName = "data" }) => {
     setIsOpen(false);
   };
 
+  // 📄 PDF Download (optimized look)
+  const handleDownloadPDF = () => {
+    if (!data || data.length === 0)
+      return alert("No data available to download");
+
+    const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "A4" });
+
+    doc.setFontSize(14);
+    doc.setTextColor(40);
+    doc.text(`${fileName} Data`, 40, 40);
+
+    const headers = [Object.keys(data[0])];
+    const body = data.map((item) => Object.values(item));
+
+    autoTable(doc, {
+      head: headers,
+      body: body,
+      startY: 60,
+      theme: "grid",
+      styles: {
+        fontSize: 8,
+        cellPadding: 3,
+        halign: "center",
+        valign: "middle",
+      },
+      headStyles: {
+        fillColor: [30, 64, 175], // Deep blue
+        textColor: 255,
+        fontStyle: "bold",
+      },
+      alternateRowStyles: { fillColor: [245, 247, 250] },
+      tableWidth: "auto",
+      margin: { top: 60, left: 40, right: 40 },
+    });
+
+    doc.save(`${fileName}.pdf`);
+    setIsOpen(false);
+  };
+
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>
+      {/* Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-sm font-semibold shadow transition-all duration-300 hover:shadow-lg"
@@ -115,27 +154,34 @@ const DownloadDataButton = ({ data = [], fileName = "data" }) => {
         <ChevronDown size={14} />
       </button>
 
-     {isOpen && (
-  <div
-    className="absolute right-0 mt-2 w-56 rounded-md shadow-lg z-50 overflow-hidden border border-gray-200"
-    style={{
-      backgroundColor: "var(--color-primary)",
-    }}
-  >
-    <button
-      onClick={handleDownloadExcel}
-      className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-opacity-90 hover:bg-[var(--color-primary-hover)] transition"
-    >
-      📘 Download in Excel (.xlsx)
-    </button>
-    <button
-      onClick={handleDownloadWord}
-      className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-opacity-90 hover:bg-[var(--color-primary-hover)] transition"
-    >
-      📝 Download in Word (.docx)
-    </button>
-  </div>
-)}
+      {/* Dropdown */}
+      {isOpen && (
+        <div
+          className="absolute right-0 mt-2 w-56 rounded-md shadow-lg z-50 overflow-hidden border border-gray-200"
+          style={{
+            backgroundColor: "var(--color-primary)",
+          }}
+        >
+          <button
+            onClick={handleDownloadExcel}
+            className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-opacity-90 hover:bg-[var(--color-primary-hover)] transition"
+          >
+            📘 Download Excel (.xlsx)
+          </button>
+          <button
+            onClick={handleDownloadWord}
+            className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-opacity-90 hover:bg-[var(--color-primary-hover)] transition"
+          >
+            📝 Download Word (.docx)
+          </button>
+          <button
+            onClick={handleDownloadPDF}
+            className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-opacity-90 hover:bg-[var(--color-primary-hover)] transition"
+          >
+            📄 Download PDF (.pdf)
+          </button>
+        </div>
+      )}
     </div>
   );
 };

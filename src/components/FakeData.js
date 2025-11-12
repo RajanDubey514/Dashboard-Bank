@@ -922,18 +922,17 @@ export const fakeMainProductData = [
   },
 ];
 
-// ✅ Fake Data for Groups
 export const FakeGroupData = [
-  { id: 1, groupName: "North Region Dealers", remark: "Handles all northern area clients" },
-  { id: 2, groupName: "South Zone Distributors", remark: "Focuses on southern distributors" },
-  { id: 3, groupName: "Premium Clients", remark: "Top-tier loyal customers" },
-  { id: 4, groupName: "Corporate Accounts", remark: "Large-scale B2B clients" },
-  { id: 5, groupName: "Retail Partners", remark: "Local store and franchise groups" },
-  { id: 6, groupName: "International Clients", remark: "Customers from overseas markets" },
-  { id: 7, groupName: "Online Vendors", remark: "Partners operating via e-commerce" },
-  { id: 8, groupName: "Seasonal Buyers", remark: "Active during festive and seasonal sales" },
-  { id: 9, groupName: "Testing Group", remark: "Used for internal QA and demo purposes" },
-  { id: 10, groupName: "Inactive Clients", remark: "Accounts with low or no recent activity" },
+  { id: 1, groupName: "North Region Dealers", remark: "Handles all northern area clients", activeStatus: true },
+  { id: 2, groupName: "South Zone Distributors", remark: "Focuses on southern distributors", activeStatus: false },
+  { id: 3, groupName: "Premium Clients", remark: "Top-tier loyal customers", activeStatus: true },
+  { id: 4, groupName: "Corporate Accounts", remark: "Large-scale B2B clients", activeStatus: true },
+  { id: 5, groupName: "Retail Partners", remark: "Local store and franchise groups", activeStatus: false },
+  { id: 6, groupName: "International Clients", remark: "Customers from overseas markets", activeStatus: true },
+  { id: 7, groupName: "Online Vendors", remark: "Partners operating via e-commerce", activeStatus: true },
+  { id: 8, groupName: "Seasonal Buyers", remark: "Active during festive and seasonal sales", activeStatus: false },
+  { id: 9, groupName: "Testing Group", remark: "Used for internal QA and demo purposes", activeStatus: true },
+  { id: 10, groupName: "Inactive Clients", remark: "Accounts with low or no recent activity", activeStatus: false },
 ];
 
 export const FakeSubMainGroupData = [
@@ -942,67 +941,162 @@ export const FakeSubMainGroupData = [
     groupName: "North Region Dealers",
     subGroupName: "Delhi Division",
     remark: "Manages Delhi and NCR wholesale clients",
+    activeStatus: true,
   },
   {
     id: 2,
     groupName: "South Zone Distributors",
     subGroupName: "Tamil Nadu Subgroup",
     remark: "Focus on Tamil Nadu state operations",
+    activeStatus: true,
   },
   {
     id: 3,
     groupName: "Premium Clients",
     subGroupName: "Gold Tier",
     remark: "Top loyalty customers with >5 years association",
+    activeStatus: false,
   },
   {
     id: 4,
     groupName: "Corporate Accounts",
     subGroupName: "Government Contracts",
     remark: "Public sector business clients",
+    activeStatus: true,
   },
   {
     id: 5,
     groupName: "Retail Partners",
     subGroupName: "Franchise Stores",
     remark: "Small retail chains and outlets",
+    activeStatus: false,
   },
   {
     id: 6,
     groupName: "International Clients",
     subGroupName: "Middle East",
     remark: "Serves clients in Dubai, UAE, and nearby countries",
+    activeStatus: true,
   },
   {
     id: 7,
     groupName: "Online Vendors",
     subGroupName: "Marketplace Sellers",
     remark: "Sellers from Amazon and Flipkart",
+    activeStatus: false,
   },
   {
     id: 8,
     groupName: "Seasonal Buyers",
     subGroupName: "Festive Clients",
     remark: "Clients active only during festive sales",
+    activeStatus: true,
   },
   {
     id: 9,
     groupName: "Testing Group",
     subGroupName: "Internal QA",
     remark: "Used for test data and dummy transactions",
+    activeStatus: true,
   },
   {
     id: 10,
     groupName: "Inactive Clients",
     subGroupName: "Dormant Users",
     remark: "Accounts not active for over a year",
+    activeStatus: false,
   },
 ];
 
 
 
+export const FakeProductTypeData = [
+  {
+    id: 1,
+    typeName: "Electronics",
+    remark: "Includes mobile phones, laptops, and accessories",
+    isActive: true,
+  },
+  {
+    id: 2,
+    typeName: "Furniture",
+    remark: "All types of home and office furniture",
+    isActive: true,
+  },
+  {
+    id: 3,
+    typeName: "Clothing",
+    remark: "Men’s and women’s apparel and accessories",
+    isActive: false,
+  },
+  {
+    id: 4,
+    typeName: "Stationery",
+    remark: "Office and school supplies",
+    isActive: true,
+  },
+  {
+    id: 5,
+    typeName: "Groceries",
+    remark: "Daily essentials and packaged food items",
+    isActive: false,
+  },
+];
+
+export const fakeAssemblyTypeData = [
+  {
+    id: 1,
+    assemblyTypeName: "Electrical Assembly",
+    remark: "Used for electrical components and circuits",
+    isActive: true,
+  },
+  {
+    id: 2,
+    assemblyTypeName: "Mechanical Assembly",
+    remark: "Includes metal and structural assemblies",
+    isActive: false,
+  },
+  {
+    id: 3,
+    assemblyTypeName: "Plastic Assembly",
+    remark: "Used for molded plastic parts",
+    isActive: true,
+  },
+  {
+    id: 4,
+    assemblyTypeName: "Packaging Assembly",
+    remark: "For packaging and shipping materials",
+    isActive: true,
+  },
+];
 
 
-
+// 📁 components/FakeData.js (add this section)
+export const fakeUnitMasterData = [
+  {
+    id: 1,
+    uomName: "Kilogram",
+    remarks: "Used for measuring weight",
+    active: true,
+  },
+  {
+    id: 2,
+    uomName: "Litre",
+    remarks: "Used for measuring volume",
+    active: true,
+  },
+  {
+    id: 3,
+    uomName: "Piece",
+    remarks: "Used for counting items",
+    active: false,
+  },
+  {
+    id: 4,
+    uomName: "Meter",
+    remarks: "Used for measuring length",
+    active: true,
+  },
+];
 
 

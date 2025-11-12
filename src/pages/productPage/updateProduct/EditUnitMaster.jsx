@@ -4,30 +4,23 @@ import * as Yup from "yup";
 
 // ✅ Validation Schema
 const validationSchema = Yup.object({
-  groupName: Yup.string().required("Group Name is required"),
-  remark: Yup.string().max(200, "Remark must be less than 200 characters"),
+  uomName: Yup.string().required("UOM Name is required"),
+  remarks: Yup.string().max(200, "Remarks must be less than 200 characters"),
   isActive: Yup.boolean(),
 });
 
-const EditGroupForm = ({ selectedData, dataList, setDataList, onClose }) => {
+const EditUnitMaster = ({ selectedData, dataList, setDataList, onClose }) => {
   const formik = useFormik({
     initialValues: {
-      groupName: selectedData?.groupName || "",
-      remark: selectedData?.remark || "",
-      isActive: selectedData?.isActive || false, // ✅ Prefilled checkbox
+      uomName: selectedData?.uomName || "",
+      remarks: selectedData?.remarks || "",
+      isActive: selectedData?.isActive ?? true,
     },
     enableReinitialize: true,
     validationSchema,
     onSubmit: (values) => {
       const updatedList = dataList.map((item) =>
-        item.id === selectedData.id
-          ? {
-              ...item,
-              groupName: values.groupName,
-              remark: values.remark,
-              isActive: values.isActive,
-            }
-          : item
+        item.id === selectedData.id ? { ...item, ...values } : item
       );
       setDataList(updatedList);
       if (onClose) onClose();
@@ -37,47 +30,47 @@ const EditGroupForm = ({ selectedData, dataList, setDataList, onClose }) => {
   return (
     <form
       onSubmit={formik.handleSubmit}
-      className="relative bg-white shadow-md rounded-lg border flex flex-col h-[300px]"
+      className="relative bg-white shadow-md rounded-lg border flex flex-col h-full max-h-[80vh]"
     >
-      {/* Scrollable Form Content */}
+      {/* 🧾 Scrollable Form Content */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {/* Group Name */}
+        {/* UOM Name */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Group Name <span className="text-red-500">*</span>
+            UOM Name <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
-            name="groupName"
-            value={formik.values.groupName}
+            name="uomName"
+            value={formik.values.uomName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring focus:ring-blue-100"
-            placeholder="Enter group name"
+            placeholder="Enter UOM Name"
           />
-          {formik.touched.groupName && formik.errors.groupName && (
-            <p className="text-red-500 text-xs mt-1">
-              {formik.errors.groupName}
-            </p>
+          {formik.touched.uomName && formik.errors.uomName && (
+            <p className="text-red-500 text-xs mt-1">{formik.errors.uomName}</p>
           )}
         </div>
 
-        {/* Remark */}
+        {/* Remarks */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Remark
+            Remarks
           </label>
           <textarea
-            name="remark"
-            value={formik.values.remark}
+            name="remarks"
+            value={formik.values.remarks}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring focus:ring-blue-100"
-            placeholder="Enter remark (optional)"
             rows="3"
+            className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring focus:ring-blue-100"
+            placeholder="Enter remarks (optional)"
           />
-          {formik.touched.remark && formik.errors.remark && (
-            <p className="text-red-500 text-xs mt-1">{formik.errors.remark}</p>
+          {formik.touched.remarks && formik.errors.remarks && (
+            <p className="text-red-500 text-xs mt-1">
+              {formik.errors.remarks}
+            </p>
           )}
         </div>
 
@@ -97,8 +90,15 @@ const EditGroupForm = ({ selectedData, dataList, setDataList, onClose }) => {
         </div>
       </div>
 
-      {/* ✅ Fixed Bottom Buttons */}
-      <div className="sticky -bottom-4 bg-white  flex justify-end gap-3 px-4 py-2">
+      {/* ✅ Fixed Footer Buttons */}
+      <div className="sticky bottom-0 bg-white flex justify-end gap-3 px-4 py-2 border-t">
+        <button
+          type="button"
+          onClick={() => formik.resetForm()}
+          className="px-4 py-1.5 border rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100"
+        >
+          Reset
+        </button>
         <button
           type="button"
           onClick={() => onClose && onClose()}
@@ -111,11 +111,11 @@ const EditGroupForm = ({ selectedData, dataList, setDataList, onClose }) => {
           className="px-4 py-1.5 rounded-md text-sm font-semibold text-white"
           style={{ backgroundColor: "var(--color-primary)" }}
         >
-          Save Changes
+          Update
         </button>
       </div>
     </form>
   );
 };
 
-export default EditGroupForm;
+export default EditUnitMaster;

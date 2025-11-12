@@ -2,90 +2,70 @@ import React, { useEffect, useState } from "react";
 import { PlusCircle } from "lucide-react";
 import Swal from "sweetalert2";
 import ModalCom from "../../../../components/modalComp/ModalCom";
-import AddBranchsDetail from "../../../salesPage/add-Customer/addBranchsDetail/AddBranchsDetail";
-import { FakeBranchData } from "../../../../components/FakeData";
 import EditableTable from "../../../../components/tablecomp/EditableTable";
 import Pagination from "../../../../components/pagination/Pagination";
-import EditBranchsDetail from "../../../salesPage/edit-Customer/editBranchsDetail/EdiitBranchsDetail";
 import DownloadDataButton from "../../../../components/DownloadData/DownloadDataButton";
-
+import AddUnitMaster from "../../../productPage/addProduct/AddUnitMaster";
+import EditUnitMaster from "../../../productPage/updateProduct/EditUnitMaster";
+import { fakeUnitMasterData } from "../../../../components/FakeData";
 
 const ShowUnitMaster = () => {
   const [dataList, setDataList] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedData, setSelectedData] = useState(null);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [rowsPerPage, setRowsPerPage] = useState(2);
-
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  // ✅ Load fake data
+  // ✅ Add/Edit Modal States
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [showInlineForm, setShowInlineForm] = useState(false);
+  const [showInlineEditForm, setShowInlineEditForm] = useState(false);
+  const [selectedData, setSelectedData] = useState(null);
+
+  // ✅ Initial fake data
   useEffect(() => {
-    setDataList(FakeBranchData);
-    setFilteredData(FakeBranchData);
+    setDataList(fakeUnitMasterData);
+    setFilteredData(fakeUnitMasterData);
   }, []);
-   
-  // ✅ Search filter
+
+  // ✅ Search
   useEffect(() => {
-    if (!searchQuery.trim()) {
-      setFilteredData(dataList);
-    } else {
-      const query = searchQuery.toLowerCase();
-      const filtered = dataList.filter((item) =>
-        Object.values(item).some(
-          (val) => val && val.toString().toLowerCase().includes(query)
+    if (!searchQuery.trim()) setFilteredData(dataList);
+    else {
+      const q = searchQuery.toLowerCase();
+      setFilteredData(
+        dataList.filter((item) =>
+          Object.values(item).some(
+            (val) => val && val.toString().toLowerCase().includes(q)
+          )
         )
       );
-      setFilteredData(filtered);
     }
     setCurrentPage(1);
   }, [searchQuery, dataList]);
 
-  // ✅ Sorting logic
+  // ✅ Sort
   const onSort = (key) => {
     let direction = "asc";
     if (sortConfig.key === key && sortConfig.direction === "asc")
       direction = "desc";
     setSortConfig({ key, direction });
 
-    const sortedData = [...filteredData].sort((a, b) => {
+    const sorted = [...filteredData].sort((a, b) => {
       if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
       if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
       return 0;
     });
-    setFilteredData(sortedData);
-  };
-
-
-  // ✅ Pagination
-  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
-const paginatedData = filteredData.slice(
-  (currentPage - 1) * rowsPerPage,
-  currentPage * rowsPerPage
-);
-
-  // ✅ Modal Handlers
-  const openAddModal = () => setIsAddModalOpen(true);
-  const closeAddModal = () => setIsAddModalOpen(false);
-
-  const openEditModal = (id) => {
-    const row = dataList.find((item) => item.id === id);
-    setSelectedData(row);
-    setIsEditModalOpen(true);
-  };
-  const closeEditModal = () => {
-    setSelectedData(null);
-    setIsEditModalOpen(false);
+    setFilteredData(sorted);
   };
 
   // ✅ Delete Confirmation
   const handleDelete = (id) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "This branch will be permanently deleted!",
+      text: "This SubMain record will be permanently deleted!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#16a34a",
@@ -96,94 +76,119 @@ const paginatedData = filteredData.slice(
         const updated = dataList.filter((item) => item.id !== id);
         setDataList(updated);
         setFilteredData(updated);
-        Swal.fire("Deleted!", "Branch deleted successfully.", "success");
+        Swal.fire("Deleted!", "SubMain deleted successfully.", "success");
       }
     });
   };
 
+  // ✅ Pagination
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+
   const headers = filteredData.length > 0 ? Object.keys(filteredData[0]) : [];
 
+  // ✅ Add & Edit handlers
+  const handleAddClick = () => {
+    if (window.innerWidth < 768) setIsAddModalOpen(true);
+    else setShowInlineForm(!showInlineForm);
+  };
+
+  const handleEditClick = (id) => {
+    const selected = dataList.find((item) => item.id === id);
+    setSelectedData(selected);
+    if (window.innerWidth < 768) setIsEditModalOpen(true);
+    else setShowInlineEditForm(true);
+  };
+
   return (
-    <div className="p-2 md:p-2 space-y-5 w-full">
-      {/* 🔍 Search + Add Button */}
-      <div className="flex  justify-end items-center gap-3">
-        {/* <div className="w-full sm:w-1/2">
-          <SearchBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            placeholder="Search branch by name, city, or email..."
-          />
-        </div> */}
-
-        <DownloadDataButton 
-          data={dataList} // ✅ all data
-          fileName="BranchDetails"
-        />
-
+    <div className="p-2 space-y-5 w-full">
+      {/* Top Controls */}
+      <div className="flex justify-end items-center gap-3">
+        <DownloadDataButton data={dataList} fileName="SubMainGroupDetails" />
         <button
-          onClick={openAddModal}
-           className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-sm font-semibold shadow transition-all duration-300 hover:shadow-lg"
-          style={{
-            backgroundColor: "var(--color-primary)",
-          }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.backgroundColor =
-              "var(--color-primary-hover)")
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.backgroundColor = "var(--color-primary)")
-          }
+          onClick={handleAddClick}
+          className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-sm font-semibold shadow transition-all duration-300 hover:shadow-lg"
+          style={{ backgroundColor: "var(--color-primary)" }}
         >
           <PlusCircle size={12} />
-          Add Branch
+          Add Unit Master
         </button>
       </div>
 
-      {/* 📋 Editable Table */}
+      {/* Inline Add Form */}
+      {showInlineForm && (
+        <AddUnitMaster
+          dataList={dataList}
+          setDataList={setDataList}
+          onClose={() => setShowInlineForm(false)}
+        />
+      )}
+
+      {/* Inline Edit Form */}
+      {showInlineEditForm && selectedData && (
+        <EditUnitMaster
+          selectedData={selectedData}
+          dataList={dataList}
+          setDataList={setDataList}
+          onClose={() => {
+            setShowInlineEditForm(false);
+            setSelectedData(null);
+          }}
+        />
+      )}
+
+      {/* Table */}
       <div className="overflow-x-auto">
         <EditableTable
           headers={headers}
           rows={paginatedData}
-          handleEdit={openEditModal}
+          handleEdit={handleEditClick}
           handleDelete={handleDelete}
           sortConfig={sortConfig}
           onSort={onSort}
         />
       </div>
 
-      {/* 📄 Pagination */}
+      {/* Pagination */}
       <div className="flex justify-center pt-2">
-     <Pagination
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        totalPages={totalPages}
-         totalRecords={dataList.length}
-        rowsPerPage={rowsPerPage}
-        setRowsPerPage={setRowsPerPage}
-      />
-      </div>  
+        <Pagination
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPages={totalPages}
+          totalRecords={dataList.length}
+          rowsPerPage={rowsPerPage}
+          setRowsPerPage={setRowsPerPage}
+        />
+      </div>
 
-      {/* ➕ Add Modal */}
+      {/* Add Modal */}
       <ModalCom
         isOpen={isAddModalOpen}
-        onClose={closeAddModal}
-        title="Add Branch"
+        onClose={() => setIsAddModalOpen(false)}
+        title="Add Unit Master"
         content={
-          <AddBranchsDetail dataList={dataList} setDataList={setDataList} />
+          <AddUnitMaster
+            dataList={dataList}
+            setDataList={setDataList}
+            onClose={() => setIsAddModalOpen(false)}
+          />
         }
       />
 
-      {/* ✏️ Edit Modal */}
+      {/* Edit Modal */}
       <ModalCom
         isOpen={isEditModalOpen}
-        onClose={closeEditModal}
-        title="Edit Branch"
+        onClose={() => setIsEditModalOpen(false)}
+        title="Edit Unit Master"
         content={
-          <EditBranchsDetail
+          <EditUnitMaster
             selectedData={selectedData}
             dataList={dataList}
             setDataList={setDataList}
-            closeEditModal={closeEditModal}
+            onClose={() => setIsEditModalOpen(false)}
           />
         }
       />
@@ -192,4 +197,3 @@ const paginatedData = filteredData.slice(
 };
 
 export default ShowUnitMaster;
-

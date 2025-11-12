@@ -2,32 +2,35 @@ import React, { useEffect, useState } from "react";
 import { PlusCircle } from "lucide-react";
 import Swal from "sweetalert2";
 import ModalCom from "../../../../components/modalComp/ModalCom";
-import AddBranchsDetail from "../../../salesPage/add-Customer/addBranchsDetail/AddBranchsDetail";
-import { FakeBranchData } from "../../../../components/FakeData";
+import AddAssemblyType from "../../../productPage/addProduct/AddAssemblyType";
+import EditAssemblyType from "../../../productPage/updateProduct/EditAssemblyType";
 import EditableTable from "../../../../components/tablecomp/EditableTable";
 import Pagination from "../../../../components/pagination/Pagination";
-import EditBranchsDetail from "../../../salesPage/edit-Customer/editBranchsDetail/EdiitBranchsDetail";
 import DownloadDataButton from "../../../../components/DownloadData/DownloadDataButton";
-
+import { fakeAssemblyTypeData } from "../../../../components/FakeData";
 
 const ShowAssemblyType = () => {
   const [dataList, setDataList] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedData, setSelectedData] = useState(null);
+
+  // 📱 / 🖥️ Modal and Inline Form states
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [rowsPerPage, setRowsPerPage] = useState(2);
+  const [showInlineAddForm, setShowInlineAddForm] = useState(false);
+  const [showInlineEditForm, setShowInlineEditForm] = useState(false);
 
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   // ✅ Load fake data
   useEffect(() => {
-    setDataList(FakeBranchData);
-    setFilteredData(FakeBranchData);
+    setDataList(fakeAssemblyTypeData);
+    setFilteredData(fakeAssemblyTypeData);
   }, []);
-   
+
   // ✅ Search filter
   useEffect(() => {
     if (!searchQuery.trim()) {
@@ -59,33 +62,18 @@ const ShowAssemblyType = () => {
     setFilteredData(sortedData);
   };
 
-
   // ✅ Pagination
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
-const paginatedData = filteredData.slice(
-  (currentPage - 1) * rowsPerPage,
-  currentPage * rowsPerPage
-);
-
-  // ✅ Modal Handlers
-  const openAddModal = () => setIsAddModalOpen(true);
-  const closeAddModal = () => setIsAddModalOpen(false);
-
-  const openEditModal = (id) => {
-    const row = dataList.find((item) => item.id === id);
-    setSelectedData(row);
-    setIsEditModalOpen(true);
-  };
-  const closeEditModal = () => {
-    setSelectedData(null);
-    setIsEditModalOpen(false);
-  };
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
 
   // ✅ Delete Confirmation
   const handleDelete = (id) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "This branch will be permanently deleted!",
+      text: "This assembly type will be permanently deleted!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#16a34a",
@@ -96,55 +84,80 @@ const paginatedData = filteredData.slice(
         const updated = dataList.filter((item) => item.id !== id);
         setDataList(updated);
         setFilteredData(updated);
-        Swal.fire("Deleted!", "Branch deleted successfully.", "success");
+        Swal.fire("Deleted!", "Assembly type deleted successfully.", "success");
       }
     });
   };
 
   const headers = filteredData.length > 0 ? Object.keys(filteredData[0]) : [];
 
+  // ✅ Add Button Handler (mobile → modal, desktop → inline)
+  const handleAddClick = () => {
+    if (window.innerWidth < 768) {
+      setIsAddModalOpen(true);
+    } else {
+      setShowInlineAddForm(!showInlineAddForm);
+      setShowInlineEditForm(false);
+    }
+  };
+
+  // ✅ Edit Button Handler
+  const handleEditClick = (id) => {
+    const selected = dataList.find((item) => item.id === id);
+    setSelectedData(selected);
+
+    if (window.innerWidth < 768) {
+      setIsEditModalOpen(true);
+    } else {
+      setShowInlineAddForm(false);
+      setShowInlineEditForm(true);
+    }
+  };
+
   return (
     <div className="p-2 md:p-2 space-y-5 w-full">
-      {/* 🔍 Search + Add Button */}
-      <div className="flex  justify-end items-center gap-3">
-        {/* <div className="w-full sm:w-1/2">
-          <SearchBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            placeholder="Search branch by name, city, or email..."
-          />
-        </div> */}
-
-        <DownloadDataButton 
-          data={dataList} // ✅ all data
-          fileName="BranchDetails"
-        />
+      {/* 🔍 Top Controls */}
+      <div className="flex justify-end items-center gap-3">
+        <DownloadDataButton data={dataList} fileName="AssemblyTypeData" />
 
         <button
-          onClick={openAddModal}
-           className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-sm font-semibold shadow transition-all duration-300 hover:shadow-lg"
-          style={{
-            backgroundColor: "var(--color-primary)",
-          }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.backgroundColor =
-              "var(--color-primary-hover)")
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.backgroundColor = "var(--color-primary)")
-          }
+          onClick={handleAddClick}
+          className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-sm font-semibold shadow transition-all duration-300 hover:shadow-lg"
+          style={{ backgroundColor: "var(--color-primary)" }}
         >
           <PlusCircle size={12} />
-          Add Branch
+          Add Assembly Type
         </button>
       </div>
 
-      {/* 📋 Editable Table */}
+      {/* 🖥️ Inline Add Form */}
+      {showInlineAddForm && (
+        <AddAssemblyType
+          dataList={dataList}
+          setDataList={setDataList}
+          onClose={() => setShowInlineAddForm(false)}
+        />
+      )}
+
+      {/* 🖥️ Inline Edit Form */}
+      {showInlineEditForm && selectedData && (
+        <EditAssemblyType
+          selectedData={selectedData}
+          dataList={dataList}
+          setDataList={setDataList}
+          onClose={() => {
+            setShowInlineEditForm(false);
+            setSelectedData(null);
+          }}
+        />
+      )}
+
+      {/* 📋 Table */}
       <div className="overflow-x-auto">
         <EditableTable
           headers={headers}
           rows={paginatedData}
-          handleEdit={openEditModal}
+          handleEdit={handleEditClick}
           handleDelete={handleDelete}
           sortConfig={sortConfig}
           onSort={onSort}
@@ -153,37 +166,41 @@ const paginatedData = filteredData.slice(
 
       {/* 📄 Pagination */}
       <div className="flex justify-center pt-2">
-     <Pagination
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        totalPages={totalPages}
-         totalRecords={dataList.length}
-        rowsPerPage={rowsPerPage}
-        setRowsPerPage={setRowsPerPage}
-      />
-      </div>  
+        <Pagination
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPages={totalPages}
+          totalRecords={dataList.length}
+          rowsPerPage={rowsPerPage}
+          setRowsPerPage={setRowsPerPage}
+        />
+      </div>
 
-      {/* ➕ Add Modal */}
+      {/* 📱 Add Modal */}
       <ModalCom
         isOpen={isAddModalOpen}
-        onClose={closeAddModal}
-        title="Add Branch"
+        onClose={() => setIsAddModalOpen(false)}
+        title="Add Assembly Type"
         content={
-          <AddBranchsDetail dataList={dataList} setDataList={setDataList} />
+          <AddAssemblyType
+            dataList={dataList}
+            setDataList={setDataList}
+            onClose={() => setIsAddModalOpen(false)}
+          />
         }
       />
 
-      {/* ✏️ Edit Modal */}
+      {/* 📱 Edit Modal */}
       <ModalCom
         isOpen={isEditModalOpen}
-        onClose={closeEditModal}
-        title="Edit Branch"
+        onClose={() => setIsEditModalOpen(false)}
+        title="Edit Assembly Type"
         content={
-          <EditBranchsDetail
+          <EditAssemblyType
             selectedData={selectedData}
             dataList={dataList}
             setDataList={setDataList}
-            closeEditModal={closeEditModal}
+            onClose={() => setIsEditModalOpen(false)}
           />
         }
       />

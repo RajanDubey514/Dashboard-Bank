@@ -1,60 +1,58 @@
 import React, { useEffect, useState } from "react";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Pencil } from "lucide-react";
 import Swal from "sweetalert2";
 import ModalCom from "../../../../components/modalComp/ModalCom";
-import { fakeMainProductData } from "../../../../components/FakeData";
 import EditableTable from "../../../../components/tablecomp/EditableTable";
 import Pagination from "../../../../components/pagination/Pagination";
-import AddProduct from "../../addProduct/AddProduct";
-import UpdateProduct from "../../updateProduct/UpdateProduct";
 import DownloadDataButton from "../../../../components/DownloadData/DownloadDataButton";
+import AddProductType from "../../../productPage/addProduct/AddProductType";
+import EditProductType from "../../../productPage/updateProduct/EditProductType";
+import { FakeProductTypeData } from "../../../../components/FakeData";
 
 const ShowTypeProduct = () => {
   const [dataList, setDataList] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-
-  const [selectedData, setSelectedData] = useState(null);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
-  const [editRowId, setEditRowId] = useState(null);
-  const [editedData, setEditedData] = useState({});
-  const editableFields = [];
-
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [currentPage, setCurrentPage] = useState(1);
-    const [rowsPerPage, setRowsPerPage] = useState(2);
-  
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  // ✅ Load fake data
+  // ✅ Add Form state
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [showInlineForm, setShowInlineForm] = useState(false);
+
+  // ✅ Edit Form state
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [showInlineEditForm, setShowInlineEditForm] = useState(false);
+  const [selectedData, setSelectedData] = useState(null);
+
+  // ✅ Load Fake Data
   useEffect(() => {
-    setDataList(fakeMainProductData);
-    setFilteredData(fakeMainProductData);
+    setDataList(FakeProductTypeData);
+    setFilteredData(FakeProductTypeData);
   }, []);
 
-  // ✅ Search
+  // ✅ Search Filter
   useEffect(() => {
-    if (!searchQuery) {
+    if (!searchQuery.trim()) {
       setFilteredData(dataList);
     } else {
-      const lowerQuery = searchQuery.toLowerCase();
+      const query = searchQuery.toLowerCase();
       const filtered = dataList.filter((item) =>
         Object.values(item).some(
-          (val) =>
-            typeof val === "string" && val.toLowerCase().includes(lowerQuery)
+          (val) => val && val.toString().toLowerCase().includes(query)
         )
       );
       setFilteredData(filtered);
     }
+    setCurrentPage(1);
   }, [searchQuery, dataList]);
 
   // ✅ Sorting
   const onSort = (key) => {
     let direction = "asc";
-    if (sortConfig.key === key && sortConfig.direction === "asc") {
+    if (sortConfig.key === key && sortConfig.direction === "asc")
       direction = "desc";
-    }
     setSortConfig({ key, direction });
 
     const sortedData = [...filteredData].sort((a, b) => {
@@ -65,140 +63,142 @@ const ShowTypeProduct = () => {
     setFilteredData(sortedData);
   };
 
-  // ✅ Pagination
-  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
-const paginatedData = filteredData.slice(
-  (currentPage - 1) * rowsPerPage,
-  currentPage * rowsPerPage
-);
-
-
-  // ✅ Modal Handlers
-  const openAddModal = () => setIsAddModalOpen(true);
-  const closeAddModal = () => setIsAddModalOpen(false);
-
-  const openEditModal = (id) => {
-    const row = dataList.find((item) => item.id === id);
-    setSelectedData(row);
-    setIsEditModalOpen(true);
-  };
-  const closeEditModal = () => {
-    setSelectedData(null);
-    setIsEditModalOpen(false);
-  };
-
-  // ✅ Delete with confirmation (theme-colored buttons)
+  // ✅ Delete Confirmation
   const handleDelete = (id) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "This record will be permanently deleted!",
+      text: "This product type will be permanently deleted!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor:
-        getComputedStyle(document.documentElement)
-          .getPropertyValue("--color-primary")
-          .trim() || "#16a34a",
+      confirmButtonColor: "#16a34a",
       cancelButtonColor: "#dc2626",
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        setDataList((prev) => prev.filter((item) => item.id !== id));
-        setFilteredData((prev) => prev.filter((item) => item.id !== id));
-        Swal.fire("Deleted!", "Record has been removed.", "success");
+        const updated = dataList.filter((item) => item.id !== id);
+        setDataList(updated);
+        setFilteredData(updated);
+        Swal.fire("Deleted!", "Product type deleted successfully.", "success");
       }
     });
   };
 
-  // ✅ Table headers
+  // ✅ Pagination
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+
   const headers = filteredData.length > 0 ? Object.keys(filteredData[0]) : [];
 
+  // ✅ Add Button Handler
+  const handleAddClick = () => {
+    if (window.innerWidth < 768) {
+      setIsAddModalOpen(true);
+    } else {
+      setShowInlineForm(!showInlineForm);
+    }
+  };
+
+  // ✅ Edit Button Handler
+  const handleEditClick = (id) => {
+    const selected = dataList.find((item) => item.id === id);
+    setSelectedData(selected);
+    if (window.innerWidth < 768) {
+      setIsEditModalOpen(true);
+    } else {
+      setShowInlineEditForm(true);
+    }
+  };
+
   return (
-    <div className="p-2 md:p-3 space-y-5 w-full">
-      {/* ✅ Top Section - Add + Search */}
+    <div className="p-2 md:p-2 space-y-5 w-full">
+      {/* 🔍 Controls */}
       <div className="flex justify-end items-center gap-3">
-        {/* Optional SearchBar */}
-        {/* <div className="w-full sm:w-1/2">
-          <SearchBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            placeholder="Search by name, city, or email..."
-          />
-        </div> */}
+        <DownloadDataButton data={dataList} fileName="ProductTypeDetails" />
 
-        <DownloadDataButton
-          data={dataList} // ✅ all data
-          fileName="Product Detail"
-        />
-
-        {/* ✅ Add Button (Theme colored) */}
         <button
-          onClick={openAddModal}
-          className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-sm font-semibold shadow 
-                     transition-all duration-300 hover:shadow-lg"
-          style={{
-            backgroundColor: "var(--color-primary)",
-          }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.backgroundColor =
-              "var(--color-primary-hover)")
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.backgroundColor = "var(--color-primary)")
-          }
+          onClick={handleAddClick}
+          className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-sm font-semibold shadow transition-all duration-300 hover:shadow-lg"
+          style={{ backgroundColor: "var(--color-primary)" }}
         >
-          <PlusCircle size={16} />
-          Add Product
+          <PlusCircle size={12} />
+          Add Product Type
         </button>
       </div>
 
-      {/* ✅ Editable Table */}
-      <EditableTable
-        headers={headers}
-        rows={paginatedData}
-        editRowId={editRowId}
-        editedData={editedData}
-        handleEdit={openEditModal}
-        handleDelete={handleDelete}
-        editableFields={editableFields}
-        sortConfig={sortConfig}
-        onSort={onSort}
-      />
+      {/* ✅ Inline Add Form */}
+      {showInlineForm && (
+        <AddProductType
+          dataList={dataList}
+          setDataList={setDataList}
+          onClose={() => setShowInlineForm(false)}
+        />
+      )}
 
-      {/* ✅ Pagination */}
-      <div className="flex justify-center pt-2">
-        <Pagination
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        totalPages={totalPages}
-         totalRecords={dataList.length}
-        rowsPerPage={rowsPerPage}
-        setRowsPerPage={setRowsPerPage}
+      {/* ✅ Inline Edit Form */}
+      {showInlineEditForm && selectedData && (
+        <EditProductType
+          selectedData={selectedData}
+          dataList={dataList}
+          setDataList={setDataList}
+          onClose={() => {
+            setShowInlineEditForm(false);
+            setSelectedData(null);
+          }}
+        />
+      )}
+
+      {/* 📋 Table */}
+      <div className="overflow-x-auto">
+        <EditableTable
+          headers={headers}
+          rows={paginatedData}
+          handleEdit={handleEditClick}
+          handleDelete={handleDelete}
+          sortConfig={sortConfig}
+          onSort={onSort}
         />
       </div>
 
-      {/* ✅ Add Modal */}
+      {/* 📄 Pagination */}
+      <div className="flex justify-center pt-2">
+        <Pagination
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPages={totalPages}
+          totalRecords={dataList.length}
+          rowsPerPage={rowsPerPage}
+          setRowsPerPage={setRowsPerPage}
+        />
+      </div>
+
+      {/* 📱 Add Modal */}
       <ModalCom
         isOpen={isAddModalOpen}
-        onClose={closeAddModal}
-        title="Add Product"
-        iconType="success"
+        onClose={() => setIsAddModalOpen(false)}
+        title="Add Product Type"
         content={
-          <AddProduct dataList={dataList} setDataList={setDataList} />
+          <AddProductType
+            dataList={dataList}
+            setDataList={setDataList}
+            onClose={() => setIsAddModalOpen(false)}
+          />
         }
       />
 
-      {/* ✅ Edit Modal */}
+      {/* 📱 Edit Modal */}
       <ModalCom
         isOpen={isEditModalOpen}
-        onClose={closeEditModal}
-        title="Edit Product"
-        iconType="info"
+        onClose={() => setIsEditModalOpen(false)}
+        title="Edit Product Type"
         content={
-          <UpdateProduct
+          <EditProductType
             selectedData={selectedData}
             dataList={dataList}
             setDataList={setDataList}
-            closeEditModal={closeEditModal}
+            onClose={() => setIsEditModalOpen(false)}
           />
         }
       />

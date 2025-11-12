@@ -4,26 +4,26 @@ import * as Yup from "yup";
 
 // ✅ Validation Schema
 const validationSchema = Yup.object({
-  groupName: Yup.string().required("Group Name is required"),
+  typeName: Yup.string().required("Type Name is required"),
   remark: Yup.string().max(200, "Remark must be less than 200 characters"),
 });
 
-const AddGroupForm = ({ dataList, setDataList, onClose }) => {
+const AddProductType = ({ dataList, setDataList, onClose }) => {
   const formik = useFormik({
     initialValues: {
-      groupName: "",
+      typeName: "",
       remark: "",
-      activeStatus: false, // ✅ default checked
+      isActive: false,
     },
     validationSchema,
     onSubmit: (values, { resetForm }) => {
-      const newGroup = {
+      const newType = {
         id: Date.now(),
-        groupName: values.groupName,
+        typeName: values.typeName,
         remark: values.remark,
-        activeStatus: values.activeStatus, // ✅ include active status
+        isActive: values.isActive,
       };
-      setDataList([newGroup, ...dataList]);
+      setDataList([newType, ...dataList]);
       resetForm();
       if (onClose) onClose();
     },
@@ -34,25 +34,25 @@ const AddGroupForm = ({ dataList, setDataList, onClose }) => {
       onSubmit={formik.handleSubmit}
       className="bg-white shadow-md rounded-lg border flex flex-col h-full max-h-[80vh]"
     >
-      {/* Scrollable Form Content */}
+      {/* Scrollable Content */}
       <div className="p-4 space-y-4 overflow-y-auto flex-1">
-        {/* Group Name */}
+        {/* Type Name */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Group Name <span className="text-red-500">*</span>
+            Type Name <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
-            name="groupName"
-            value={formik.values.groupName}
+            name="typeName"
+            value={formik.values.typeName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring focus:ring-blue-100"
-            placeholder="Enter group name"
+            placeholder="Enter type name"
           />
-          {formik.touched.groupName && formik.errors.groupName && (
+          {formik.touched.typeName && formik.errors.typeName && (
             <p className="text-red-500 text-xs mt-1">
-              {formik.errors.groupName}
+              {formik.errors.typeName}
             </p>
           )}
         </div>
@@ -72,47 +72,45 @@ const AddGroupForm = ({ dataList, setDataList, onClose }) => {
             rows="3"
           />
           {formik.touched.remark && formik.errors.remark && (
-            <p className="text-red-500 text-xs mt-1">
-              {formik.errors.remark}
-            </p>
+            <p className="text-red-500 text-xs mt-1">{formik.errors.remark}</p>
           )}
         </div>
 
-        {/* ✅ Active Status Checkbox */}
+        {/* ✅ Active Checkbox */}
         <div className="flex items-center gap-2">
           <input
             type="checkbox"
-            name="activeStatus"
-            id="activeStatus"
-            checked={formik.values.activeStatus}
+            id="isActive"
+            name="isActive"
+            checked={formik.values.isActive}
             onChange={formik.handleChange}
-            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring focus:ring-blue-200"
+            className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
           />
-          <label htmlFor="activeStatus" className="text-sm text-gray-700">
+          <label htmlFor="isActive" className="text-sm text-gray-700">
             Active
           </label>
         </div>
       </div>
 
       {/* ✅ Fixed Footer Buttons */}
-      <div className="flex justify-end gap-3  bg-white p-1 sticky -bottom-4">
+      <div className="flex justify-end gap-3 bg-white p-1 sticky -bottom-4">
         <button
           type="button"
           onClick={() => formik.resetForm()}
-          className="px-4 py-1 border rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100"
+          className="px-4 py-1.5 border rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100"
         >
           Reset
         </button>
         <button
           type="button"
           onClick={() => onClose && onClose()}
-          className="px-4 py-1 border rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100"
+          className="px-4 py-1.5 border rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-4 py-1 rounded-md text-sm font-semibold text-white"
+          className="px-4 py-1.5 rounded-md text-sm font-semibold text-white"
           style={{ backgroundColor: "var(--color-primary)" }}
         >
           Save
@@ -122,4 +120,4 @@ const AddGroupForm = ({ dataList, setDataList, onClose }) => {
   );
 };
 
-export default AddGroupForm;
+export default AddProductType;

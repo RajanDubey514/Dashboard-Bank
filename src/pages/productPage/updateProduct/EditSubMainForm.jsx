@@ -17,10 +17,11 @@ const EditSubMainForm = ({ selectedData, dataList, setDataList, onClose }) => {
   });
 
   const formik = useFormik({
-    initialValues: selectedData || {
-      groupName: "",
-      subGroupName: "",
-      remark: "",
+    initialValues: {
+      groupName: selectedData?.groupName || "",
+      subGroupName: selectedData?.subGroupName || "",
+      remark: selectedData?.remark || "",
+      isActive: selectedData?.isActive ?? true,
     },
     enableReinitialize: true,
     validationSchema,
@@ -36,48 +37,92 @@ const EditSubMainForm = ({ selectedData, dataList, setDataList, onClose }) => {
   return (
     <form
       onSubmit={formik.handleSubmit}
-      className="bg-white shadow-md rounded-lg p-4 space-y-4 border"
+      className="bg-white rounded-lg border flex flex-col h-[70vh] max-h-[70vh]"
     >
-      <div>
-        <label className="block text-sm font-medium text-gray-700">
-          Group Name <span className="text-red-500">*</span>
-        </label>
-        <Select
-          name="groupName"
-          options={groupOptions}
-          value={groupOptions.find((o) => o.value === formik.values.groupName)}
-          onChange={(option) => formik.setFieldValue("groupName", option.value)}
-          className="text-sm"
-        />
+      {/* Scrollable content */}
+      <div className="overflow-y-auto flex-1 space-y-4 p-4">
+        {/* Group Name */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Group Name <span className="text-red-500">*</span>
+          </label>
+          <Select
+            name="groupName"
+            options={groupOptions}
+            value={groupOptions.find(
+              (o) => o.value === formik.values.groupName
+            )}
+            onChange={(option) => formik.setFieldValue("groupName", option.value)}
+            className="text-sm"
+            placeholder="Select Group"
+          />
+          {formik.touched.groupName && formik.errors.groupName && (
+            <p className="text-red-500 text-xs mt-1">
+              {formik.errors.groupName}
+            </p>
+          )}
+        </div>
+
+        {/* Sub Group Name */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Sub Group Name <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            name="subGroupName"
+            value={formik.values.subGroupName}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring focus:ring-blue-100"
+            placeholder="Enter sub group name"
+          />
+          {formik.touched.subGroupName && formik.errors.subGroupName && (
+            <p className="text-red-500 text-xs mt-1">
+              {formik.errors.subGroupName}
+            </p>
+          )}
+        </div>
+
+        {/* Remark */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Remark
+          </label>
+          <textarea
+            name="remark"
+            value={formik.values.remark}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            rows="3"
+            className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring focus:ring-blue-100"
+            placeholder="Enter remark (optional)"
+          />
+          {formik.touched.remark && formik.errors.remark && (
+            <p className="text-red-500 text-xs mt-1">
+              {formik.errors.remark}
+            </p>
+          )}
+        </div>
+
+        {/* Active Checkbox */}
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="isActive"
+            name="isActive"
+            checked={formik.values.isActive}
+            onChange={formik.handleChange}
+            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring focus:ring-blue-100"
+          />
+          <label htmlFor="isActive" className="text-sm text-gray-700">
+            Active
+          </label>
+        </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700">
-          Sub Group Name <span className="text-red-500">*</span>
-        </label>
-        <input
-          type="text"
-          name="subGroupName"
-          value={formik.values.subGroupName}
-          onChange={formik.handleChange}
-          className="w-full border border-gray-300 rounded-md p-2 text-sm"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700">
-          Remark
-        </label>
-        <textarea
-          name="remark"
-          value={formik.values.remark}
-          onChange={formik.handleChange}
-          rows="3"
-          className="w-full border border-gray-300 rounded-md p-2 text-sm"
-        />
-      </div>
-
-      <div className="flex justify-end gap-3">
+      {/* Fixed bottom buttons */}
+      <div className="flex justify-end gap-3 p-3  bg-white sticky -bottom-4">
         <button
           type="button"
           onClick={() => onClose && onClose()}
