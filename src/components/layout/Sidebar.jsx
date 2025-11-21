@@ -1,105 +1,133 @@
-import React from "react";
-import { Home, BarChart2, ShoppingCart, Settings, LogOut, X , BriefcaseBusiness } from "lucide-react";
-import { useNavigate, NavLink } from "react-router-dom";
-
-const menuItems = [
-  { name: "Dashboard", icon: Home, path: "/" },
-  {name : "Product" , icon :  BriefcaseBusiness , path : "/product"},
-  { name: "Account", icon: BarChart2, path: "/sale-add" },
-  { name: "Setting", icon: ShoppingCart, path: "/setting" },
-];
+import React, { useState } from "react";
+import { X, ChevronDown, ChevronUp, Settings, LogOut } from "lucide-react";
+import { NavLink, useNavigate } from "react-router-dom";
+import menuItems from "./MenuItems";
+import "./sidebar.css";
 
 export default function Sidebar({ open, onClose, sidebarWidth = "w-60" }) {
-   const navigate = useNavigate();
+  const [openMenu, setOpenMenu] = useState(null);
+  const navigate = useNavigate();
+
+  const toggleSubMenu = (name) => {
+    setOpenMenu(openMenu === name ? null : name);
+  };
 
   return (
     <>
-      {/* Sidebar Drawer */}
       <aside
-        className={`
-          fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out
-          ${open ? "translate-x-0" : "-translate-x-full"}
-          md:translate-x-0 md:static md:flex md:h-full
-          ${sidebarWidth}
-          flex flex-col shadow-xl
-        `}
+        className={`fixed inset-y-0 left-0 z-50 transform transition-transform duration-300
+        ${open ? "translate-x-0" : "-translate-x-full"}
+        md:translate-x-0 md:static
+        ${sidebarWidth} flex flex-col shadow-xl`}
         style={{
           backgroundColor: "var(--theme-bg)",
           color: "var(--theme-text)",
         }}
-        aria-hidden={!open}
       >
         {/* Header */}
-        <div
-          className="flex items-center justify-between h-14 px-4 border-b"
-          style={{ borderColor: "var(--theme-hover)" }}
-        >
-          <div  onClick={() => navigate("/")} className="text-lg font-semibold cursor-pointer">Project</div>
-          <button
-            onClick={onClose}
-            className="md:hidden text-slate-300 hover:text-white p-1 rounded"
-            aria-label="Close sidebar"
+        <div className="flex items-center justify-between h-12 px-4 border-b">
+          <div
+            onClick={() => navigate("/")}
+            className="text-[14px] font-semibold cursor-pointer"
           >
+            Project
+          </div>
+          <button onClick={onClose} className="md:hidden text-slate-300">
             <X size={18} />
           </button>
         </div>
 
         {/* Menu */}
-        <nav className="flex-1 overflow-y-auto no-scrollbar space-y-1 px-3 py-4">
+        <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-1 text-[13px] no-scrollbar">
+
           {menuItems.map((item, idx) => (
-            <NavLink
-              key={idx}
-              to={item.path}
-              end
-              onClick={onClose}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-1.5 rounded-lg text-[15px] font-medium transition-all duration-200 ${
-                  isActive
-                    ? "shadow-md"
-                    : "hover:opacity-90"
-                }`
-              }
-              style={({ isActive }) => ({
-                backgroundColor: isActive ? "var(--theme-accent)" : "transparent",
-                color: isActive ? "#fff" : "var(--theme-text)",
-              })}
-            >
-              <item.icon size={18} />
-              <span className="truncate">{item.name}</span>
-            </NavLink>
+            <div key={idx} className="w-full">
+
+              {/* Parent / Single */}
+              {item.subItems ? (
+                <button
+                  onClick={() => toggleSubMenu(item.name)}
+                  className="w-full flex items-center justify-between px-3 py-2 rounded-lg
+                    hover:bg-white/10 transition-all"
+                >
+                  <span className="flex items-center gap-2">
+                    <item.icon size={16} />
+                    <span>{item.name}</span>
+                  </span>
+
+                  {openMenu === item.name ? (
+                    <ChevronUp size={15} />
+                  ) : (
+                    <ChevronDown size={15} />
+                  )}
+                </button>
+              ) : (
+                <NavLink
+                  to={item.path}
+                  onClick={onClose}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all"
+                  style={({ isActive }) => ({
+                    backgroundColor: isActive ? "var(--theme-accent)" : "transparent",
+                    color: isActive ? "#fff" : "var(--theme-text)",
+                    fontWeight: isActive ? "600" : "400",
+                  })}
+                >
+                  <item.icon size={16} />
+                  <span>{item.name}</span>
+                </NavLink>
+              )}
+
+              {/* Sub Menu */}
+              {item.subItems && openMenu === item.name && (
+                <ul className="pl-8 mt-1 space-y-1 border-l border-white/10">
+                  {item.subItems.map((sub, sIdx) => (
+                    <li key={sIdx}>
+                      <NavLink
+                        to={sub.path}
+                        onClick={onClose}
+                        className="block px-3 py-1.5 rounded-lg hover:bg-white/10 transition-all"
+                        style={({ isActive }) => ({
+                          backgroundColor: isActive ? "var(--theme-accent)" : "transparent",
+                          color: isActive ? "#fff" : "var(--theme-text)",
+                          fontWeight: isActive ? "600" : "400",
+                        })}
+                      >
+                        {sub.name}
+                      </NavLink>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           ))}
         </nav>
 
         {/* Footer */}
-        <div
-          className="border-t px-4 py-3 flex items-center justify-between text-slate-300"
-          style={{ borderColor: "var(--theme-hover)" }}
-        >
-          <button className="flex items-center gap-2 text-sm hover:opacity-80 transition"
-            style={{ color: "var(--theme-text)" }}
+        <div className="border-t px-3 py-2 flex items-center justify-between text-[13px]">
+          <button
+            onClick={() => navigate("/setting")}
+            className="flex items-center gap-2 hover:bg-white/10 px-3 py-1 rounded-lg transition-all"
           >
-            <Settings size={16} /> <span className="hidden sm:inline">Settings</span>
+            <Settings size={15} /> Settings
           </button>
+
           <button
             onClick={() => {
               localStorage.removeItem("authToken");
               window.location.href = "/login";
             }}
-            className="hover:text-red-400 transition"
-            title="Logout"
+            className="hover:bg-white/10 p-1.5 rounded-lg transition"
           >
-            <LogOut size={18} />
+            <LogOut size={16} />
           </button>
         </div>
       </aside>
 
-      {/* Mobile overlay */}
+      {/* Overlay */}
       <div
-        className={`fixed inset-0 z-40 bg-black/40 transition-opacity duration-300 md:hidden ${
-          open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
+        className={`fixed inset-0 bg-black/40 z-40 md:hidden transition
+          ${open ? "opacity-100" : "opacity-0 pointer-events-none"}`}
         onClick={onClose}
-        aria-hidden={!open}
       />
     </>
   );

@@ -10,6 +10,10 @@ import EditBranchsDetail from "../../edit-Customer/editBranchsDetail/EdiitBranch
 import SearchBar from "../../../../components/searchComp/SearchBar";
 import DownloadDataButton from "../../../../components/DownloadData/DownloadDataButton";
 
+// ✅ NEW COMMON COMPONENTS
+import SearchBarCommon from "../../../../components/searchComp/SearchBar";
+import SelectBoxCommon from "../../../../components/searchComp/SelectBoxCommon";
+
 
 const BranchsDetail = () => {
   const [dataList, setDataList] = useState([]);
@@ -20,30 +24,49 @@ const BranchsDetail = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(2);
 
+    const [filterType, setFilterType] = useState("all"); // 🔥 NEW FILTER STATE
+  
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [currentPage, setCurrentPage] = useState(1);
 
-  // ✅ Load fake data
-  useEffect(() => {
-    setDataList(FakeBranchData);
-    setFilteredData(FakeBranchData);
-  }, []);
+ 
+  // 🔹 Load initial data
+    useEffect(() => {
+      setDataList(FakeBranchData);
+      setFilteredData(FakeBranchData);
+    }, []);
+  
+    // 🔹 Apply FILTER + SEARCH
+    useEffect(() => {
+      let updated = [...dataList];
+  
+      if (filterType === "new") {
+        updated = updated.filter((item) => item.isNew === true);
+      }
+  
+      if (filterType === "active") {
+        updated = updated.filter((item) => item.status === "Active");
+      }
+  
+      if (filterType === "inactive") {
+        updated = updated.filter((item) => item.status === "Inactive");
+      }
+  
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        updated = updated.filter((item) =>
+          Object.values(item).some(
+            (val) =>
+              typeof val === "string" && val.toLowerCase().includes(q)
+          )
+        );
+      }
+  
+      setFilteredData(updated);
+      setCurrentPage(1);
+    }, [filterType, searchQuery, dataList]);
+
    
-  // ✅ Search filter
-  useEffect(() => {
-    if (!searchQuery.trim()) {
-      setFilteredData(dataList);
-    } else {
-      const query = searchQuery.toLowerCase();
-      const filtered = dataList.filter((item) =>
-        Object.values(item).some(
-          (val) => val && val.toString().toLowerCase().includes(query)
-        )
-      );
-      setFilteredData(filtered);
-    }
-    setCurrentPage(1);
-  }, [searchQuery, dataList]);
 
   // ✅ Sorting logic
   const onSort = (key) => {
@@ -107,14 +130,31 @@ const paginatedData = filteredData.slice(
   return (
     <div className="p-2 md:p-2 space-y-5 w-full">
       {/* 🔍 Search + Add Button */}
-      <div className="flex  justify-end items-center gap-3">
-        {/* <div className="w-full sm:w-1/2">
-          <SearchBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            placeholder="Search branch by name, city, or email..."
+      <div className="flex flex-col md:flex-row justify-between md:items-center gap-3">
+        {/* LEFT — Search + Select */}
+        <div className="flex items-center gap-3 w-full md:w-auto">
+
+          {/* 🔍 SEARCH */}
+          <SearchBarCommon
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="Search customer..."
           />
-        </div> */}
+
+          {/* 🔽 SELECT BOX */}
+          <SelectBoxCommon
+            value={filterType}
+            onChange={setFilterType}
+            options={[
+              { value: "all", label: "All Customers" },
+              { value: "new", label: "New Customers" },
+              { value: "active", label: "Active Customers" },
+              { value: "inactive", label: "Inactive Customers" },
+            ]}
+          />
+        </div>
+
+        <div className="flex items-center gap-3">
 
         <DownloadDataButton 
           data={dataList} // ✅ all data
@@ -138,6 +178,8 @@ const paginatedData = filteredData.slice(
           <PlusCircle size={12} />
           Add Branch
         </button>
+        </div>
+
       </div>
 
       {/* 📋 Editable Table */}

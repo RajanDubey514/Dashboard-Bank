@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/layout/Sidebar";
 import Topbar from "../components/layout/Topbar";
-import { IconButton } from "@mui/material"; // keep if you already use IconButton; else replace with button
 import { Menu } from "lucide-react";
 import Footer from "../components/footer/Footer";
 import { useLocation } from "react-router-dom";
@@ -13,7 +12,6 @@ import { useLocation } from "react-router-dom";
 export default function MainLayout() {
     const location = useLocation();
   const [open, setOpen] = useState(false);
-  const drawerWidthClass = "md:w-60"; // must match sidebarWidth in Sidebar (w-60 default)
   
     let path = location.pathname === "/" ? "Dashboard" : location.pathname.replace("/", "");
      // Capitalize first letter
@@ -22,7 +20,7 @@ export default function MainLayout() {
   return (
     <div className="flex h-screen w-screen bg-slate-50 overflow-hidden">
       {/* Sidebar */}
-      <Sidebar open={open} onClose={() => setOpen(false)} sidebarWidth="w-50" />
+      <Sidebar open={open} onClose={() => setOpen(false)} sidebarWidth="w-55" />
 
       {/* Main content wrapper */}
       <div

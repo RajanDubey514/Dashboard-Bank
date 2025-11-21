@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Login from "./pages/loginPage/Login";
 import Signup from "./pages/loginPage/Signup"; // ✅ Added Signup Page
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/dashboard/Dashboard";
 import CustomerUrl from "./pages/salesPage/CustomerUrl";
 import MainLayout from "./layoutWraper/MainLayout";
 import Settings from "./pages/Settings";

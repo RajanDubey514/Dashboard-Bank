@@ -9,11 +9,19 @@ import AddProductType from "../../../productPage/addProduct/AddProductType";
 import EditProductType from "../../../productPage/updateProduct/EditProductType";
 import { FakeProductTypeData } from "../../../../components/FakeData";
 
+
+// ✅ NEW COMMON COMPONENTS
+import SearchBarCommon from "../../../../components/searchComp/SearchBar";
+import SelectBoxCommon from "../../../../components/searchComp/SelectBoxCommon";
+
+
 const ShowTypeProduct = () => {
   const [dataList, setDataList] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+        const [filterType, setFilterType] = useState("all"); // 🔥 NEW FILTER STATE
+  
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -26,27 +34,41 @@ const ShowTypeProduct = () => {
   const [showInlineEditForm, setShowInlineEditForm] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
 
-  // ✅ Load Fake Data
-  useEffect(() => {
-    setDataList(FakeProductTypeData);
-    setFilteredData(FakeProductTypeData);
-  }, []);
-
-  // ✅ Search Filter
-  useEffect(() => {
-    if (!searchQuery.trim()) {
-      setFilteredData(dataList);
-    } else {
-      const query = searchQuery.toLowerCase();
-      const filtered = dataList.filter((item) =>
-        Object.values(item).some(
-          (val) => val && val.toString().toLowerCase().includes(query)
-        )
-      );
-      setFilteredData(filtered);
-    }
-    setCurrentPage(1);
-  }, [searchQuery, dataList]);
+   // 🔹 Load initial data
+       useEffect(() => {
+         setDataList(FakeProductTypeData);
+         setFilteredData(FakeProductTypeData);
+       }, []);
+     
+       // 🔹 Apply FILTER + SEARCH
+       useEffect(() => {
+         let updated = [...dataList];
+     
+         if (filterType === "new") {
+           updated = updated.filter((item) => item.isNew === true);
+         }
+     
+         if (filterType === "active") {
+           updated = updated.filter((item) => item.status === "Active");
+         }
+     
+         if (filterType === "inactive") {
+           updated = updated.filter((item) => item.status === "Inactive");
+         }
+     
+         if (searchQuery) {
+           const q = searchQuery.toLowerCase();
+           updated = updated.filter((item) =>
+             Object.values(item).some(
+               (val) =>
+                 typeof val === "string" && val.toLowerCase().includes(q)
+             )
+           );
+         }
+     
+         setFilteredData(updated);
+         setCurrentPage(1);
+       }, [filterType, searchQuery, dataList]);
 
   // ✅ Sorting
   const onSort = (key) => {
@@ -115,7 +137,33 @@ const ShowTypeProduct = () => {
   return (
     <div className="p-2 md:p-2 space-y-5 w-full">
       {/* 🔍 Controls */}
-      <div className="flex justify-end items-center gap-3">
+      <div className="flex flex-col md:flex-row justify-between md:items-center gap-3">
+
+       {/* LEFT — Search + Select */}
+        <div className="flex items-center gap-3 w-full md:w-auto">
+
+          {/* 🔍 SEARCH */}
+          <SearchBarCommon
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="Search customer..."
+          />
+
+          {/* 🔽 SELECT BOX */}
+          <SelectBoxCommon
+            value={filterType}
+            onChange={setFilterType}
+            options={[
+              { value: "all", label: "All Customers" },
+              { value: "new", label: "New Customers" },
+              { value: "active", label: "Active Customers" },
+              { value: "inactive", label: "Inactive Customers" },
+            ]}
+          />
+        </div>
+
+        <div className="flex items-center gap-3">
+
         <DownloadDataButton data={dataList} fileName="ProductTypeDetails" />
 
         <button
@@ -126,6 +174,7 @@ const ShowTypeProduct = () => {
           <PlusCircle size={12} />
           Add Product Type
         </button>
+        </div>
       </div>
 
       {/* ✅ Inline Add Form */}

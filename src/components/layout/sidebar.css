@@ -1,0 +1,18 @@
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; 
+  scrollbar-width: none;      
+}
+
+
+/* Child Menu Bullet Style */
+.child-menu {
+  list-style-type: disc;
+  margin-left: 40px;
+}
+
+.child-menu li {
+  padding-left: 1px;
+}

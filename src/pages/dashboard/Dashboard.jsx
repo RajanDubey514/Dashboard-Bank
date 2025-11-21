@@ -1,7 +1,7 @@
 import React from "react";
-import StatCard from "../components/cards/StatCard";
-import LineOverviewChart from "../components/charts/LineChartComp";
-import PieDeviceChart from "../components/charts/PieChartComp";
+import StatCard from "../../components/cards/StatCard";
+import LineOverviewChart from "../../components/charts/LineChartComp";
+import PieDeviceChart from "../../components/charts/PieChartComp";
 
 const statData = [
   {

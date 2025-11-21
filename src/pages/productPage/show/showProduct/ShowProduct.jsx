@@ -9,6 +9,10 @@ import AddProduct from "../../addProduct/AddProduct";
 import UpdateProduct from "../../updateProduct/UpdateProduct";
 import DownloadDataButton from "../../../../components/DownloadData/DownloadDataButton";
 
+// ✅ NEW COMMON COMPONENTS
+import SearchBarCommon from "../../../../components/searchComp/SearchBar";
+import SelectBoxCommon from "../../../../components/searchComp/SelectBoxCommon";
+
 const ShowProduct = () => {
   const [dataList, setDataList] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -17,6 +21,8 @@ const ShowProduct = () => {
   const [selectedData, setSelectedData] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+        const [filterType, setFilterType] = useState("all"); // 🔥 NEW FILTER STATE
+  
 
   const [editRowId, setEditRowId] = useState(null);
   const [editedData, setEditedData] = useState({});
@@ -27,27 +33,43 @@ const ShowProduct = () => {
     const [rowsPerPage, setRowsPerPage] = useState(2);
   
 
-  // ✅ Load fake data
-  useEffect(() => {
-    setDataList(fakeMainProductData);
-    setFilteredData(fakeMainProductData);
-  }, []);
+  
 
-  // ✅ Search
-  useEffect(() => {
-    if (!searchQuery) {
-      setFilteredData(dataList);
-    } else {
-      const lowerQuery = searchQuery.toLowerCase();
-      const filtered = dataList.filter((item) =>
-        Object.values(item).some(
-          (val) =>
-            typeof val === "string" && val.toLowerCase().includes(lowerQuery)
-        )
-      );
-      setFilteredData(filtered);
-    }
-  }, [searchQuery, dataList]);
+ // 🔹 Load initial data
+       useEffect(() => {
+         setDataList(fakeMainProductData);
+         setFilteredData(fakeMainProductData);
+       }, []);
+     
+       // 🔹 Apply FILTER + SEARCH
+       useEffect(() => {
+         let updated = [...dataList];
+     
+         if (filterType === "new") {
+           updated = updated.filter((item) => item.isNew === true);
+         }
+     
+         if (filterType === "active") {
+           updated = updated.filter((item) => item.status === "Active");
+         }
+     
+         if (filterType === "inactive") {
+           updated = updated.filter((item) => item.status === "Inactive");
+         }
+     
+         if (searchQuery) {
+           const q = searchQuery.toLowerCase();
+           updated = updated.filter((item) =>
+             Object.values(item).some(
+               (val) =>
+                 typeof val === "string" && val.toLowerCase().includes(q)
+             )
+           );
+         }
+     
+         setFilteredData(updated);
+         setCurrentPage(1);
+       }, [filterType, searchQuery, dataList]);
 
   // ✅ Sorting
   const onSort = (key) => {
@@ -115,15 +137,31 @@ const paginatedData = filteredData.slice(
   return (
     <div className="p-2 md:p-3 space-y-5 w-full">
       {/* ✅ Top Section - Add + Search */}
-      <div className="flex justify-end items-center gap-3">
-        {/* Optional SearchBar */}
-        {/* <div className="w-full sm:w-1/2">
-          <SearchBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            placeholder="Search by name, city, or email..."
+       <div className="flex flex-col md:flex-row justify-between md:items-center gap-3"> 
+     {/* LEFT — Search + Select */}
+        <div className="flex items-center gap-3 w-full md:w-auto">
+
+          {/* 🔍 SEARCH */}
+          <SearchBarCommon
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="Search customer..."
           />
-        </div> */}
+
+          {/* 🔽 SELECT BOX */}
+          <SelectBoxCommon
+            value={filterType}
+            onChange={setFilterType}
+            options={[
+              { value: "all", label: "All Customers" },
+              { value: "new", label: "New Customers" },
+              { value: "active", label: "Active Customers" },
+              { value: "inactive", label: "Inactive Customers" },
+            ]}
+          />
+        </div>
+        
+        <div className="flex items-center gap-3">
 
         <DownloadDataButton
           data={dataList} // ✅ all data
@@ -149,6 +187,7 @@ const paginatedData = filteredData.slice(
           <PlusCircle size={16} />
           Add Product
         </button>
+      </div>
       </div>
 
       {/* ✅ Editable Table */}

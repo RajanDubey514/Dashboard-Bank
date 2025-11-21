@@ -9,6 +9,10 @@ import AddUnitMaster from "../../../productPage/addProduct/AddUnitMaster";
 import EditUnitMaster from "../../../productPage/updateProduct/EditUnitMaster";
 import { fakeUnitMasterData } from "../../../../components/FakeData";
 
+// ✅ NEW COMMON COMPONENTS
+import SearchBarCommon from "../../../../components/searchComp/SearchBar";
+import SelectBoxCommon from "../../../../components/searchComp/SelectBoxCommon";
+
 const ShowUnitMaster = () => {
   const [dataList, setDataList] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -23,28 +27,44 @@ const ShowUnitMaster = () => {
   const [showInlineForm, setShowInlineForm] = useState(false);
   const [showInlineEditForm, setShowInlineEditForm] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
+  const [filterType, setFilterType] = useState("all"); // 🔥 NEW FILTER STATE
+  
 
-  // ✅ Initial fake data
-  useEffect(() => {
-    setDataList(fakeUnitMasterData);
-    setFilteredData(fakeUnitMasterData);
-  }, []);
-
-  // ✅ Search
-  useEffect(() => {
-    if (!searchQuery.trim()) setFilteredData(dataList);
-    else {
-      const q = searchQuery.toLowerCase();
-      setFilteredData(
-        dataList.filter((item) =>
-          Object.values(item).some(
-            (val) => val && val.toString().toLowerCase().includes(q)
-          )
-        )
-      );
-    }
-    setCurrentPage(1);
-  }, [searchQuery, dataList]);
+ // 🔹 Load initial data
+        useEffect(() => {
+          setDataList(fakeUnitMasterData);
+          setFilteredData(fakeUnitMasterData);
+        }, []);
+      
+        // 🔹 Apply FILTER + SEARCH
+        useEffect(() => {
+          let updated = [...dataList];
+      
+          if (filterType === "new") {
+            updated = updated.filter((item) => item.isNew === true);
+          }
+      
+          if (filterType === "active") {
+            updated = updated.filter((item) => item.status === "Active");
+          }
+      
+          if (filterType === "inactive") {
+            updated = updated.filter((item) => item.status === "Inactive");
+          }
+      
+          if (searchQuery) {
+            const q = searchQuery.toLowerCase();
+            updated = updated.filter((item) =>
+              Object.values(item).some(
+                (val) =>
+                  typeof val === "string" && val.toLowerCase().includes(q)
+              )
+            );
+          }
+      
+          setFilteredData(updated);
+          setCurrentPage(1);
+        }, [filterType, searchQuery, dataList]);
 
   // ✅ Sort
   const onSort = (key) => {
@@ -106,7 +126,32 @@ const ShowUnitMaster = () => {
   return (
     <div className="p-2 space-y-5 w-full">
       {/* Top Controls */}
-      <div className="flex justify-end items-center gap-3">
+      <div className="flex flex-col md:flex-row justify-between md:items-center gap-3">
+  
+       {/* LEFT — Search + Select */}
+        <div className="flex items-center gap-3 w-full md:w-auto">
+
+          {/* 🔍 SEARCH */}
+          <SearchBarCommon
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="Search customer..."
+          />
+
+          {/* 🔽 SELECT BOX */}
+          <SelectBoxCommon
+            value={filterType}
+            onChange={setFilterType}
+            options={[
+              { value: "all", label: "All Customers" },
+              { value: "new", label: "New Customers" },
+              { value: "active", label: "Active Customers" },
+              { value: "inactive", label: "Inactive Customers" },
+            ]}
+          />
+        </div>
+
+        <div className="flex items-center gap-3"> 
         <DownloadDataButton data={dataList} fileName="SubMainGroupDetails" />
         <button
           onClick={handleAddClick}
@@ -116,6 +161,7 @@ const ShowUnitMaster = () => {
           <PlusCircle size={12} />
           Add Unit Master
         </button>
+      </div>
       </div>
 
       {/* Inline Add Form */}

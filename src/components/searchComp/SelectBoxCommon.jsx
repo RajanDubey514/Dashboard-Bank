@@ -1,18 +1,20 @@
 import React from "react";
 
-const SearchBar = ({ value, onChange, placeholder = "Search..." }) => {
+const SelectBoxCommon = ({
+  value,
+  onChange,
+  options = [],
+}) => {
   return (
-    <input
-      type="text"
+    <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholder}
       className="
         w-full
         sm:w-full
-        md:w-64
-        lg:w-72
-        xl:w-80
+        md:w-48
+        lg:w-56
+        xl:w-64
         px-3 py-2
         border rounded-lg text-sm shadow-sm
         outline-none
@@ -23,8 +25,14 @@ const SearchBar = ({ value, onChange, placeholder = "Search..." }) => {
         borderColor: "var(--color-primary)",
         "--tw-ring-color": "var(--color-primary)",
       }}
-    />
+    >
+      {options.map((item, index) => (
+        <option key={index} value={item.value}>
+          {item.label}
+        </option>
+      ))}
+    </select>
   );
 };
 
-export default SearchBar;
+export default SelectBoxCommon;

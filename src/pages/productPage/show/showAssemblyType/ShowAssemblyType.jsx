@@ -9,11 +9,17 @@ import Pagination from "../../../../components/pagination/Pagination";
 import DownloadDataButton from "../../../../components/DownloadData/DownloadDataButton";
 import { fakeAssemblyTypeData } from "../../../../components/FakeData";
 
+// ✅ NEW COMMON COMPONENTS
+import SearchBarCommon from "../../../../components/searchComp/SearchBar";
+import SelectBoxCommon from "../../../../components/searchComp/SelectBoxCommon";
+
 const ShowAssemblyType = () => {
   const [dataList, setDataList] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedData, setSelectedData] = useState(null);
+      const [filterType, setFilterType] = useState("all"); // 🔥 NEW FILTER STATE
+  
 
   // 📱 / 🖥️ Modal and Inline Form states
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -25,27 +31,42 @@ const ShowAssemblyType = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  // ✅ Load fake data
-  useEffect(() => {
-    setDataList(fakeAssemblyTypeData);
-    setFilteredData(fakeAssemblyTypeData);
-  }, []);
-
-  // ✅ Search filter
-  useEffect(() => {
-    if (!searchQuery.trim()) {
-      setFilteredData(dataList);
-    } else {
-      const query = searchQuery.toLowerCase();
-      const filtered = dataList.filter((item) =>
-        Object.values(item).some(
-          (val) => val && val.toString().toLowerCase().includes(query)
-        )
-      );
-      setFilteredData(filtered);
-    }
-    setCurrentPage(1);
-  }, [searchQuery, dataList]);
+  
+  // 🔹 Load initial data
+      useEffect(() => {
+        setDataList(fakeAssemblyTypeData);
+        setFilteredData(fakeAssemblyTypeData);
+      }, []);
+    
+      // 🔹 Apply FILTER + SEARCH
+      useEffect(() => {
+        let updated = [...dataList];
+    
+        if (filterType === "new") {
+          updated = updated.filter((item) => item.isNew === true);
+        }
+    
+        if (filterType === "active") {
+          updated = updated.filter((item) => item.status === "Active");
+        }
+    
+        if (filterType === "inactive") {
+          updated = updated.filter((item) => item.status === "Inactive");
+        }
+    
+        if (searchQuery) {
+          const q = searchQuery.toLowerCase();
+          updated = updated.filter((item) =>
+            Object.values(item).some(
+              (val) =>
+                typeof val === "string" && val.toLowerCase().includes(q)
+            )
+          );
+        }
+    
+        setFilteredData(updated);
+        setCurrentPage(1);
+      }, [filterType, searchQuery, dataList]);
 
   // ✅ Sorting logic
   const onSort = (key) => {
@@ -117,7 +138,32 @@ const ShowAssemblyType = () => {
   return (
     <div className="p-2 md:p-2 space-y-5 w-full">
       {/* 🔍 Top Controls */}
-      <div className="flex justify-end items-center gap-3">
+      <div className="flex flex-col md:flex-row justify-between md:items-center gap-3">
+
+       {/* LEFT — Search + Select */}
+        <div className="flex items-center gap-3 w-full md:w-auto">
+
+          {/* 🔍 SEARCH */}
+          <SearchBarCommon
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="Search customer..."
+          />
+
+          {/* 🔽 SELECT BOX */}
+          <SelectBoxCommon
+            value={filterType}
+            onChange={setFilterType}
+            options={[
+              { value: "all", label: "All Customers" },
+              { value: "new", label: "New Customers" },
+              { value: "active", label: "Active Customers" },
+              { value: "inactive", label: "Inactive Customers" },
+            ]}
+          />
+        </div>
+
+        <div className="flex items-center gap-3"> 
         <DownloadDataButton data={dataList} fileName="AssemblyTypeData" />
 
         <button
@@ -128,6 +174,7 @@ const ShowAssemblyType = () => {
           <PlusCircle size={12} />
           Add Assembly Type
         </button>
+        </div>
       </div>
 
       {/* 🖥️ Inline Add Form */}
