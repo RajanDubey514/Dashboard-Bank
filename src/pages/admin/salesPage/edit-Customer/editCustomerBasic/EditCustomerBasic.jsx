@@ -93,9 +93,9 @@ const EditCustomerBasic = ({ selectedData, dataList, setDataList, closeEditModal
       <form onSubmit={formik.handleSubmit}
        id="addForm"
        className="overflow-y-auto flex-1 space-y-4 pr-2">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Text Fields */}
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <RequiredLabel label="Customer Name" />
             <input
               type="text"
@@ -110,7 +110,7 @@ const EditCustomerBasic = ({ selectedData, dataList, setDataList, closeEditModal
             )}
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <RequiredLabel label="Customer Code" />
             <input
               type="text"
@@ -125,7 +125,7 @@ const EditCustomerBasic = ({ selectedData, dataList, setDataList, closeEditModal
             )}
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <RequiredLabel label="Contact Person" />
             <input
               type="text"
@@ -140,7 +140,7 @@ const EditCustomerBasic = ({ selectedData, dataList, setDataList, closeEditModal
             )}
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Designation</label>
             <input
               type="text"
@@ -152,7 +152,7 @@ const EditCustomerBasic = ({ selectedData, dataList, setDataList, closeEditModal
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Email</label>
             <input
               type="email"
@@ -164,7 +164,7 @@ const EditCustomerBasic = ({ selectedData, dataList, setDataList, closeEditModal
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">City</label>
             <input
               type="text"
@@ -177,7 +177,7 @@ const EditCustomerBasic = ({ selectedData, dataList, setDataList, closeEditModal
           </div>
 
           {/* Number Fields */}
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <RequiredLabel label="Mobile Number" />
             <input
               type="number"
@@ -192,7 +192,7 @@ const EditCustomerBasic = ({ selectedData, dataList, setDataList, closeEditModal
             )}
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Contact Number</label>
             <input
               type="number"
@@ -204,7 +204,7 @@ const EditCustomerBasic = ({ selectedData, dataList, setDataList, closeEditModal
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">FAX</label>
             <input
               type="number"
@@ -216,7 +216,7 @@ const EditCustomerBasic = ({ selectedData, dataList, setDataList, closeEditModal
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Pincode</label>
             <input
               type="number"
@@ -228,7 +228,7 @@ const EditCustomerBasic = ({ selectedData, dataList, setDataList, closeEditModal
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Credit Limit</label>
             <input
               type="number"
@@ -240,7 +240,7 @@ const EditCustomerBasic = ({ selectedData, dataList, setDataList, closeEditModal
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Credit Days</label>
             <input
               type="number"
@@ -253,7 +253,7 @@ const EditCustomerBasic = ({ selectedData, dataList, setDataList, closeEditModal
           </div>
 
           {/* Select Fields */}
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <RequiredLabel label="Country" />
             <Select
               options={countryOptions}
@@ -266,7 +266,7 @@ const EditCustomerBasic = ({ selectedData, dataList, setDataList, closeEditModal
             )}
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <RequiredLabel label="State" />
             <Select
               options={stateOptions}
@@ -279,7 +279,7 @@ const EditCustomerBasic = ({ selectedData, dataList, setDataList, closeEditModal
             )}
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <RequiredLabel label="Customer Type" />
             <Select
               options={customerTypeOptions}
@@ -293,7 +293,7 @@ const EditCustomerBasic = ({ selectedData, dataList, setDataList, closeEditModal
           </div>
 
           {/* Address */}
-          <div className="col-span-2 flex flex-col gap-1">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
             <RequiredLabel label="Address" />
             <textarea
               name="address"

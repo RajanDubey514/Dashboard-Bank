@@ -139,7 +139,7 @@ const UserCridiatials = ({ selectedData, dataList, setDataList, onClose }) => {
         </div>
 
         {/* ===== ACTION BUTTONS ===== */}
-        <div className="flex justify-end gap-4 pt-3">
+        <div className="p-3 flex justify-end gap-4 bg-white sticky -bottom-4">
           <button
             type="button"
             onClick={onClose}
