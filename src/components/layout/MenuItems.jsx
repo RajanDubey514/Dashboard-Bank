@@ -17,8 +17,6 @@ import {
 
 const MenuItems = [
   { name: "Dashboard", icon: LayoutGrid, path: "/" },
-  { name: "Product", icon: Package, path: "/product" },
-  { name: "Account", icon: Wallet, path: "/sale-add" },
 //   { name: "Setting", icon: Settings, path: "/setting" },
 
   {
@@ -146,10 +144,10 @@ const MenuItems = [
     // name: "Administration / Master Setup",
     icon: Users,
     subItems: [
-      { name: "Item Master", path: "/item-master" },
-      { name: "Ledger Master", path: "/ledger-master" },
-      { name: "User Management", path: "/user-management" },
-      { name: "BOM Master", path: "/bom-master" },
+      { name: "Product",  path: "/admin/product" },
+      { name: "Account", path: "/admin/account" },
+      { name: "User Management", path: "/admin/user-management" },
+      { name: "BOM Master", path: "/admin/bom" },
     ],
   },
 ];

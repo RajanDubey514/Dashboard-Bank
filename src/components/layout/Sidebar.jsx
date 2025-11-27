@@ -79,25 +79,27 @@ export default function Sidebar({ open, onClose, sidebarWidth = "w-60" }) {
 
               {/* Sub Menu */}
               {item.subItems && openMenu === item.name && (
-                <ul className="pl-8 mt-1 space-y-1 border-l border-white/10">
-                  {item.subItems.map((sub, sIdx) => (
-                    <li key={sIdx}>
-                      <NavLink
-                        to={sub.path}
-                        onClick={onClose}
-                        className="block px-3 py-1.5 rounded-lg hover:bg-white/10 transition-all"
-                        style={({ isActive }) => ({
-                          backgroundColor: isActive ? "var(--theme-accent)" : "transparent",
-                          color: isActive ? "#fff" : "var(--theme-text)",
-                          fontWeight: isActive ? "600" : "400",
-                        })}
-                      >
-                        {sub.name}
-                      </NavLink>
-                    </li>
-                  ))}
-                </ul>
-              )}
+              <ul className="pl-8 mt-1 space-y-1 border-l border-white/10">
+                {item.subItems.map((sub, sIdx) => (
+                  <li key={sIdx} className="list-disc">
+                    <NavLink
+                      to={sub.path}
+                      onClick={onClose}
+                      className={({ isActive }) =>
+                        `flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all 
+                        ${isActive
+                          ? "bg-[var(--theme-accent)] text-white font-semibold"
+                          : "text-[var(--theme-text)] hover:bg-[var(--theme-hover)] hover:translate-x-1"
+                        }`
+                      }
+                    >
+                      {/* Label */}
+                      <span>{sub.name}</span>
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            )}
             </div>
           ))}
         </nav>

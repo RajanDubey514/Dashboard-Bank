@@ -3,11 +3,13 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Login from "./pages/loginPage/Login";
 import Signup from "./pages/loginPage/Signup"; // ✅ Added Signup Page
 import Dashboard from "./pages/dashboard/Dashboard";
-import CustomerUrl from "./pages/salesPage/CustomerUrl";
+import CustomerUrl from "./pages//admin/salesPage/CustomerUrl";
 import MainLayout from "./layoutWraper/MainLayout";
 import Settings from "./pages/Settings";
 // import ShowProduct from "./pages/productPage/showProduct/ShowProduct";
-import ProductUrl from "./pages/productPage/ProductUrl";
+import ProductUrl from "./pages/admin/productPage/ProductUrl";
+import ShowBillOfMaterial from "./pages/admin/boi/show/ShowBillOfMaterial";
+import ShowuserManagment from "./pages/admin/userManagement/show/ShowuserManagment";
 
 // 🔒 PrivateRoute wrapper
 const PrivateRoute = ({ children }) => {
@@ -65,9 +67,11 @@ const App = () => {
       >
         {/* Nested routes inside layout */}
         <Route index element={<Dashboard />} />
-        <Route path="/sale-add" element={<CustomerUrl />} />
+        <Route path="/admin/account" element={<CustomerUrl />} />
+        <Route path="/admin/product" element={<ProductUrl />}/>
+        <Route path="/admin/bom" element={<ShowBillOfMaterial />}/>
+        <Route path="/admin/user-management" element={<ShowuserManagment />}/>
         <Route path="/setting" element={<Settings />} />
-        <Route path="/product" element={<ProductUrl />}/>
       </Route>
 
       {/* 🔁 Catch-all redirect */}

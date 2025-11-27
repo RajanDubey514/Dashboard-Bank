@@ -12,10 +12,28 @@ import { useLocation } from "react-router-dom";
 export default function MainLayout() {
     const location = useLocation();
   const [open, setOpen] = useState(false);
+   const pathname = location.pathname;
   
-    let path = location.pathname === "/" ? "Dashboard" : location.pathname.replace("/", "");
-     // Capitalize first letter
-     const title = path.charAt(0).toUpperCase() + path.slice(1);
+  // Custom title mapping
+const titleMapping = {
+  bom: "Bill Of Materials",     // optional alias
+  qc: "Quality Control",        // example
+  grn: "Goods Received Note",   // example
+};
+
+// If root path → Dashboard
+const title =
+  pathname === "/"
+    ? "Dashboard"
+    : (() => {
+        const parts = pathname.split("/").filter(Boolean); // remove empty values
+        const last = parts[parts.length - 1].toLowerCase();
+        // 1) Check custom mapping first
+        if (titleMapping[last]) return titleMapping[last];
+        // 2) Default fallback → Capitalize first letter
+        return last.charAt(0).toUpperCase() + last.slice(1);
+      })();
+
 
   return (
     <div className="flex h-screen w-screen bg-slate-50 overflow-hidden">

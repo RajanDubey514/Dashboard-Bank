@@ -1,38 +1,45 @@
 import React from "react";
+import FilterCardsCommon from "./FilterCardsCommon";
+import { Layers, PlusCircle, Clock, CheckCircle } from "lucide-react";
 
-const SelectBoxCommon = ({
-  value,
-  onChange,
-  options = [],
-}) => {
+export default function SelectBoxCommon({ value, onChange, dataList = [] }) {
+  console.log(value)
+  console.log(dataList)
+  // Dynamic counts
+  const filterOptions = [
+    {
+      label: "All",
+      value: "all",
+      count: dataList.length,
+      icon: <Layers size={20} className="text-blue-600" />,
+    },
+    {
+      label: "New Today",
+      value: "today",
+      count: dataList.filter((d) => d.isNew).length,
+      icon: <PlusCircle size={20} className="text-purple-600" />,
+    },
+    {
+      label: "Active",
+      value: "active",
+      count: dataList.filter((d) => d.active === "active").length,
+      icon: <CheckCircle size={20} className="text-green-600" />,
+    },
+    {
+      label: "Inactive",
+      value: "inactive",
+      count: dataList.filter((d) => d.status === "Inactive").length,
+      icon: <Clock size={20} className="text-orange-500" />,
+    },
+  ];
+
   return (
-    <select
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="
-        w-full
-        sm:w-full
-        md:w-48
-        lg:w-56
-        xl:w-64
-        px-3 py-2
-        border rounded-lg text-sm shadow-sm
-        outline-none
-        focus:ring-2
-        transition
-      "
-      style={{
-        borderColor: "var(--color-primary)",
-        "--tw-ring-color": "var(--color-primary)",
-      }}
-    >
-      {options.map((item, index) => (
-        <option key={index} value={item.value}>
-          {item.label}
-        </option>
-      ))}
-    </select>
-  );
-};
+    <div className="p-2">
+      <FilterCardsCommon value={value} onChange={onChange} options={filterOptions} />
 
-export default SelectBoxCommon;
+      {/* <div className="mt-5 p-1 bg-gray-100 rounded-lg">
+        <strong>Selected Filter: </strong> {filter}
+      </div> */}
+    </div>
+  );
+}

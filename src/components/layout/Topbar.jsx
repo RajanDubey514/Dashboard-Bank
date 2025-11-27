@@ -77,7 +77,11 @@ export default function Topbar() {
     >
       <div className="flex items-center gap-1">
         {/* 🎨 Theme Selector */}
-        <div className="relative hidden md:block " ref={themeRef}   style={{ color: "var(--color-primary)" }}>
+        <div
+          className="relative hidden md:block "
+          ref={themeRef}
+          style={{ color: "var(--color-primary)" }}
+        >
           <Tooltip text="Change Theme">
             <button
               onClick={() => {
@@ -88,7 +92,6 @@ export default function Topbar() {
                 setShowBusinessSelect(false);
               }}
               className="relative p-1 rounded-full hover:opacity-80 transition"
-            
             >
               <Palette size={18} />
             </button>
@@ -251,7 +254,9 @@ export default function Topbar() {
               <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-sm font-medium">
                 J
               </div>
-              <span className="hidden md:inline text-sm font-medium ">John</span>
+              <span className="hidden md:inline text-sm font-medium ">
+                John
+              </span>
             </div>
           </Tooltip>
 

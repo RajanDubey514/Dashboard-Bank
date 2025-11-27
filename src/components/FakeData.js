@@ -1048,25 +1048,25 @@ export const fakeAssemblyTypeData = [
     id: 1,
     assemblyTypeName: "Electrical Assembly",
     remark: "Used for electrical components and circuits",
-    isActive: true,
+    active: true,
   },
   {
     id: 2,
     assemblyTypeName: "Mechanical Assembly",
     remark: "Includes metal and structural assemblies",
-    isActive: false,
+    active: false,
   },
   {
     id: 3,
     assemblyTypeName: "Plastic Assembly",
     remark: "Used for molded plastic parts",
-    isActive: true,
+    active: true,
   },
   {
     id: 4,
     assemblyTypeName: "Packaging Assembly",
     remark: "For packaging and shipping materials",
-    isActive: true,
+    active: true,
   },
 ];
 
@@ -1100,3 +1100,181 @@ export const fakeUnitMasterData = [
 ];
 
 
+
+export const fakeItemMaterialData = [
+  {
+    id: 1,
+    itemCode: "ITM-1001",
+    itemName: "Electric Motor",
+    unit: "PCS",
+    quantity: 10,
+    material: "Copper Wire",
+    materialQuantity: 25, // kg
+    materialRate: 760,
+    materialAmount: 25 * 760,
+  },
+  {
+    id: 2,
+    itemCode: "ITM-1002",
+    itemName: "Steel Frame",
+    unit: "PCS",
+    quantity: 5,
+    material: "Mild Steel Sheet",
+    materialQuantity: 40, // kg
+    materialRate: 55,
+    materialAmount: 40 * 55,
+  },
+  {
+    id: 3,
+    itemCode: "ITM-1003",
+    itemName: "Control Panel",
+    unit: "SET",
+    quantity: 3,
+    material: "Electronic Components",
+    materialQuantity: 12, // packets
+    materialRate: 210,
+    materialAmount: 12 * 210,
+  },
+  {
+    id: 4,
+    itemCode: "ITM-1004",
+    itemName: "Hydraulic Pump",
+    unit: "PCS",
+    quantity: 7,
+    material: "Hydraulic Oil",
+    materialQuantity: 18, // liters
+    materialRate: 120,
+    materialAmount: 18 * 120,
+  },
+  {
+    id: 5,
+    itemCode: "ITM-1005",
+    itemName: "Gear Assembly",
+    unit: "PCS",
+    quantity: 15,
+    material: "Alloy Steel Rod",
+    materialQuantity: 30, // kg
+    materialRate: 95,
+    materialAmount: 30 * 95,
+  },
+];
+
+
+
+export const fakeDepartments = ["HR", "IT", "Sales", "Production"];
+export const fakeUserRoles = ["Admin", "Manager", "Executive", "Viewer"];
+export const fakeStatuses = ["Active", "Inactive"];
+
+
+export const FakeUserData = [
+  {
+    id: 1,
+    fullName: "Rohit Sharma",
+    email: "rohit.sharma@example.com",
+    phone: "9876543210",
+    department: "Sales",
+    userRole: "Manager",
+    status: "Active",
+    username: "rohit_s",
+    expiryDate: "2025-12-31"
+  },
+  {
+    id: 2,
+    fullName: "Priya Verma",
+    email: "priya.verma@example.com",
+    phone: "9988776655",
+    department: "Marketing",
+    userRole: "Executive",
+    status: "Inactive",
+    username: "priya_v",
+    expiryDate: "2025-11-15"
+  },
+  {
+    id: 3,
+    fullName: "Aman Gupta",
+    email: "aman.gupta@example.com",
+    phone: "9090909090",
+    department: "HR",
+    userRole: "HR Assistant",
+    status: "Active",
+    username: "aman_g",
+    expiryDate: "2026-01-20"
+  },
+  {
+    id: 4,
+    fullName: "Sneha Pandey",
+    email: "sneha.pandey@example.com",
+    phone: "9123456789",
+    department: "Finance",
+    userRole: "Accountant",
+    status: "Active",
+    username: "sneha_p",
+    expiryDate: "2025-10-01"
+  },
+  {
+    id: 5,
+    fullName: "Vikas Singh",
+    email: "vikas.singh@example.com",
+    phone: "9812345678",
+    department: "IT",
+    userRole: "Developer",
+    status: "Inactive",
+    username: "vikas_dev",
+    expiryDate: "2025-09-30"
+  },
+  {
+    id: 6,
+    fullName: "Nisha Rao",
+    email: "nisha.rao@example.com",
+    phone: "8800112233",
+    department: "Admin",
+    userRole: "Admin Executive",
+    status: "Active",
+    username: "nisha_r",
+    expiryDate: "2026-02-11"
+  },
+  {
+    id: 7,
+    fullName: "Ajay Mehta",
+    email: "ajay.mehta@example.com",
+    phone: "7700998877",
+    department: "Support",
+    userRole: "Support Agent",
+    status: "Active",
+    username: "ajay_m",
+    expiryDate: "2025-08-19"
+  },
+  {
+    id: 8,
+    fullName: "Kritika Sharma",
+    email: "kritika.sharma@example.com",
+    phone: "9001122334",
+    department: "Sales",
+    userRole: "Sales Executive",
+    status: "Inactive",
+    username: "kritika_s",
+    expiryDate: "2026-05-05"
+  },
+  {
+    id: 9,
+    fullName: "Harsh Patel",
+    email: "harsh.patel@example.com",
+    phone: "9856231470",
+    department: "IT",
+    userRole: "Designer",
+    status: "Active",
+    username: "harsh_design",
+    expiryDate: "2026-03-15"
+  },
+  {
+    id: 10,
+    fullName: "Simran Kaur",
+    email: "simran.kaur@example.com",
+    phone: "9998877665",
+    department: "HR",
+    userRole: "Recruiter",
+    status: "Active",
+    username: "simran_hr",
+    expiryDate: "2025-07-22"
+  }
+];
