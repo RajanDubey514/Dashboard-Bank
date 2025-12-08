@@ -140,7 +140,7 @@ const DownloadDataButton = ({ data = [], fileName = "data" }) => {
       {/* Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-sm font-semibold shadow transition-all duration-300 hover:shadow-lg"
+        className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-xs font-semibold shadow transition-all duration-300 hover:shadow-lg"
         style={{ backgroundColor: "var(--color-primary)" }}
         onMouseEnter={(e) =>
           (e.currentTarget.style.backgroundColor = "var(--color-primary-hover)")

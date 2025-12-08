@@ -1,12 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { X, ChevronDown, ChevronUp, Settings, LogOut } from "lucide-react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import menuItems from "./MenuItems";
 import "./sidebar.css";
 
 export default function Sidebar({ open, onClose, sidebarWidth = "w-60" }) {
   const [openMenu, setOpenMenu] = useState(null);
+  const location = useLocation();
   const navigate = useNavigate();
+
+  // Extract page parameter (for admin)
+  const params = new URLSearchParams(location.search);
+  const activePage = params.get("page"); // e.g. "user-management"
+
+  // Automatically open submenu if its child is active
+  useEffect(() => {
+    menuItems.forEach((item) => {
+      if (item.subItems) {
+        const match = item.subItems.some((sub) => {
+          if (sub.path.includes("?page=")) {
+            return sub.path.includes(`page=${activePage}`);
+          }
+          return location.pathname === sub.path;
+        });
+
+        if (match) setOpenMenu(item.name);
+      }
+    });
+  }, [location]);
 
   const toggleSubMenu = (name) => {
     setOpenMenu(openMenu === name ? null : name);
@@ -79,27 +100,32 @@ export default function Sidebar({ open, onClose, sidebarWidth = "w-60" }) {
 
               {/* Sub Menu */}
               {item.subItems && openMenu === item.name && (
-              <ul className="pl-8 mt-1 space-y-1 border-l border-white/10">
-                {item.subItems.map((sub, sIdx) => (
-                  <li key={sIdx} className="list-disc">
-                    <NavLink
-                      to={sub.path}
-                      onClick={onClose}
-                      className={({ isActive }) =>
-                        `flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all 
-                        ${isActive
-                          ? "bg-[var(--theme-accent)] text-white font-semibold"
-                          : "text-[var(--theme-text)] hover:bg-[var(--theme-hover)] hover:translate-x-1"
-                        }`
-                      }
-                    >
-                      {/* Label */}
-                      <span>{sub.name}</span>
-                    </NavLink>
-                  </li>
-                ))}
-              </ul>
-            )}
+                <ul className="pl-8 mt-1 space-y-1 border-l border-white/10">
+                  {item.subItems.map((sub, sIdx) => {
+                    const isActive =
+                      sub.path.includes("?page=")
+                        ? sub.path.includes(`page=${activePage}`)
+                        : location.pathname === sub.path;
+
+                    return (
+                      <li key={sIdx} className="list-disc">
+                        <NavLink
+                          to={sub.path}
+                          onClick={onClose}
+                          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all 
+                          ${
+                            isActive
+                              ? "bg-[var(--theme-accent)] text-white font-semibold"
+                              : "text-[var(--theme-text)] hover:bg-[var(--theme-hover)] hover:translate-x-1"
+                          }`}
+                        >
+                          <span>{sub.name}</span>
+                        </NavLink>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
             </div>
           ))}
         </nav>

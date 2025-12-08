@@ -1,84 +1,110 @@
 import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Sidebar from "../components/layout/Sidebar";
 import Topbar from "../components/layout/Topbar";
-import { Menu } from "lucide-react";
 import Footer from "../components/footer/Footer";
-import { useLocation } from "react-router-dom";
-
-// If you don't want to import IconButton from MUI, replace with native button:
-// import { Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 
 export default function MainLayout() {
-    const location = useLocation();
+  const location = useLocation();
+  const pathname = location.pathname;
+  const params = new URLSearchParams(location.search);
+  const pageParam = params.get("page");
+
   const [open, setOpen] = useState(false);
-   const pathname = location.pathname;
-  
-  // Custom title mapping
-const titleMapping = {
-  bom: "Bill Of Materials",     // optional alias
-  qc: "Quality Control",        // example
-  grn: "Goods Received Note",   // example
-};
 
-// If root path → Dashboard
-const title =
-  pathname === "/"
-    ? "Dashboard"
-    : (() => {
-        const parts = pathname.split("/").filter(Boolean); // remove empty values
-        const last = parts[parts.length - 1].toLowerCase();
-        // 1) Check custom mapping first
-        if (titleMapping[last]) return titleMapping[last];
-        // 2) Default fallback → Capitalize first letter
-        return last.charAt(0).toUpperCase() + last.slice(1);
-      })();
+  /* ------------------------------------------
+      1️⃣ Page Title Mapping
+  ------------------------------------------- */
+  const pageTitleMap = {
+    product: "Product",
+    account: "Account",
+    bom: "Bill Of Material",
+    usermanagement: "User Management",
+  };
 
+  const fallbackTitleMap = {
+    dashboard: "Dashboard",
+    admin: "Admin Panel",
+    profile: "Profile",
+    settings: "Settings",
+  };
+
+  /* ------------------------------------------
+      2️⃣ Title Logic (Admin + Normal paths)
+  ------------------------------------------- */
+
+  let title = "Dashboard";
+
+  // Case 1: Admin query-based pages
+  if (pathname === "/admin" && pageParam) {
+    title =
+      pageTitleMap[pageParam] ||
+      pageParam.charAt(0).toUpperCase() + pageParam.slice(1);
+  } else {
+    // Case 2: Normal routes
+    const parts = pathname.split("/").filter(Boolean);
+    const last = parts[parts.length - 1]?.toLowerCase() || "dashboard";
+    title =
+      fallbackTitleMap[last] ||
+      last.charAt(0).toUpperCase() + last.slice(1);
+  }
+
+  /* ------------------------------------------
+      3️⃣ Layout UI
+  ------------------------------------------- */
 
   return (
     <div className="flex h-screen w-screen bg-slate-50 overflow-hidden">
+
       {/* Sidebar */}
       <Sidebar open={open} onClose={() => setOpen(false)} sidebarWidth="w-55" />
 
-      {/* Main content wrapper */}
+      {/* Main Area */}
       <div
         className={`
           flex flex-col flex-1 min-w-0 transition-all duration-300 ease-in-out
           ${open ? "md:ml-60" : "md:ml-0"}
         `}
       >
-        {/* Topbar + mobile menu button row */}
+
+        {/* Topbar */}
         <div className="sticky top-0 z-30 bg-white shadow-sm">
-          {/* 🔹 Mobile Header Section (menu + title + topbar right aligned) */}
-          <div className="flex items-center justify-between p-1 border-b border-slate-200">
-            {/* Left side: Drawer toggle + title */}
+          <div className="flex items-center justify-between p-2 border-b border-slate-200">
+
+            {/* Left: Menu + Title */}
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setOpen(true)}
                 className="p-2 rounded-md hover:bg-slate-100 transition md:hidden"
-                aria-label="Open drawer"
               >
                 <Menu size={18} />
               </button>
-              <div className="text-base md:text-medium font-semibold text-slate-700 " style={{ color: "var(--color-primary)" }}>
+
+              <div
+                className="text-base md:text-lg font-semibold text-slate-700"
+                style={{ color: "var(--color-primary)" }}
+              >
                 {title}
               </div>
             </div>
 
-            {/* Right side: Topbar content */}
-            <div className="flex items-center justify-end">
+            {/* Right: Topbar */}
+            <div className="flex items-center">
               <Topbar />
             </div>
           </div>
         </div>
 
-        {/* Routed content */}
+        {/* Routed Content */}
         <main className="flex-1 overflow-auto p-1">
           <div className="">
             <Outlet />
           </div>
         </main>
-            <Footer />
+
+        {/* Footer */}
+        <Footer />
       </div>
     </div>
   );

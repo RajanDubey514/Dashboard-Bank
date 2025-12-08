@@ -78,20 +78,20 @@ const UserCridiatials = ({ selectedData, dataList, setDataList, onClose }) => {
   };
 
   return (
-    <div className="p-4 bg-gray-50 rounded-lg">
+    <div className="p-2 bg-gray-50 rounded-lg">
       <form onSubmit={formik.handleSubmit} className="space-y-6">
 
         {/* ===== PERMISSION CARDS ===== */}
         {Object.keys(modules).map((module) => (
           <fieldset
             key={module}
-            className="border border-gray-200 bg-white shadow-sm hover:shadow-md rounded-xl p-5 transition-all"
+            className="border  border-gray-200 bg-white shadow-sm hover:shadow-md rounded-xl p-5 transition-all"
           >
             {/* LEGEND TITLE */}
-            <legend className="px-2 text-indigo-700 font-semibold text-lg capitalize flex items-center gap-2">
+            <legend className="px-2 text-xs text-indigo-700 font-semibold  capitalize flex items-center gap-2">
               <input
                 type="checkbox"
-                className="h-4 w-4"
+                className="h-3 w-3"
                 checked={formik.values.permissions[module].enabled}
                 onChange={(e) => handleMasterToggle(module, e.target.checked)}
               />
@@ -103,12 +103,12 @@ const UserCridiatials = ({ selectedData, dataList, setDataList, onClose }) => {
               {modules[module].map((p) => (
                 <label
                   key={p}
-                  className={`flex items-center gap-2 text-sm capitalize 
+                  className={`flex items-center gap-2 text-xs capitalize 
                   ${formik.values.permissions[module].enabled ? "text-gray-800" : "text-gray-400"}`}
                 >
                   <input
                     type="checkbox"
-                    className="h-4 w-4"
+                    className="h-3 w-3"
                     disabled={!formik.values.permissions[module].enabled}
                     checked={formik.values.permissions[module][p]}
                     onChange={(e) =>
@@ -127,11 +127,11 @@ const UserCridiatials = ({ selectedData, dataList, setDataList, onClose }) => {
 
         {/* ===== NOTES FIELD ===== */}
         <div className="flex flex-col gap-1">
-          <label className="font-medium text-gray-700 text-sm">Additional Notes</label>
+          <label className="font-medium text-gray-700 text-xs">Additional Notes</label>
           <textarea
             name="note"
             rows="3"
-            className="border rounded-lg p-3 text-sm bg-white shadow-sm focus:ring-2 focus:ring-indigo-400 outline-none transition"
+            className="border rounded-lg p-3 text-xs bg-white shadow-sm focus:ring-2 focus:ring-indigo-400 outline-none transition"
             value={formik.values.note}
             onChange={formik.handleChange}
             placeholder="Write notes here..."
@@ -143,14 +143,14 @@ const UserCridiatials = ({ selectedData, dataList, setDataList, onClose }) => {
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2 text-sm font-medium border border-red-400 text-red-600 rounded-lg hover:bg-red-50 transition"
+            className="px-5 py-2 text-xs font-medium border border-red-400 text-red-600 rounded-lg hover:bg-red-50 transition"
           >
             Close
           </button>
 
           <button
             type="submit"
-            className="px-6 py-2 text-sm font-medium bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-md transition"
+            className="px-6 py-2 text-xs font-medium bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-md transition"
           >
             Save Permissions
           </button>

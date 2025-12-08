@@ -1,297 +1,538 @@
-import React, { useState, useEffect } from "react";
+// UpdateBillOfMaterials.jsx
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
+import Select from "react-select";
 import * as Yup from "yup";
 import { alertSuccess } from "../../../../components/alert/Alert";
-import { fakeMainProductData } from "../../../../components/FakeData";
+import { fakeMainProductData, fakeMaterialList } from "../../../../components/FakeData";
 
-// ⭐ Reusable required label
+// small required label component
 const RequiredLabel = ({ label }) => (
   <label className="text-sm font-medium text-gray-700">
     {label} <span className="text-red-600 ml-1">(*)</span>
   </label>
 );
 
-// ⭐ Validation Schema
 const validationSchema = Yup.object({
   selectedProduct: Yup.string().required("Please select product"),
-  requiredItemCode: Yup.string().required("Item code is required"),
-  requiredItemName: Yup.string().required("Item name is required"),
-  unit: Yup.string().required("Unit is required"),
-  quantity: Yup.number().typeError("Enter valid number").required("Quantity is required"),
-
-  material: Yup.string().required("Material name is required"),
-  materialQuantity: Yup.number().typeError("Invalid").required("Material quantity is required"),
-  materialRate: Yup.number().typeError("Invalid").required("Material rate is required"),
-  materialAmount: Yup.number().typeError("Invalid").required("Material amount is required"),
 });
 
-const UpdateBillOfMaterials = ({ selectedData, dataList, setDataList, closeModal }) => {
+export default function UpdateBillOfMaterials({
+  selectedData = null,
+  dataList = [],
+  setDataList = () => {},
+  closeModal = null,
+}) {
+  // lists
   const [productList, setProductList] = useState([]);
+  // table rows (editable)
+  const [requiredRows, setRequiredRows] = useState([]);
+  const [consumableRows, setConsumableRows] = useState([]);
 
-  // ⭐ Load dropdown product list
+  // temp storage for adding a required material (selected via react-select)
+  const [tempRequiredMat, setTempRequiredMat] = useState(null);
+  // temp storage for adding a consumable material
+  const [tempConsumableMat, setTempConsumableMat] = useState(null);
+
   useEffect(() => {
-    setProductList(fakeMainProductData);
+    setProductList(fakeMainProductData || []);
   }, []);
+
+  // initialize tables from selectedData when component mounts / selectedData changes
+  useEffect(() => {
+    if (!selectedData) {
+      setRequiredRows([]);
+      setConsumableRows([]);
+      return;
+    }
+
+    // if selectedData uses the Option A structure, it has requiredRows & consumableRows
+    setRequiredRows(
+      (selectedData.requiredRows || []).map((r) => ({
+        ...r,
+      }))
+    );
+
+    setConsumableRows(
+      (selectedData.consumableRows || []).map((r) => ({
+        ...r,
+      }))
+    );
+  }, [selectedData]);
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      selectedProduct: selectedData?.selectedProduct || "",
-      autoProductCode: selectedData?.autoProductCode || "",
-      requiredItemCode: selectedData?.requiredItemCode || "",
-      requiredItemName: selectedData?.requiredItemName || "",
-      unit: selectedData?.unit || "",
-      quantity: selectedData?.quantity || "",
+      selectedProduct: selectedData?.selectedProduct ?? "",
+      autoProductCode: selectedData?.autoProductCode ?? "",
 
-      material: selectedData?.material || "",
-      materialQuantity: selectedData?.materialQuantity || "",
-      materialRate: selectedData?.materialRate || "",
-      materialAmount: selectedData?.materialAmount || "",
+      // fields for adding required row
+      requiredQty: "",
+      // fields for adding consumable row
+      materialQty: "",
+      materialRate: "",
     },
     validationSchema,
     onSubmit: (values) => {
-      // Update the selected item in the list
+      // build updated item
+      const updatedItem = {
+        ...selectedData,
+        selectedProduct: values.selectedProduct,
+        autoProductCode: values.autoProductCode,
+        requiredRows,
+        consumableRows,
+      };
+
       const updatedList = dataList.map((item) =>
-        item.id === selectedData.id ? { ...item, ...values } : item
+        item.id === selectedData.id ? updatedItem : item
       );
+
       setDataList(updatedList);
       alertSuccess("Bill of Material updated successfully!");
-      if (closeModal) closeModal();
+      if (typeof closeModal === "function") closeModal();
     },
   });
 
-  // ⭐ Auto fill product code, item name, and unit when product is selected
+  // when product changes, auto-fill product code (and optional related values)
   useEffect(() => {
-    if (!formik.values.selectedProduct) return;
-
+    if (!formik.values.selectedProduct) {
+      formik.setFieldValue("autoProductCode", "");
+      return;
+    }
     const selected = productList.find(
-      (p) => p.id === Number(formik.values.selectedProduct)
+      (p) => Number(p.id) === Number(formik.values.selectedProduct)
     );
-
     if (selected) {
       formik.setFieldValue("autoProductCode", selected.productCode);
-      formik.setFieldValue("requiredItemName", selected.productName);
-      formik.setFieldValue("unit", selected.saleUom);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formik.values.selectedProduct, productList]);
 
-  // ⭐ Auto calculate Material Amount = Qty × Rate
-  useEffect(() => {
-    const qty = Number(formik.values.materialQuantity);
-    const rate = Number(formik.values.materialRate);
+  /* -------------------------
+     Required Material handlers
+     ------------------------- */
 
-    if (!isNaN(qty) && !isNaN(rate)) {
-      formik.setFieldValue("materialAmount", qty * rate, false); // false avoids validation loop
+  // when user picks material from react-select for Required Material
+  const onSelectRequiredMaterial = (mat) => {
+    if (!mat) {
+      setTempRequiredMat(null);
+      return;
     }
-  }, [formik.values.materialQuantity, formik.values.materialRate]);
+    setTempRequiredMat({
+      id: mat.id,
+      name: mat.name,
+      code: mat.code,
+      unit: mat.unit,
+    });
+  };
+
+  const addRequiredRow = () => {
+    // require a selected material and a qty
+    if (!tempRequiredMat || !formik.values.requiredQty) return;
+
+    const newRow = {
+      id: Date.now(),
+      itemName: tempRequiredMat.name,
+      itemCode: tempRequiredMat.code,
+      unit: tempRequiredMat.unit,
+      quantity: formik.values.requiredQty,
+    };
+
+    setRequiredRows((prev) => [...prev, newRow]);
+
+    // reset
+    setTempRequiredMat(null);
+    formik.setFieldValue("requiredQty", "");
+  };
+
+  const deleteRequiredRow = (id) => {
+    setRequiredRows((prev) => prev.filter((r) => r.id !== id));
+  };
+
+  // update an existing required row field (quantity)
+  const updateRequiredRow = (id, field, value) => {
+    setRequiredRows((prev) =>
+      prev.map((r) => (r.id === id ? { ...r, [field]: value } : r))
+    );
+  };
+
+  /* -------------------------
+     Consumable Material handlers
+     ------------------------- */
+
+  const onSelectConsumableMaterial = (mat) => {
+    if (!mat) {
+      setTempConsumableMat(null);
+      return;
+    }
+    setTempConsumableMat({
+      id: mat.id,
+      name: mat.name,
+      code: mat.code,
+      unit: mat.unit,
+    });
+  };
+
+  const addConsumableRow = () => {
+    if (!tempConsumableMat || !formik.values.materialQty || !formik.values.materialRate) return;
+
+    const qty = Number(formik.values.materialQty);
+    const rate = Number(formik.values.materialRate);
+    const amount = !isNaN(qty) && !isNaN(rate) ? qty * rate : "";
+
+    const newRow = {
+      id: Date.now(),
+      material: tempConsumableMat.name,
+      materialCode: tempConsumableMat.code,
+      unit: tempConsumableMat.unit,
+      qty: formik.values.materialQty,
+      rate: formik.values.materialRate,
+      amount,
+    };
+
+    setConsumableRows((prev) => [...prev, newRow]);
+
+    // reset
+    setTempConsumableMat(null);
+    formik.setFieldValue("materialQty", "");
+    formik.setFieldValue("materialRate", "");
+  };
+
+  const deleteConsumableRow = (id) => {
+    setConsumableRows((prev) => prev.filter((r) => r.id !== id));
+  };
+
+  const updateConsumableRow = (id, field, value) => {
+    setConsumableRows((prev) =>
+      prev.map((r) => {
+        if (r.id !== id) return r;
+        const updated = { ...r, [field]: value };
+        if (field === "qty" || field === "rate") {
+          const qty = Number(field === "qty" ? value : r.qty);
+          const rate = Number(field === "rate" ? value : r.rate);
+          updated.amount = !isNaN(qty) && !isNaN(rate) ? qty * rate : "";
+        }
+        return updated;
+      })
+    );
+  };
+
+  /* -------------------------
+     react-select helpers
+     ------------------------- */
+  const materialOptions = (fakeMaterialList || []).map((m) => ({
+    ...m,
+    label: `${m.name} (${m.code}) — ${m.unit}`,
+    value: m.id,
+  }));
+
+  const productOptions = (productList || []).map((p) => ({
+    label: p.productName,
+    value: String(p.id),
+    code: p.productCode,
+  }));
 
   return (
     <div className="bg-white rounded-md h-full flex flex-col">
       <form
-        onSubmit={formik.handleSubmit}
         id="updateBill"
-        className="space-y-6 p-3 overflow-y-auto"
+        onSubmit={formik.handleSubmit}
+        className="space-y-4 overflow-y-auto"
       >
-        {/* 🔵 BLOCK 1 : Select Product */}
-        <fieldset className="border border-gray-300 rounded-md p-4 bg-gray-50 shadow-sm">
-          <legend className="px-2 text-lg font-semibold text-indigo-700">
-            Manufacturing Item
-          </legend>
+        {/* Manufacturing Item */}
+        <fieldset className="border border-gray-200 rounded-md bg-gray-50">
+          <legend className="px-2 text-md font-semibold text-indigo-700">Manufacturing Item</legend>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Product Select */}
-            <div className="flex flex-col gap-1">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 p-3">
+            <div>
               <RequiredLabel label="Product Name" />
-              <select
-                name="selectedProduct"
-                value={formik.values.selectedProduct}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
-              >
-                <option value="">-- Select Product --</option>
-                {productList.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.productName}
-                  </option>
-                ))}
-              </select>
+              <Select
+                options={productOptions}
+                value={productOptions.find((o) => o.value === String(formik.values.selectedProduct)) || null}
+                onChange={(opt) => {
+                  formik.setFieldValue("selectedProduct", opt ? opt.value : "");
+                  formik.setFieldValue("autoProductCode", opt ? opt.code : "");
+                }}
+                isClearable
+                placeholder="Select product..."
+                styles={{ menu: (base) => ({ ...base, zIndex: 9999 }) }}
+              />
               {formik.touched.selectedProduct && formik.errors.selectedProduct && (
-                <p className="text-xs text-red-500">{formik.errors.selectedProduct}</p>
+                <div className="text-xs text-red-600 mt-1">{formik.errors.selectedProduct}</div>
               )}
             </div>
 
-            {/* Auto-Filled Product Code */}
-            <div className="flex flex-col gap-1">
+            <div>
               <RequiredLabel label="Product Code" />
               <input
-                type="text"
-                name="autoProductCode"
-                value={formik.values.autoProductCode}
                 readOnly
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-gray-100"
+                value={formik.values.autoProductCode}
+                className="w-full border rounded px-3 py-2 text-sm bg-gray-100"
               />
             </div>
           </div>
         </fieldset>
 
-        {/* 🔵 BLOCK 2 : Required Material */}
-        <fieldset className="border border-gray-300 rounded-md p-4 bg-gray-50 shadow-sm">
-          <legend className="px-2 text-lg font-semibold text-indigo-700">
-            Required Material
-          </legend>
+        {/* Required Material */}
+        <fieldset className="border border-gray-200 rounded-md bg-gray-50">
+          <legend className="px-2 text-md font-semibold text-indigo-700">Required Material</legend>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Required Item Name */}
-            <div className="flex flex-col gap-1">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-3 items-end p-3">
+            <div className="md:col-span-2">
               <RequiredLabel label="Item Name" />
-              <input
-                type="text"
-                name="requiredItemName"
-                readOnly
-                value={formik.values.requiredItemName}
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-gray-100"
+              <Select
+                options={materialOptions}
+                value={tempRequiredMat ? { ...tempRequiredMat, label: `${tempRequiredMat.name} (${tempRequiredMat.code})`, value: tempRequiredMat.id } : null}
+                onChange={(sel) => onSelectRequiredMaterial(sel ? { id: sel.value, name: sel.name, code: sel.code, unit: sel.unit } : null)}
+                isClearable
+                placeholder="Select item..."
+                styles={{ menu: (base) => ({ ...base, zIndex: 9999 }) }}
+                getOptionLabel={(o) => o.label}
+                getOptionValue={(o) => o.value}
               />
-              {formik.touched.requiredItemName && formik.errors.requiredItemName && (
-                <p className="text-xs text-red-500">{formik.errors.requiredItemName}</p>
-              )}
             </div>
 
-            {/* Required Item Code */}
-            <div className="flex flex-col gap-1">
+            <div>
               <RequiredLabel label="Item Code" />
               <input
                 type="text"
-                name="requiredItemCode"
-                value={formik.values.autoProductCode}
-                onChange={formik.handleChange}
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+                readOnly
+                value={tempRequiredMat?.code || ""}
+                className="w-full border rounded px-3 py-2 text-sm bg-gray-100"
               />
-              {formik.touched.autoProductCode && formik.errors.autoProductCode && (
-                <p className="text-xs text-red-500">{formik.errors.autoProductCode}</p>
-              )}
             </div>
 
-            {/* Unit */}
-            <div className="flex flex-col gap-1">
+            <div>
               <RequiredLabel label="Unit" />
               <input
                 type="text"
-                name="unit"
-                value={formik.values.unit}
                 readOnly
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-gray-100"
+                value={tempRequiredMat?.unit || ""}
+                className="w-full border rounded px-3 py-2 text-sm bg-gray-100"
               />
             </div>
 
-            {/* Quantity */}
-            <div className="flex flex-col gap-1">
-              <RequiredLabel label="Quantity" />
+            <div>
+              <RequiredLabel label="Qty" />
               <input
                 type="number"
-                name="quantity"
-                value={formik.values.quantity}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+                value={formik.values.requiredQty}
+                onChange={(e) => formik.setFieldValue("requiredQty", e.target.value)}
+                className="w-full border rounded px-3 py-2 text-sm"
+                placeholder="0"
               />
-              {formik.touched.quantity && formik.errors.quantity && (
-                <p className="text-xs text-red-500">{formik.errors.quantity}</p>
-              )}
             </div>
+
+            <div>
+              <button
+                type="button"
+                onClick={addRequiredRow}
+                className="w-full bg-green-600 text-white rounded px-3 py-2"
+              >
+                Add
+              </button>
+            </div>
+          </div>
+
+          {/* Required Rows table */}
+          <div className="p-3">
+            {requiredRows.length === 0 ? (
+              <div className="text-sm text-gray-500">No required materials added.</div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm border">
+                  <thead className="bg-gray-100">
+                    <tr>
+                      <th className="p-2 border text-left">Item Name</th>
+                      <th className="p-2 border text-left">Item Code</th>
+                      <th className="p-2 border text-left">Unit</th>
+                      <th className="p-2 border text-left w-28">Qty</th>
+                      <th className="p-2 border text-left w-28">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {requiredRows.map((r) => (
+                      <tr key={r.id}>
+                        <td className="p-2 border">{r.itemName}</td>
+                        <td className="p-2 border">{r.itemCode}</td>
+                        <td className="p-2 border">{r.unit}</td>
+                        <td className="p-2 border">
+                          <input
+                            type="number"
+                            value={r.quantity}
+                            onChange={(e) => updateRequiredRow(r.id, "quantity", e.target.value)}
+                            className="w-20 border rounded px-2 py-1 text-sm"
+                          />
+                        </td>
+                        <td className="p-2 border">
+                          <button
+                            type="button"
+                            onClick={() => deleteRequiredRow(r.id)}
+                            className="text-red-600 hover:underline"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </fieldset>
 
-        {/* 🔵 BLOCK 3 : Consumable Material */}
-        <fieldset className="border border-gray-300 rounded-md p-4 bg-gray-50 shadow-sm">
-          <legend className="px-2 text-lg font-semibold text-indigo-700">
-            Consumable Material
-          </legend>
+        {/* Consumable Material */}
+        <fieldset className="border border-gray-200 rounded-md bg-gray-50">
+          <legend className="px-2 text-md font-semibold text-indigo-700">Consumable Material</legend>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Material Name */}
-            <div className="flex flex-col gap-1">
-              <RequiredLabel label="Material Name" />
-              <input
-                type="text"
-                name="material"
-                value={formik.values.material}
-                onChange={formik.handleChange}
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-3 items-end p-3">
+            <div>
+              <RequiredLabel label="Material" />
+              <Select
+                options={materialOptions}
+                value={tempConsumableMat ? { ...tempConsumableMat, label: `${tempConsumableMat.name} (${tempConsumableMat.code})`, value: tempConsumableMat.id } : null}
+                onChange={(sel) => onSelectConsumableMaterial(sel ? { id: sel.value, name: sel.name, code: sel.code, unit: sel.unit } : null)}
+                isClearable
+                placeholder="Select material..."
+                styles={{ menu: (base) => ({ ...base, zIndex: 9999 }) }}
+                getOptionLabel={(o) => o.label}
+                getOptionValue={(o) => o.value}
               />
-              {formik.touched.material && formik.errors.material && (
-                <p className="text-xs text-red-500">{formik.errors.material}</p>
-              )}
             </div>
 
-            {/* Material Quantity */}
-            <div className="flex flex-col gap-1">
-              <RequiredLabel label="Material Quantity" />
+            <div>
+              <RequiredLabel label="Qty" />
               <input
                 type="number"
-                name="materialQuantity"
-                value={formik.values.materialQuantity}
-                onChange={formik.handleChange}
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+                value={formik.values.materialQty}
+                onChange={(e) => formik.setFieldValue("materialQty", e.target.value)}
+                className="w-full border rounded px-3 py-2 text-sm"
+                placeholder="0"
               />
-              {formik.touched.materialQuantity && formik.errors.materialQuantity && (
-                <p className="text-xs text-red-500">{formik.errors.materialQuantity}</p>
-              )}
             </div>
 
-            {/* Material Rate */}
-            <div className="flex flex-col gap-1">
-              <RequiredLabel label="Material Rate" />
+            <div>
+              <RequiredLabel label="Rate" />
               <input
                 type="number"
-                name="materialRate"
                 value={formik.values.materialRate}
-                onChange={formik.handleChange}
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+                onChange={(e) => formik.setFieldValue("materialRate", e.target.value)}
+                className="w-full border rounded px-3 py-2 text-sm"
+                placeholder="0"
               />
-              {formik.touched.materialRate && formik.errors.materialRate && (
-                <p className="text-xs text-red-500">{formik.errors.materialRate}</p>
-              )}
             </div>
 
-            {/* Material Amount */}
-            <div className="flex flex-col gap-1">
-              <RequiredLabel label="Material Amount" />
+            <div>
+              <RequiredLabel label="Amount" />
               <input
                 type="number"
-                name="materialAmount"
-                value={formik.values.materialAmount}
+                value={
+                  formik.values.materialQty && formik.values.materialRate
+                    ? Number(formik.values.materialQty) * Number(formik.values.materialRate)
+                    : ""
+                }
                 readOnly
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-gray-100"
+                className="w-full border rounded px-3 py-2 text-sm bg-gray-100"
+                placeholder="0"
               />
-              {formik.touched.materialAmount && formik.errors.materialAmount && (
-                <p className="text-xs text-red-500">{formik.errors.materialAmount}</p>
-              )}
             </div>
+
+            <div>
+              <button
+                type="button"
+                onClick={addConsumableRow}
+                className="w-full bg-green-600 text-white rounded px-3 py-2"
+              >
+                Add
+              </button>
+            </div>
+          </div>
+
+          <div className="p-3">
+            {consumableRows.length === 0 ? (
+              <div className="text-sm text-gray-500">No consumable materials added.</div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm border">
+                  <thead className="bg-gray-100">
+                    <tr>
+                      <th className="p-2 border text-left">Material</th>
+                      <th className="p-2 border text-left">Code</th>
+                      <th className="p-2 border text-left">Unit</th>
+                      <th className="p-2 border text-left w-28">Qty</th>
+                      <th className="p-2 border text-left w-28">Rate</th>
+                      <th className="p-2 border text-left w-28">Amount</th>
+                      <th className="p-2 border text-left w-28">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {consumableRows.map((r) => (
+                      <tr key={r.id}>
+                        <td className="p-2 border">{r.material}</td>
+                        <td className="p-2 border">{r.materialCode || ""}</td>
+                        <td className="p-2 border">{r.unit || ""}</td>
+                        <td className="p-2 border">
+                          <input
+                            type="number"
+                            value={r.qty}
+                            onChange={(e) => updateConsumableRow(r.id, "qty", e.target.value)}
+                            className="w-20 border rounded px-2 py-1 text-sm"
+                          />
+                        </td>
+                        <td className="p-2 border">
+                          <input
+                            type="number"
+                            value={r.rate}
+                            onChange={(e) => updateConsumableRow(r.id, "rate", e.target.value)}
+                            className="w-20 border rounded px-2 py-1 text-sm"
+                          />
+                        </td>
+                        <td className="p-2 border">{r.amount}</td>
+                        <td className="p-2 border">
+                          <button
+                            type="button"
+                            onClick={() => deleteConsumableRow(r.id)}
+                            className="text-red-600 hover:underline"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </fieldset>
       </form>
 
-      {/* SUBMIT + RESET */}
-      <div className="p-3 flex justify-end gap-4 bg-white sticky -bottom-4">
+      {/* footer actions */}
+      <div className="flex justify-end gap-3 pt-3">
         <button
-          type="submit"
-          form="updateBill"
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm"
+          type="button"
+          onClick={() => formik.handleSubmit()}
+          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded"
         >
           Update
         </button>
 
         <button
           type="button"
-          onClick={() => formik.resetForm()}
-          className="border border-red-500 text-red-600 hover:bg-red-50 px-4 py-2 rounded-md text-sm"
+          onClick={() => {
+            // reset to original selectedData values
+            formik.resetForm();
+            setRequiredRows(selectedData?.requiredRows || []);
+            setConsumableRows(selectedData?.consumableRows || []);
+            setTempRequiredMat(null);
+            setTempConsumableMat(null);
+          }}
+          className="border border-red-500 text-red-600 px-4 py-2 rounded"
         >
           Reset
         </button>
       </div>
     </div>
   );
-};
-
-export default UpdateBillOfMaterials;
+}

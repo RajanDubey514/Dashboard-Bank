@@ -135,7 +135,7 @@ const AddProduct = ({ dataList = [], setDataList }) => {
             { name: "hsnCode", label: "HSN Code" },
           ].map((field) => (
             <div key={field.name} className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-xs font-medium text-gray-700">
                 {field.label} <span className="text-red-600">(*)</span>
               </label>
               <input
@@ -144,7 +144,7 @@ const AddProduct = ({ dataList = [], setDataList }) => {
                 value={formik.values[field.name]}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="border border-gray-300 rounded-md px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+                className="border border-gray-300 rounded-md px-2 py-1.5 text-xs outline-none focus:ring-2 focus:ring-indigo-500"
               />
               {formik.touched[field.name] && formik.errors[field.name] && (
                 <p className="text-xs text-red-500">{formik.errors[field.name]}</p>
@@ -163,7 +163,7 @@ const AddProduct = ({ dataList = [], setDataList }) => {
             { name: "igst", label: "IGST (%)" },
           ].map((field) => (
             <div key={field.name} className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-xs font-medium text-gray-700">
                 {field.label} <span className="text-red-600">(*)</span>
               </label>
               <input
@@ -172,7 +172,7 @@ const AddProduct = ({ dataList = [], setDataList }) => {
                 value={formik.values[field.name]}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="border border-gray-300 rounded-md px-2 py-1.5 text-sm outline-none bg-yellow-50 focus:ring-2 focus:ring-indigo-500"
+                className="border border-gray-300 rounded-md px-2 py-1.5 text-xs outline-none bg-yellow-50 focus:ring-2 focus:ring-indigo-500"
               />
               {formik.touched[field.name] && formik.errors[field.name] && (
                 <p className="text-xs text-red-500">{formik.errors[field.name]}</p>
@@ -220,7 +220,7 @@ const AddProduct = ({ dataList = [], setDataList }) => {
 
           {/* Image Upload */}
           <div className="col-span-2 flex flex-col gap-1">
-            <label className="text-sm font-medium text-gray-700">
+            <label className="text-xs font-medium text-gray-700">
               Upload Image
             </label>
             <input
@@ -230,7 +230,7 @@ const AddProduct = ({ dataList = [], setDataList }) => {
                 const file = e.target.files[0];
                 if (file) setImageName(file.name);
               }}
-              className="border border-gray-300 rounded-md px-2 py-1.5 text-sm bg-white"
+              className="border border-gray-300 rounded-md px-2 py-1.5 text-xs bg-white"
             />
             {imageName && (
               <p className="text-xs text-green-600 mt-1">
@@ -253,7 +253,7 @@ const AddProduct = ({ dataList = [], setDataList }) => {
                 onChange={formik.handleChange}
                 className="w-4 h-4 accent-indigo-600"
               />
-              <label className="text-sm text-gray-700">{box.label}</label>
+              <label className="text-xs text-gray-700">{box.label}</label>
             </div>
           ))}
         </div>
@@ -264,7 +264,7 @@ const AddProduct = ({ dataList = [], setDataList }) => {
         <button
           type="submit"
           form="addProductForm"
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 rounded-md text-sm font-medium transition"
+          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 rounded-md text-xs font-medium transition"
         >
           Submit
         </button>
@@ -274,7 +274,7 @@ const AddProduct = ({ dataList = [], setDataList }) => {
             formik.resetForm();
             setImageName("");
           }}
-          className="border border-red-500 text-red-600 hover:bg-red-50 px-4 rounded-md text-sm font-medium transition"
+          className="border border-red-500 text-red-600 hover:bg-red-50 px-4 rounded-md text-xs font-medium transition"
         >
           Reset
         </button>
@@ -286,10 +286,11 @@ const AddProduct = ({ dataList = [], setDataList }) => {
 // ✅ Reusable Select Component
 const SelectField = ({ name, label, options, formik }) => (
   <div className="flex flex-col gap-1">
-    <label className="text-sm font-medium text-gray-700">
+    <label className="text-xs font-medium text-gray-700">
       {label} <span className="text-red-600">(*)</span>
     </label>
     <Select
+    className="text-xs"
       options={options}
       value={options.find((opt) => opt.value === formik.values[name]) || null}
       onChange={(opt) => formik.setFieldValue(name, opt?.value || "")}

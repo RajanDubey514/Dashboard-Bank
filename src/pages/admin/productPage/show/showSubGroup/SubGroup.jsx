@@ -167,7 +167,7 @@ const SubMainGroup = () => {
   // UI RENDER
   // ---------------------------------------------------------------------
   return (
-    <div className="p-2 space-y-5 w-full">
+    <div className="space-y-2 w-full">
 
       {/* ---------------------------------------------------
         TOP BAR → SEARCH + FILTER + ACTIONS
@@ -192,7 +192,7 @@ const SubMainGroup = () => {
 
           <button
             onClick={handleAddClick}
-            className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-sm font-semibold shadow transition-all duration-300 hover:shadow-lg"
+            className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-xs font-semibold shadow transition-all duration-300 hover:shadow-lg"
             style={{ backgroundColor: "var(--color-primary)" }}
           >
             <PlusCircle size={12} />
@@ -220,7 +220,7 @@ const SubMainGroup = () => {
       {/* ---------------------------------------------------
         PAGINATION
       ----------------------------------------------------- */}
-      <div className="flex justify-center pt-2">
+      <div className="flex justify-center ">
         <Pagination
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}

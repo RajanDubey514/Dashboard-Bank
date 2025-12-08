@@ -68,7 +68,7 @@ const AddFollowUpActivity = ({ dataList, setDataList }) => {
           
           {/* Due Date/Time */}
           <div>
-            <label className="block mb-1">
+            <label className="block mb-1 text-xs">
               <RequiredLabel label="Due Date/Time" />
             </label>
             <input
@@ -77,20 +77,20 @@ const AddFollowUpActivity = ({ dataList, setDataList }) => {
               value={formik.values.dueDateTime}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className={`w-full border rounded px-3 py-2 ${
+              className={`w-full text-xs border rounded px-3 py-2 ${
                 formik.touched.dueDateTime && formik.errors.dueDateTime
                   ? "border-red-500"
                   : "border-gray-300"
               }`}
             />
             {formik.touched.dueDateTime && formik.errors.dueDateTime && (
-              <p className="text-red-600 text-sm mt-1">{formik.errors.dueDateTime}</p>
+              <p className="text-red-600 text-xs mt-1">{formik.errors.dueDateTime}</p>
             )}
           </div>
 
           {/* Reminder Date/Time */}
           <div>
-            <label className="block mb-1">
+            <label className="block mb-1 text-xs">
               <RequiredLabel label="Reminder Date/Time" />
             </label>
             <input
@@ -99,33 +99,33 @@ const AddFollowUpActivity = ({ dataList, setDataList }) => {
               value={formik.values.reminderDateTime}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className={`w-full border rounded px-3 py-2 ${
+              className={`w-full text-xs border rounded px-3 py-2 ${
                 formik.touched.reminderDateTime && formik.errors.reminderDateTime
                   ? "border-red-500"
                   : "border-gray-300"
               }`}
             />
             {formik.touched.reminderDateTime && formik.errors.reminderDateTime && (
-              <p className="text-red-600 text-sm mt-1">{formik.errors.reminderDateTime}</p>
+              <p className="text-red-600 text-xs mt-1">{formik.errors.reminderDateTime}</p>
             )}
           </div>
 
           {/* Remarks */}
           <div>
-            <label className="block mb-1">Remarks</label>
+            <label className="block mb-1 text-xs">Remarks</label>
             <textarea
               name="remarks"
               value={formik.values.remarks}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="w-full border border-gray-300 rounded px-3 py-2 resize-none"
+              className="w-full border text-xs border-gray-300 rounded px-3 py-2 resize-none"
               rows={3}
             />
           </div>
 
           {/* Follow Up Status Reason */}
           <div>
-            <label className="block mb-1">
+            <label className="block mb-1 text-xs">
               <RequiredLabel label="Follow Up Status Reason" />
             </label>
             <input
@@ -134,36 +134,37 @@ const AddFollowUpActivity = ({ dataList, setDataList }) => {
               value={formik.values.followUpStatusReason}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className={`w-full border rounded px-3 py-2 ${
+              className={`w-full text-xs border rounded px-3 py-2 ${
                 formik.touched.followUpStatusReason && formik.errors.followUpStatusReason
                   ? "border-red-500"
                   : "border-gray-300"
               }`}
             />
             {formik.touched.followUpStatusReason && formik.errors.followUpStatusReason && (
-              <p className="text-red-600 text-sm mt-1">{formik.errors.followUpStatusReason}</p>
+              <p className="text-red-600 text-xs mt-1">{formik.errors.followUpStatusReason}</p>
             )}
           </div>
 
           {/* Assign Follow Up */}
           <div>
-            <label className="block mb-1">Assign Follow Up</label>
+            <label className="block mb-1 text-xs">Assign Follow Up</label>
             <input
               type="text"
               name="assignFollowUp"
               value={formik.values.assignFollowUp}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="w-full border border-gray-300 rounded px-3 py-2"
+              className="w-full border text-xs border-gray-300 rounded px-3 py-2"
             />
           </div>
 
           {/* Follow Up Activity Type */}
           <div>
-            <label className="block mb-1">
+            <label className="block mb-1 text-xs">
               <RequiredLabel label="Follow Up Activity Type" />
             </label>
             <Select
+               
               options={followUpActivityTypeOptions}
               value={followUpActivityTypeOptions.find(
                 (option) => option.value === formik.values.followUpActivityType
@@ -172,16 +173,16 @@ const AddFollowUpActivity = ({ dataList, setDataList }) => {
                 formik.setFieldValue("followUpActivityType", selected?.value || "")
               }
               onBlur={formik.handleBlur}
-              className="w-full"
+              className="w-full text-xs"
             />
             {formik.touched.followUpActivityType && formik.errors.followUpActivityType && (
-              <p className="text-red-600 text-sm mt-1">{formik.errors.followUpActivityType}</p>
+              <p className="text-red-600 text-xs mt-1">{formik.errors.followUpActivityType}</p>
             )}
           </div>
 
           {/* Priority */}
           <div>
-            <label className="block mb-1">
+            <label className="block mb-1 text-xs">
               <RequiredLabel label="Priority" />
             </label>
             <Select
@@ -193,16 +194,16 @@ const AddFollowUpActivity = ({ dataList, setDataList }) => {
                 formik.setFieldValue("priority", selected?.value || "")
               }
               onBlur={formik.handleBlur}
-              className="w-full"
+              className="w-full text-xs"
             />
             {formik.touched.priority && formik.errors.priority && (
-              <p className="text-red-600 text-sm mt-1">{formik.errors.priority}</p>
+              <p className="text-red-600 text-xs mt-1">{formik.errors.priority}</p>
             )}
           </div>
 
           {/* Follow Up Status */}
           <div>
-            <label className="block mb-1">
+            <label className="block mb-1 text-xs">
               <RequiredLabel label="Follow Up Status" />
             </label>
             <Select
@@ -214,10 +215,10 @@ const AddFollowUpActivity = ({ dataList, setDataList }) => {
                 formik.setFieldValue("followUpStatus", selected?.value || "")
               }
               onBlur={formik.handleBlur}
-              className="w-full"
+              className="w-full text-xs"
             />
             {formik.touched.followUpStatus && formik.errors.followUpStatus && (
-              <p className="text-red-600 text-sm mt-1">{formik.errors.followUpStatus}</p>
+              <p className="text-red-600 text-xs mt-1">{formik.errors.followUpStatus}</p>
             )}
           </div>
         </form>
@@ -228,14 +229,14 @@ const AddFollowUpActivity = ({ dataList, setDataList }) => {
         <button
           type="submit"
           form="addFollowUpForm"
-          className="px-6  bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+          className="px-6 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition"
         >
           Submit
         </button>
         <button
           type="button"
           onClick={() => formik.resetForm()}
-          className="px-6  border border-red-600 text-red-600 rounded hover:bg-red-50 transition"
+          className="px-6 text-xs border border-red-600 text-red-600 rounded hover:bg-red-50 transition"
         >
           Reset
         </button>

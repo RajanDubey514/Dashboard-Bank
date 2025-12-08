@@ -43,7 +43,7 @@ const EditSubMainForm = ({ selectedData, dataList, setDataList, onClose }) => {
       <div className="overflow-y-auto flex-1 space-y-4 p-4">
         {/* Group Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-xs font-medium text-gray-700">
             Group Name <span className="text-red-500">*</span>
           </label>
           <Select
@@ -53,7 +53,7 @@ const EditSubMainForm = ({ selectedData, dataList, setDataList, onClose }) => {
               (o) => o.value === formik.values.groupName
             )}
             onChange={(option) => formik.setFieldValue("groupName", option.value)}
-            className="text-sm"
+            className="text-xs"
             placeholder="Select Group"
           />
           {formik.touched.groupName && formik.errors.groupName && (
@@ -65,7 +65,7 @@ const EditSubMainForm = ({ selectedData, dataList, setDataList, onClose }) => {
 
         {/* Sub Group Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-xs font-medium text-gray-700">
             Sub Group Name <span className="text-red-500">*</span>
           </label>
           <input
@@ -74,7 +74,7 @@ const EditSubMainForm = ({ selectedData, dataList, setDataList, onClose }) => {
             value={formik.values.subGroupName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring focus:ring-blue-100"
+            className="w-full border border-gray-300 rounded-md p-2 text-xs focus:ring focus:ring-blue-100"
             placeholder="Enter sub group name"
           />
           {formik.touched.subGroupName && formik.errors.subGroupName && (
@@ -86,7 +86,7 @@ const EditSubMainForm = ({ selectedData, dataList, setDataList, onClose }) => {
 
         {/* Remark */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-xs font-medium text-gray-700">
             Remark
           </label>
           <textarea
@@ -95,7 +95,7 @@ const EditSubMainForm = ({ selectedData, dataList, setDataList, onClose }) => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             rows="3"
-            className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring focus:ring-blue-100"
+            className="w-full border border-gray-300 rounded-md p-2 text-xs focus:ring focus:ring-blue-100"
             placeholder="Enter remark (optional)"
           />
           {formik.touched.remark && formik.errors.remark && (
@@ -115,7 +115,7 @@ const EditSubMainForm = ({ selectedData, dataList, setDataList, onClose }) => {
             onChange={formik.handleChange}
             className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring focus:ring-blue-100"
           />
-          <label htmlFor="isActive" className="text-sm text-gray-700">
+          <label htmlFor="isActive" className="text-xs text-gray-700">
             Active
           </label>
         </div>
@@ -126,13 +126,13 @@ const EditSubMainForm = ({ selectedData, dataList, setDataList, onClose }) => {
         <button
           type="button"
           onClick={() => onClose && onClose()}
-          className="px-4 py-1 border rounded-md text-sm text-gray-600 hover:bg-gray-100"
+          className="px-4 py-1 border rounded-md text-xs text-gray-600 hover:bg-gray-100"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-4 py-1 rounded-md text-sm font-semibold text-white"
+          className="px-4 py-1 rounded-md text-xs font-semibold text-white"
           style={{ backgroundColor: "var(--color-primary)" }}
         >
           Update

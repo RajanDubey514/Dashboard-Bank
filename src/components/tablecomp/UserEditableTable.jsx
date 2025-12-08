@@ -54,7 +54,7 @@ const UserEditableTable = ({
 
   return (
     <div className="relative w-full rounded-lg border border-gray-200 shadow-sm bg-white overflow-hidden">
-      <div className="max-h-[50vh] min-h-[50vh] overflow-auto scrollbar-hide">
+      <div className="max-h-[40vh] min-h-[40vh] overflow-auto scrollbar-hide">
         <table className="w-full table-auto border-collapse text-sm sm:text-base">
           {/* HEADER */}
           <thead className="bg-gray-500 text-white uppercase text-xs sticky top-0 z-20">
@@ -62,7 +62,7 @@ const UserEditableTable = ({
               {headers.map((header, index) => (
                 <th
                   key={index}
-                  className={`relative px-2 py-1 font-semibold border border-gray-500 whitespace-nowrap 
+                  className={`relative px-1.5 font-semibold border border-gray-500 whitespace-nowrap 
                     ${index === 0 ? "sticky left-0 bg-gray-600 z-30" : ""}`}
                 >
                   <div className="flex items-center justify-between">
@@ -76,7 +76,7 @@ const UserEditableTable = ({
               ))}
 
               {!hideAction && (
-                <th className="px-2 py-1 text-center font-semibold border border-gray-500 sticky right-0 bg-gray-600 z-60">
+                <th className="px-1.5 text-center text-xs font-semibold border border-gray-500 sticky right-0 bg-gray-600 z-60">
                   Action
                 </th>
               )}
@@ -96,7 +96,7 @@ const UserEditableTable = ({
                   {headers.map((header, colIndex) => (
                     <td
                       key={colIndex}
-                      className={`px-2 py-1 border border-gray-200 text-gray-800 truncate max-w-[200px]
+                      className={`px-1.5 border text-xs border-gray-200 text-gray-800 truncate max-w-[200px]
                       ${colIndex === 0 ? "sticky left-0 bg-gray-100 z-10" : ""}
                     `}
                       title={row[header]}
@@ -113,15 +113,15 @@ const UserEditableTable = ({
 
                   {/* ACTION COLUMN */}
                   {!hideAction && (
-                    <td className="px-2 py-1 text-center border border-gray-200 sticky right-0 bg-gray-50 z-10">
+                    <td className="px-1.5 text-center border text-xs border-gray-200 sticky right-0 bg-gray-50 z-10">
                       <div className="flex items-center justify-center ">
                         {/* EDIT */}
                         <button
                           onClick={() => handleEdit(row.id)}
-                          className="text-blue-600 hover:text-blue-800"
+                          className="text-blue-600 text-xs hover:text-blue-800"
                           title="Edit"
                         >
-                          <Edit size={16} />
+                          <Edit size={15} />
                         </button>
 
                         {/* VIEW */}
@@ -130,18 +130,18 @@ const UserEditableTable = ({
                             setSelectedUser(row);
                             setViewModalOpen(true);
                           }}
-                          className="text-indigo-600 hover:text-indigo-800"
+                          className="text-indigo-600 text-xs hover:text-indigo-800"
                           title="View Details"
                         >
-                          <Eye size={16} />
+                          <Eye size={15} />
                         </button>
                         {/* DELETE */}
                         <button
                           onClick={() => handleDelete(row.id)}
-                          className="text-red-600 hover:text-red-800"
+                          className="text-red-600 text-xs hover:text-red-800"
                           title="Delete"
                         >
-                          <Trash2 size={16} />
+                          <Trash2 size={15} />
                         </button>
                       </div>
                     </td>

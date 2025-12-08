@@ -36,7 +36,7 @@ const EditUnitMaster = ({ selectedData, dataList, setDataList, onClose }) => {
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {/* UOM Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-xs font-medium text-gray-700">
             UOM Name <span className="text-red-500">*</span>
           </label>
           <input
@@ -45,7 +45,7 @@ const EditUnitMaster = ({ selectedData, dataList, setDataList, onClose }) => {
             value={formik.values.uomName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring focus:ring-blue-100"
+            className="w-full border border-gray-300 rounded-md p-2 text-xs focus:ring focus:ring-blue-100"
             placeholder="Enter UOM Name"
           />
           {formik.touched.uomName && formik.errors.uomName && (
@@ -55,7 +55,7 @@ const EditUnitMaster = ({ selectedData, dataList, setDataList, onClose }) => {
 
         {/* Remarks */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-xs font-medium text-gray-700">
             Remarks
           </label>
           <textarea
@@ -64,7 +64,7 @@ const EditUnitMaster = ({ selectedData, dataList, setDataList, onClose }) => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             rows="3"
-            className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring focus:ring-blue-100"
+            className="w-full border border-gray-300 rounded-md p-2 text-xs focus:ring focus:ring-blue-100"
             placeholder="Enter remarks (optional)"
           />
           {formik.touched.remarks && formik.errors.remarks && (
@@ -84,31 +84,31 @@ const EditUnitMaster = ({ selectedData, dataList, setDataList, onClose }) => {
             onChange={formik.handleChange}
             className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
           />
-          <label htmlFor="isActive" className="text-sm text-gray-700">
+          <label htmlFor="isActive" className="text-xs text-gray-700">
             Active
           </label>
         </div>
       </div>
 
       {/* ✅ Fixed Footer Buttons */}
-      <div className="sticky bottom-0 bg-white flex justify-end gap-3 px-4 py-2 border-t">
+      <div className="sticky bottom-0 bg-white flex justify-end gap-3 px-4 py-2 ">
         <button
           type="button"
           onClick={() => formik.resetForm()}
-          className="px-4 py-1.5 border rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100"
+          className="px-4 py-1.5 border rounded-md text-xs font-medium text-gray-600 hover:bg-gray-100"
         >
           Reset
         </button>
         <button
           type="button"
           onClick={() => onClose && onClose()}
-          className="px-4 py-1.5 border rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100"
+          className="px-4 py-1.5 border rounded-md text-xs font-medium text-gray-600 hover:bg-gray-100"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-4 py-1.5 rounded-md text-sm font-semibold text-white"
+          className="px-4 py-1.5 rounded-md text-xs font-semibold text-white"
           style={{ backgroundColor: "var(--color-primary)" }}
         >
           Update

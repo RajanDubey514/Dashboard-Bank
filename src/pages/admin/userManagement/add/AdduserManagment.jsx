@@ -10,7 +10,7 @@ import {
 } from "../../../../components/FakeData";
 
 const RequiredLabel = ({ label }) => (
-  <label className="text-sm font-medium text-gray-700">
+  <label className="text-xs font-medium text-gray-700">
     {label} <span className="text-red-600 ml-1">(*)</span>
   </label>
 );
@@ -63,7 +63,7 @@ const AdduserManagment = ({ dataList, setDataList }) => {
       <form
         id="addUserForm"
         onSubmit={formik.handleSubmit}
-        className="overflow-y-auto flex-1 p-4 space-y-8"
+        className="overflow-y-auto flex-1 p-2 space-y-8"
       >
         {/* PERSONAL INFORMATION */}
         <fieldset className="border rounded-lg p-4">
@@ -77,7 +77,7 @@ const AdduserManagment = ({ dataList, setDataList }) => {
               <input
                 type="text"
                 name="fullName"
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+                className="border border-gray-300 rounded-md px-3 py-2 text-xs"
                 value={formik.values.fullName}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -93,7 +93,7 @@ const AdduserManagment = ({ dataList, setDataList }) => {
               <input
                 type="email"
                 name="email"
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+                className="border border-gray-300 rounded-md px-3 py-2 text-xs"
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -109,7 +109,7 @@ const AdduserManagment = ({ dataList, setDataList }) => {
               <input
                 type="text"
                 name="phone"
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+                className="border border-gray-300 rounded-md px-3 py-2 text-xs"
                 value={formik.values.phone}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -132,7 +132,7 @@ const AdduserManagment = ({ dataList, setDataList }) => {
               <RequiredLabel label="Department" />
               <select
                 name="department"
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+                className="border border-gray-300 rounded-md px-3 py-2 text-xs"
                 value={formik.values.department}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -154,7 +154,7 @@ const AdduserManagment = ({ dataList, setDataList }) => {
               <RequiredLabel label="User Role" />
               <select
                 name="role"
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+                className="border border-gray-300 rounded-md px-3 py-2 text-xs"
                 value={formik.values.role}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -176,7 +176,7 @@ const AdduserManagment = ({ dataList, setDataList }) => {
               <RequiredLabel label="Account Status" />
               <select
                 name="status"
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+                className="border border-gray-300 rounded-md px-3 py-2 text-xs"
                 value={formik.values.status}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -207,7 +207,7 @@ const AdduserManagment = ({ dataList, setDataList }) => {
               <input
                 type="text"
                 name="username"
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+                className="border border-gray-300 rounded-md px-3 py-2 text-xs"
                 value={formik.values.username}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -223,7 +223,7 @@ const AdduserManagment = ({ dataList, setDataList }) => {
               <input
                 type="password"
                 name="password"
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+                className="border border-gray-300 rounded-md px-3 py-2 text-xs"
                 value={formik.values.password}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -239,7 +239,7 @@ const AdduserManagment = ({ dataList, setDataList }) => {
               <input
                 type="password"
                 name="confirmPassword"
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+                className="border border-gray-300 rounded-md px-3 py-2 text-xs"
                 value={formik.values.confirmPassword}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -255,7 +255,7 @@ const AdduserManagment = ({ dataList, setDataList }) => {
               <input
                 type="date"
                 name="expiryDate"
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+                className="border border-gray-300 rounded-md px-3 py-2 text-xs"
                 value={formik.values.expiryDate}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -273,7 +273,7 @@ const AdduserManagment = ({ dataList, setDataList }) => {
         <button
           type="submit"
           form="addUserForm"
-          className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 text-sm"
+          className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 text-xs"
         >
           Submit
         </button>
@@ -281,7 +281,7 @@ const AdduserManagment = ({ dataList, setDataList }) => {
         <button
           type="button"
           onClick={() => formik.resetForm()}
-          className="border border-red-500 text-red-600 px-4 py-2 rounded-md hover:bg-red-50 text-sm"
+          className="border border-red-500 text-red-600 px-4 py-2 rounded-md hover:bg-red-50 text-xs"
         >
           Reset
         </button>

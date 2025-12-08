@@ -1,6 +1,4 @@
 import React from "react";
-import { Button, Stack, Typography, useMediaQuery, MenuItem, Select } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 
 const Pagination = ({
   currentPage,
@@ -10,16 +8,13 @@ const Pagination = ({
   rowsPerPage,
   setRowsPerPage,
 }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
   const handlePageChange = (newPage) => {
     if (newPage < 1 || newPage > totalPages) return;
     setCurrentPage(newPage);
   };
 
-  const handleRowsChange = (event) => {
-    setRowsPerPage(Number(event.target.value));
+  const handleRowsChange = (e) => {
+    setRowsPerPage(Number(e.target.value));
     setCurrentPage(1);
   };
 
@@ -27,193 +22,124 @@ const Pagination = ({
   const startPage = Math.max(currentPage - 1, 1);
   const endPage = Math.min(currentPage + 1, totalPages);
 
-  const buttonFontSize = {
-    xs: "0.55rem",
-    sm: "0.7rem",
-    md: "0.8rem",
-  };
+  // Tailwind + CSS Variables
+  const baseBtn =
+    "text-xs px-2 py-1 rounded-md border transition-all duration-200";
 
-  const buttonPadding = {
-    xs: "2px 6px",
-    sm: "3px 10px",
-    md: "4px 12px",
-  };
+  const filledBtn =
+    "text-[var(--btn-text-color)] bg-[var(--btn-primary-bg)] border-[var(--btn-primary-bg)] hover:bg-[var(--btn-primary-hover)] hover:-translate-y-0.5";
 
-  const baseButton = {
-    fontSize: buttonFontSize,
-    px: buttonPadding,
-    borderRadius: "6px",
-    minWidth: { xs: 28, sm: 34, md: 40 },
-    transition: "all 0.2s ease",
-    textTransform: "none",
-  };
-
-  const primaryContained = {
-    ...baseButton,
-    backgroundColor: "var(--btn-primary-bg)",
-    color: "var(--btn-text-color)",
-    "&:hover": {
-      backgroundColor: "var(--btn-primary-hover)",
-      transform: "translateY(-1px)",
-    },
-  };
-
-  const primaryOutlined = {
-    ...baseButton,
-    border: "1px solid var(--btn-primary-bg)",
-    color: "var(--btn-primary-bg)",
-    backgroundColor: "transparent",
-    "&:hover": {
-      backgroundColor: "var(--btn-primary-bg)",
-      color: "var(--btn-text-color)",
-      transform: "translateY(-1px)",
-    },
-  };
+  const outlineBtn =
+    "text-[var(--btn-primary-bg)] border-[var(--btn-primary-bg)] hover:bg-[var(--btn-primary-bg)] hover:text-[var(--btn-text-color)] hover:-translate-y-0.5";
 
   return (
-    <Stack
-      direction="column"
-      alignItems="center"
-      spacing={1.2}
-      sx={{ mt: { xs: 1, sm: 2 }, textAlign: "center" }}
-    >
+    <div className="flex flex-col items-center space-y-2 mt-3 text-center text-xs">
+
       {/* === Pagination Buttons === */}
-      <Stack
-        direction="row"
-        spacing={isMobile ? 0.5 : 1}
-        justifyContent="center"
-        alignItems="center"
-        sx={{
-          flexWrap: "wrap",
-          rowGap: { xs: 0.5, sm: 1 },
-        }}
-      >
+      <div className="flex flex-wrap gap-1 justify-center items-center">
+
         {/* Prev */}
-        <Button
-          variant="outlined"
-          size="small"
-          sx={primaryOutlined}
+        <button
+          className={`${baseBtn} ${outlineBtn} disabled:opacity-40 disabled:hover:translate-y-0`}
           disabled={currentPage === 1}
           onClick={() => handlePageChange(currentPage - 1)}
         >
           Prev
-        </Button>
+        </button>
 
         {/* First */}
-        <Button
-          variant={currentPage === 1 ? "contained" : "outlined"}
-          size="small"
-          sx={currentPage === 1 ? primaryContained : primaryOutlined}
+        <button
+          className={`${baseBtn} ${
+            currentPage === 1 ? filledBtn : outlineBtn
+          }`}
           onClick={() => handlePageChange(1)}
         >
           1
-        </Button>
+        </button>
 
-        {/* Ellipsis */}
+        {/* Left Ellipsis */}
         {isTooManyPages && currentPage > 3 && (
-          <Typography variant="body2" sx={{ fontSize: buttonFontSize }}>
-            ...
-          </Typography>
+          <span className="text-xs">...</span>
         )}
 
         {/* Middle Pages */}
-        {Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i)
-          .filter((page) => page > 1 && page < totalPages)
+        {Array.from(
+          { length: endPage - startPage + 1 },
+          (_, i) => startPage + i
+        )
+          .filter((p) => p > 1 && p < totalPages)
           .map((page) => (
-            <Button
+            <button
               key={page}
-              variant={currentPage === page ? "contained" : "outlined"}
-              size="small"
-              sx={currentPage === page ? primaryContained : primaryOutlined}
+              className={`${baseBtn} ${
+                currentPage === page ? filledBtn : outlineBtn
+              }`}
               onClick={() => handlePageChange(page)}
             >
               {page}
-            </Button>
+            </button>
           ))}
 
-        {/* Ellipsis */}
+        {/* Right Ellipsis */}
         {isTooManyPages && currentPage < totalPages - 2 && (
-          <Typography variant="body2" sx={{ fontSize: buttonFontSize }}>
-            ...
-          </Typography>
+          <span className="text-xs">...</span>
         )}
 
         {/* Last */}
         {totalPages > 1 && (
-          <Button
-            variant={currentPage === totalPages ? "contained" : "outlined"}
-            size="small"
-            sx={currentPage === totalPages ? primaryContained : primaryOutlined}
+          <button
+            className={`${baseBtn} ${
+              currentPage === totalPages ? filledBtn : outlineBtn
+            }`}
             onClick={() => handlePageChange(totalPages)}
           >
             {totalPages}
-          </Button>
+          </button>
         )}
 
         {/* Next */}
-        <Button
-          variant="outlined"
-          size="small"
-          sx={primaryOutlined}
+        <button
+          className={`${baseBtn} ${outlineBtn} disabled:opacity-40 disabled:hover:translate-y-0`}
           disabled={currentPage === totalPages}
           onClick={() => handlePageChange(currentPage + 1)}
         >
           Next
-        </Button>
-      </Stack>
+        </button>
+      </div>
+      {/* === Rows & Info === */}
+      <div className="w-full max-w-xs flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[var(--color-text-light)]">
 
-      {/* === Rows & Info Section === */}
-      <Stack
-        direction={{ xs: "column", sm: "row" }}
-        alignItems="center"
-        justifyContent="space-between"
-        spacing={{ xs: 0.5, sm: 2 }}
-        sx={{
-          width: "100%",
-          maxWidth: 480,
-          mt: 1,
-          color: "var(--color-text-light)",
-          fontSize: { xs: "0.75rem", sm: "0.85rem" },
-        }}
-      >
-        {/* Rows per page selector */}
-        <Stack direction="row" alignItems="center" spacing={0.5}>
-          <Typography variant="body2">Rows per page:</Typography>
-          <Select
-            size="small"
+        {/* Rows Selector */}
+        <div className="flex items-center gap-1">
+          <span>Rows per page:</span>
+
+          <select
             value={rowsPerPage}
             onChange={handleRowsChange}
-            sx={{
-              fontSize: "0.8rem",
-              height: "1.8rem",
-              borderRadius: "6px",
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "var(--btn-primary-bg)",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "var(--btn-primary-hover)",
-              },
-              "& .MuiSelect-select": {
-                padding: "2px 8px",
-              },
-            }}
+            className="
+              text-xs px-2 py-1 border rounded-md bg-white 
+              border-[var(--btn-primary-bg)] 
+              focus:outline-none focus:ring-1 focus:ring-[var(--btn-primary-hover)]
+            "
           >
             {[2, 5, 20, 50].map((num) => (
-              <MenuItem key={num} value={num}>
+              <option key={num} value={num}>
                 {num}
-              </MenuItem>
+              </option>
             ))}
-          </Select>
-        </Stack>
+          </select>
+        </div>
 
-        {/* Total info */}
-        <Typography variant="body2">
+        {/* Pagination info */}
+        <div className="text-xs">
           Page <b>{currentPage}</b> of <b>{totalPages}</b> — Total{" "}
           <b>{totalRecords}</b> records
-        </Typography>
-      </Stack>
-    </Stack>
+        </div>
+      </div>
+
+    </div>
   );
 };
 
 export default Pagination;
+

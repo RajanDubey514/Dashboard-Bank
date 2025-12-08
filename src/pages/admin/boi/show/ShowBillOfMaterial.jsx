@@ -3,23 +3,23 @@ import { PlusCircle } from "lucide-react";
 import Swal from "sweetalert2";
 
 import ModalCom from "../../../../components/modalComp/ModalCom";
-import EditableTable from "../../../../components/tablecomp/EditableTable";
 import Pagination from "../../../../components/pagination/Pagination";
 import DownloadDataButton from "../../../../components/DownloadData/DownloadDataButton";
 
-import { fakeItemMaterialData } from "../../../../components/FakeData";
+import { fakeMaterialList, fakeMainProductData , fakeConsumableMaterialList } from "../../../../components/FakeData";
 
 // Common Components
 import SelectBoxCommon from "../../../../components/searchComp/SelectBoxCommon";
 import AddBillOfMaterials from "../add/AddBillOfMaterials";
 import UpdateBillOfMaterials from "../update/UpdateBillOfMaterials";
+import BoiTable from "../boiTable/BoiTable";
 
 const ShowBillOfMaterial = () => {
   // 🔥 MAIN STATES
-  const [dataList, setDataList] = useState([]);        // all data
+  const [dataList, setDataList] = useState([]); // all data
   const [filteredData, setFilteredData] = useState([]); // filtered + searched result
-  const [searchQuery, setSearchQuery] = useState("");   // search input
-  const [filterType, setFilterType] = useState("all");  // filter dropdown
+  const [searchQuery, setSearchQuery] = useState(""); // search input
+  const [filterType, setFilterType] = useState("all"); // filter dropdown
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
   // Pagination
@@ -35,44 +35,99 @@ const ShowBillOfMaterial = () => {
   // 🚀 LOAD INITIAL DATA
   // ----------------------------------------------------------------------
   useEffect(() => {
-    setDataList(fakeItemMaterialData);
-    setFilteredData(fakeItemMaterialData);
+    setDataList(fakeMaterialList);
+    setFilteredData(fakeMaterialList);
   }, []);
+
+  // ===================================
+  // 🔥 INLINE EDIT STATES
+  // ===================================
+  const [editRowId, setEditRowId] = useState(null);
+  const [editedData, setEditedData] = useState({});
+
+  // fields that can be edited directly in the table
+  const editableFields = ["productName", "productCode"];
+
+  const handleEdit = (id) => {
+    setEditRowId(id);
+
+    const rowToEdit = dataList.find((item) => item.id === id);
+    setEditedData(rowToEdit ? { ...rowToEdit } : {});
+  };
+
+  const handleSave = () => {
+    const updated = dataList.map((item) =>
+      item.id === editRowId ? { ...item, ...editedData } : item
+    );
+
+    setDataList(updated);
+    setFilteredData(updated);
+    setEditRowId(null);
+    setEditedData({});
+  };
+
+  const handleCancel = () => {
+    setEditRowId(null);
+    setEditedData({});
+  };
+
+  /**
+   * handleChange for inline edit inputs/selects.
+   * - For productName: update productCode automatically from fakeMainProductData
+   * - For other fields: simple value set
+   *
+   * onChange signature: (e, field)
+   */
+  const handleChange = (e, field) => {
+    const value = e?.target?.value ?? "";
+
+    if (field === "productName") {
+      const selected = fakeMainProductData.find(
+        (p) => p.productName === value
+      );
+
+      setEditedData({
+        ...editedData,
+        productName: value,
+        productCode: selected ? selected.productCode : "",
+      });
+    } else {
+      setEditedData({ ...editedData, [field]: value });
+    }
+  };
 
   // ----------------------------------------------------------------------
   // 🔍 FILTER + SEARCH LOGIC
   // ----------------------------------------------------------------------
- /** -------------------- FILTER + SEARCH -------------------- **/
-    useEffect(() => {
-      let updated = [...dataList];
-  
-      switch (filterType) {
-        case "today":
-          updated = updated.filter((item) => item.isNew === true);
-          break;
-        case "active":
-          updated = updated.filter((item) => item.status === "Active");
-          break;
-        case "inactive":
-          updated = updated.filter((item) => item.status === "Inactive");
-          break;
-        default:
-          break; // "all"
-      }
-  
-      if (searchQuery) {
-        const q = searchQuery.toLowerCase();
-        updated = updated.filter((item) =>
-          Object.values(item).some(
-            (val) => typeof val === "string" && val.toLowerCase().includes(q)
-          )
-        );
-      }
-  
-      setFilteredData(updated);
-      setCurrentPage(1);
-    }, [filterType, searchQuery, dataList]);
+  useEffect(() => {
+    let updated = [...dataList];
 
+    switch (filterType) {
+      case "today":
+        updated = updated.filter((item) => item.isNew === true);
+        break;
+      case "active":
+        updated = updated.filter((item) => item.status === "Active");
+        break;
+      case "inactive":
+        updated = updated.filter((item) => item.status === "Inactive");
+        break;
+      default:
+        break; // "all"
+    }
+
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      updated = updated.filter((item) =>
+        Object.values(item).some(
+          (val) => typeof val === "string" && val.toLowerCase().includes(q)
+        )
+      );
+    }
+
+    setFilteredData(updated);
+    setCurrentPage(1);
+  }, [filterType, searchQuery, dataList]);
 
   // ----------------------------------------------------------------------
   // ↕️ SORTING LOGIC
@@ -94,8 +149,7 @@ const ShowBillOfMaterial = () => {
     });
 
     setFilteredData(sorted);
-  }; 
-
+  };
 
   // ==============================
   // COLUMN SEARCH
@@ -110,7 +164,6 @@ const ShowBillOfMaterial = () => {
     setFilteredData(updated);
     setCurrentPage(1);
   };
-  
 
   // ----------------------------------------------------------------------
   // ❌ DELETE ROW WITH CONFIRMATION
@@ -167,31 +220,29 @@ const ShowBillOfMaterial = () => {
   // UI RENDER
   // ----------------------------------------------------------------------
   return (
-    <div className="p-2 md:p-2 space-y-5 w-full">
-
+    <div className="space-y-2 w-full">
       {/* ------------------------------------------------------------------ */}
       {/* 🔍 FILTER + SEARCH + ADD BUTTON */}
       {/* ------------------------------------------------------------------ */}
 
-        {/* LEFT — Filter + Search */}
-        <div className="">
-          {/* Filter Select Box */}
-          <SelectBoxCommon
-            value={filterType}
-             onChange={setFilterType}
-             dataList={dataList} // pass full data for dynamic counts
-          />
-        </div>
+      {/* LEFT — Filter + Search */}
+      <div className="">
+        {/* Filter Select Box */}
+        <SelectBoxCommon
+          value={filterType}
+          onChange={setFilterType}
+          dataList={dataList} // pass full data for dynamic counts
+        />
+      </div>
 
       <div className="flex flex-col md:flex-row justify-end md:items-center gap-3">
-
         {/* RIGHT — Download + Add */}
         <div className="flex items-center gap-3">
           <DownloadDataButton data={dataList} fileName="Bill Of Materials" />
 
           <button
             onClick={handleAddClick}
-            className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-sm font-semibold shadow transition-all duration-300 hover:shadow-lg"
+            className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-xs font-semibold shadow transition-all duration-300 hover:shadow-lg"
             style={{ backgroundColor: "var(--color-primary)" }}
           >
             <PlusCircle size={12} />
@@ -204,22 +255,28 @@ const ShowBillOfMaterial = () => {
       {/* 📋 TABLE */}
       {/* ------------------------------------------------------------------ */}
       <div className="overflow-x-auto">
-        <EditableTable
+        <BoiTable
           headers={headers}
           rows={paginatedData}
-          handleEdit={handleEditClick}
+          editRowId={editRowId}
+          editedData={editedData}
+          editableFields={editableFields}
+          handleEdit={handleEdit}
+          handleSave={handleSave}
+          handleCancel={handleCancel}
+          handleChange={handleChange}
           handleDelete={handleDelete}
           sortConfig={sortConfig}
           onSort={onSort}
           onColumnSearch={handleColumnSearch}
-
+          productOptions={fakeMainProductData} // <-- newly passed
         />
       </div>
 
       {/* ------------------------------------------------------------------ */}
       {/* 📄 PAGINATION */}
       {/* ------------------------------------------------------------------ */}
-      <div className="flex justify-center pt-2">
+      <div className="flex justify-center ">
         <Pagination
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}

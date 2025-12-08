@@ -16,8 +16,6 @@ const componentsMap = {
   Product_Type : ShowTypeProduct,
   Assembly_Type : ShowAssemblyType,
   Unit_Master : ShowUnitMaster
-
-
 };
 
 // ✅ Icons for each tab
@@ -43,7 +41,7 @@ const ProductUrl = () => {
     <div className="space-y-4 h-full w-full overflow-hidden transition-colors duration-300">
       {/* ✅ Tabs Navigation */}
       <div
-        className="flex flex-wrap justify-start gap-2 p-1 rounded-lg "
+        className="flex flex-wrap justify-start gap-2 rounded-lg "
         style={{
           backgroundColor: "var(--color-surface)",
           // borderColor: "var(--color-primary)",
@@ -53,7 +51,7 @@ const ProductUrl = () => {
           <button
             key={key}
             onClick={() => setActiveTab(key)}
-            className="flex items-center gap-2 px-4 py-1 rounded-lg text-[13px] font-semibold transition-all duration-300 ease-in-out"
+            className="flex items-center gap-2 px-2 py-1 rounded-lg text-[12px] font-semibold transition-all duration-300 ease-in-out"
             style={{
               backgroundColor:
                 activeTab === key

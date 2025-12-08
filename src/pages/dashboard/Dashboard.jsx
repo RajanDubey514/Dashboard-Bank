@@ -51,7 +51,7 @@ const deviceData = [
 
 export default function Dashboard() {
   return (
-    <div className="p-2 md:p-4 space-y-4 overflow-hidden"
+    <div className="p-1 md:p-3 space-y-4 overflow-hidden"
       style={{ color: "var(--color-text)" }}
     >
       {/* Stat Cards */}
@@ -85,7 +85,7 @@ export default function Dashboard() {
             Revenue Overview
           </h2>
 
-          <div className="h-44 sm:h-56 md:h-64">
+          <div className="h-40 sm:h-50 md:h-60">
             <LineOverviewChart
               data={revenueData}
               strokeColor="var(--color-primary)"
@@ -110,7 +110,7 @@ export default function Dashboard() {
             User Devices
           </h2>
 
-          <div className="h-44 sm:h-56 md:h-64">
+          <div className="h-40 sm:h-50 md:h-60">
             <PieDeviceChart
               data={deviceData}
               colors={[

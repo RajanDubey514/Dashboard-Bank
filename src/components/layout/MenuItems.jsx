@@ -1,3 +1,4 @@
+
 // MenuItems.jsx
 import {
   LayoutGrid,
@@ -17,10 +18,8 @@ import {
 
 const MenuItems = [
   { name: "Dashboard", icon: LayoutGrid, path: "/" },
-//   { name: "Setting", icon: Settings, path: "/setting" },
 
   {
-    // name: "Sales & Distribution",
     name: "Sales",
     icon: Receipt,
     subItems: [
@@ -32,7 +31,6 @@ const MenuItems = [
   },
 
   {
-    // name: "Procurement / Purchase",
     name: "Purchase",
     icon: ShoppingCart,
     subItems: [
@@ -45,7 +43,6 @@ const MenuItems = [
 
   {
     name: "Production",
-    // name: "Production / Manufacturing",
     icon: Building2,
     subItems: [
       { name: "Bill of Material (BOM)", path: "/bom" },
@@ -56,7 +53,6 @@ const MenuItems = [
 
   {
     name: "Inventory",
-    // name: "Inventory & Warehouse",
     icon: Boxes,
     subItems: [
       { name: "Stock Transfer", path: "/stock-transfer" },
@@ -66,7 +62,6 @@ const MenuItems = [
   },
 
   {
-    // name: "Finance & Accounts",
     name: "Finance",
     icon: Wallet,
     subItems: [
@@ -130,7 +125,6 @@ const MenuItems = [
 
   {
     name: "Day Books",
-    // name: "Day Books & Registers",
     icon: ClipboardList,
     subItems: [
       { name: "Day Book", path: "/day-book" },
@@ -141,13 +135,13 @@ const MenuItems = [
 
   {
     name: "Admin/Master Setup",
-    // name: "Administration / Master Setup",
     icon: Users,
     subItems: [
-      { name: "Product",  path: "/admin/product" },
-      { name: "Account", path: "/admin/account" },
-      { name: "User Management", path: "/admin/user-management" },
-      { name: "BOM Master", path: "/admin/bom" },
+      { name: "Product", path: "/admin?page=product" },
+      { name: "Customer", path: "/admin?page=account" },
+      { name: "Supplier", path: "/admin?page=supplier" },
+      { name: "User Management", path: "/admin?page=usermanagement" },
+      { name: "BOM Master", path: "/admin?page=bom" },
     ],
   },
 ];

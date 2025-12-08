@@ -38,7 +38,7 @@ const AddGroupForm = ({ dataList, setDataList, onClose }) => {
       <div className="p-4 space-y-4 overflow-y-auto flex-1">
         {/* Group Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-xs font-medium text-gray-700">
             Group Name <span className="text-red-500">*</span>
           </label>
           <input
@@ -47,7 +47,7 @@ const AddGroupForm = ({ dataList, setDataList, onClose }) => {
             value={formik.values.groupName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring focus:ring-blue-100"
+            className="w-full border border-gray-300 rounded-md p-2 text-xs focus:ring focus:ring-blue-100"
             placeholder="Enter group name"
           />
           {formik.touched.groupName && formik.errors.groupName && (
@@ -59,7 +59,7 @@ const AddGroupForm = ({ dataList, setDataList, onClose }) => {
 
         {/* Remark */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-xs font-medium text-gray-700">
             Remark
           </label>
           <textarea
@@ -67,7 +67,7 @@ const AddGroupForm = ({ dataList, setDataList, onClose }) => {
             value={formik.values.remark}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring focus:ring-blue-100"
+            className="w-full border border-gray-300 rounded-md p-2 text-xs focus:ring focus:ring-blue-100"
             placeholder="Enter remark (optional)"
             rows="3"
           />
@@ -88,7 +88,7 @@ const AddGroupForm = ({ dataList, setDataList, onClose }) => {
             onChange={formik.handleChange}
             className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring focus:ring-blue-200"
           />
-          <label htmlFor="activeStatus" className="text-sm text-gray-700">
+          <label htmlFor="activeStatus" className="text-xs text-gray-700">
             Active
           </label>
         </div>
@@ -99,20 +99,20 @@ const AddGroupForm = ({ dataList, setDataList, onClose }) => {
         <button
           type="button"
           onClick={() => formik.resetForm()}
-          className="px-4 py-1 border rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100"
+          className="px-4 py-1 border rounded-md text-xs font-medium text-gray-600 hover:bg-gray-100"
         >
           Reset
         </button>
         <button
           type="button"
           onClick={() => onClose && onClose()}
-          className="px-4 py-1 border rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100"
+          className="px-4 py-1 border rounded-md text-xs font-medium text-gray-600 hover:bg-gray-100"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-4 py-1 rounded-md text-sm font-semibold text-white"
+          className="px-4 py-1 rounded-md text-xs font-semibold text-white"
           style={{ backgroundColor: "var(--color-primary)" }}
         >
           Save

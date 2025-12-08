@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+
 import Login from "./pages/loginPage/Login";
-import Signup from "./pages/loginPage/Signup"; // ✅ Added Signup Page
+import Signup from "./pages/loginPage/Signup";
+
 import Dashboard from "./pages/dashboard/Dashboard";
-import CustomerUrl from "./pages//admin/salesPage/CustomerUrl";
 import MainLayout from "./layoutWraper/MainLayout";
 import Settings from "./pages/Settings";
-// import ShowProduct from "./pages/productPage/showProduct/ShowProduct";
-import ProductUrl from "./pages/admin/productPage/ProductUrl";
-import ShowBillOfMaterial from "./pages/admin/boi/show/ShowBillOfMaterial";
-import ShowuserManagment from "./pages/admin/userManagement/show/ShowuserManagment";
 
-// 🔒 PrivateRoute wrapper
+import AdminRouter from "./pages/admin/AdminRouter";   // ✅ NEW
+
+// 🔒 PrivateRoute
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("authToken");
   const location = useLocation();
+
   return token ? (
     children
   ) : (
@@ -22,41 +22,27 @@ const PrivateRoute = ({ children }) => {
   );
 };
 
-const App = () => {
+export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // ✅ Check login status on app load
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    setIsLoggedIn(!!token);
+    setIsLoggedIn(!!localStorage.getItem("authToken"));
   }, []);
 
   return (
     <Routes>
-      {/* 🔓 Public routes */}
+      {/* Public */}
       <Route
         path="/login"
-        element={
-          !isLoggedIn ? (
-            <Login setIsLoggedIn={setIsLoggedIn} />
-          ) : (
-            <Navigate to="/" replace />
-          )
-        }
+        element={!isLoggedIn ? <Login setIsLoggedIn={setIsLoggedIn} /> : <Navigate to="/" />}
       />
 
       <Route
         path="/signup"
-        element={
-          !isLoggedIn ? (
-            <Signup />
-          ) : (
-            <Navigate to="/" replace />
-          )
-        }
+        element={!isLoggedIn ? <Signup /> : <Navigate to="/" />}
       />
 
-      {/* 🔒 Protected routes under MainLayout */}
+      {/* Protected */}
       <Route
         path="/"
         element={
@@ -65,19 +51,17 @@ const App = () => {
           </PrivateRoute>
         }
       >
-        {/* Nested routes inside layout */}
+        {/* default dashboard */}
         <Route index element={<Dashboard />} />
-        <Route path="/admin/account" element={<CustomerUrl />} />
-        <Route path="/admin/product" element={<ProductUrl />}/>
-        <Route path="/admin/bom" element={<ShowBillOfMaterial />}/>
-        <Route path="/admin/user-management" element={<ShowuserManagment />}/>
-        <Route path="/setting" element={<Settings />} />
+
+        {/* Single admin route */}
+        <Route path="admin" element={<AdminRouter />} />
+
+        <Route path="setting" element={<Settings />} />
       </Route>
 
-      {/* 🔁 Catch-all redirect */}
+      {/* fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
-};
-
-export default App;
+}

@@ -35,6 +35,9 @@ const ShowProduct = () => {
   const [editedData, setEditedData] = useState({});
   const editableFields = []; // You can add fields to allow inline editing
 
+  const [columnSearchKeys, setColumnSearchKeys] = useState({});
+
+
   // Sorting
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
@@ -111,16 +114,53 @@ const ShowProduct = () => {
     // ==============================
   // COLUMN SEARCH
   // ==============================
-  const handleColumnSearch = (header, value) => {
-    const updated = dataList.filter((item) =>
-      String(item[header] || "")
-        .toLowerCase()
-        .includes(value.toLowerCase())
-    );
+  // const handleColumnSearch = (header, value) => {
+  //   const updated = dataList.filter((item) =>
+  //     String(item[header] || "")
+  //       .toLowerCase()
+  //       .includes(value.toLowerCase())
+  //   );
 
-    setFilteredData(updated);
-    setCurrentPage(1);
-  };
+  //   setFilteredData(updated);
+  //   setCurrentPage(1);
+  // };
+ 
+  
+  // COLUMN SEARCH
+const handleColumnSearch = (header, keys) => {
+  // Update stored keys
+  setColumnSearchKeys(prev => ({
+    ...prev,
+    [header]: keys,
+  }));
+
+  // Apply filters
+  applyFilters({
+    ...columnSearchKeys,
+    [header]: keys
+  });
+};
+
+const applyFilters = (allKeys) => {
+  let result = [...dataList];  // ✅ use dataList as original full rows
+
+  Object.keys(allKeys).forEach(col => {
+    const keys = allKeys[col];
+    if (!keys || keys.length === 0) return;
+
+    // Filter rows where all keys are included
+    result = result.filter(row =>
+      keys.every(key =>
+        String(row[col] ?? "")
+          .toLowerCase()
+          .includes(key.toLowerCase())
+      )
+    );
+  });
+
+  setFilteredData(result);  // ✅ update filteredData which the table uses
+  setCurrentPage(1);        // reset pagination
+};
 
 
   // ==================================================================
@@ -184,7 +224,7 @@ const ShowProduct = () => {
   // 🖥️ MAIN VIEW
   // ==================================================================
   return (
-    <div className="p-2 md:p-3 space-y-5 w-full">
+    <div className="space-y-2 w-full">
 
       {/* =============================================================
           🔍 FILTER + DOWNLOAD + ADD BUTTON
@@ -215,7 +255,7 @@ const ShowProduct = () => {
           {/* Add Product Button */}
           <button
             onClick={openAddModal}
-            className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-sm font-semibold shadow transition-all duration-300 hover:shadow-lg"
+            className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-xs font-semibold shadow transition-all duration-300 hover:shadow-lg"
             style={{ backgroundColor: "var(--color-primary)" }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.backgroundColor =
@@ -245,6 +285,7 @@ const ShowProduct = () => {
         sortConfig={sortConfig}
         onSort={onSort}
         onColumnSearch={handleColumnSearch}
+        columnSearchKeys={columnSearchKeys}   // NEW
 
 
       />
@@ -252,7 +293,7 @@ const ShowProduct = () => {
       {/* =============================================================
           📄 PAGINATION
       =============================================================== */}
-      <div className="flex justify-center pt-2">
+      <div className="flex justify-center">
         <Pagination
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}

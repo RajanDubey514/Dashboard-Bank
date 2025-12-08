@@ -1159,8 +1159,6 @@ export const fakeItemMaterialData = [
   },
 ];
 
-
-
 export const fakeDepartments = ["HR", "IT", "Sales", "Production"];
 export const fakeUserRoles = ["Admin", "Manager", "Executive", "Viewer"];
 export const fakeStatuses = ["Active", "Inactive"];
@@ -1278,3 +1276,110 @@ export const FakeUserData = [
     expiryDate: "2025-07-22"
   }
 ];
+
+
+export const fakeConsumableMaterialList = [
+  {
+    id: 1,
+    name: "Cutting Oil",
+    code: "CO-101",
+    unit: "Ltr",
+  },
+  {
+    id: 2,
+    name: "Welding Rod",
+    code: "WR-205",
+    unit: "Kg",
+  },
+  {
+    id: 3,
+    name: "Grease",
+    code: "GR-309",
+    unit: "Kg",
+  },
+  {
+    id: 4,
+    name: "Coolant",
+    code: "CL-412",
+    unit: "Ltr",
+  },
+  {
+    id: 5,
+    name: "Thread Locker",
+    code: "TL-518",
+    unit: "Bottle",
+  },
+  {
+    id: 6,
+    name: "Cleaning Solvent",
+    code: "CS-622",
+    unit: "Ltr",
+  },
+  {
+    id: 7,
+    name: "Sand Paper",
+    code: "SP-733",
+    unit: "Pack",
+  },
+  {
+    id: 8,
+    name: "Lubricant Spray",
+    code: "LS-847",
+    unit: "Can",
+  },
+  {
+    id: 9,
+    name: "Anti-Rust Oil",
+    code: "AR-950",
+    unit: "Ltr",
+  },
+  {
+    id: 10,
+    name: "Cotton Waste",
+    code: "CW-1040",
+    unit: "Kg",
+  },
+];
+
+
+
+export const fakeMaterialList = [
+  {
+    id: 1,
+    productName: "Steel Cabinet",
+    productCode: "SC-001",
+
+    consumable: [
+      { itemName: "Screw", code: "ITM-01", quantity: 20, rate: 2, unit: "pcs" },
+      { itemName: "Glue", code: "ITM-02", quantity: 1, rate: 50, unit: "bottle" },
+    ],
+
+    manufacturing: [
+      { itemName: "Steel Sheet", code: "MAT-10", quantity: 1, rate: 500, unit: "kg" },
+      { itemName: "Handle", code: "MAT-11", quantity: 2, rate: 30, unit: "pcs" },
+    ],
+
+    status: "Active",
+    isNew: true
+  },
+
+  {
+    id: 2,
+    productName: "Wooden Table",
+    productCode: "WT-002",
+
+    consumable: [
+      { itemName: "Nails", code: "ITM-10", quantity: 50, rate: 1, unit: "pcs" },
+      { itemName: "Fevicol", code: "ITM-11", quantity: 1, rate: 40, unit: "bottle" },
+    ],
+
+    manufacturing: [
+      { itemName: "Wood Board", code: "MAT-20", quantity: 2, rate: 300, unit: "sqm" },
+      { itemName: "Leg Frame", code: "MAT-21", quantity: 4, rate: 150, unit: "pcs" },
+    ],
+
+    status: "Inactive",
+    isNew: false
+  },
+];
+

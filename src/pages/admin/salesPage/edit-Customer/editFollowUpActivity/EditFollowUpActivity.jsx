@@ -81,14 +81,14 @@ const EditFollowUpActivity = ({ selectedData, dataList, setDataList, closeEditMo
   ];
 
   return (
-    <div className="flex flex-col bg-gray-100 rounded-lg h-[75vh]">
+    <div className="flex flex-col bg-gray-100 rounded-lg ">
       {/* Form Container */}
       <div className="flex-1 overflow-y-auto p-4">
         <form onSubmit={formik.handleSubmit} id="editFollowUpForm" className="space-y-4">
           
           {/* Due Date/Time */}
           <div>
-            <label className="block mb-1">
+            <label className="block mb-1 text-xs">
               <RequiredLabel label="Due Date/Time" />
             </label>
             <input
@@ -97,20 +97,20 @@ const EditFollowUpActivity = ({ selectedData, dataList, setDataList, closeEditMo
               value={formik.values.dueDateTime}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className={`w-full border rounded px-3 py-2 ${
+              className={`w-full text-xs border rounded px-3 py-2 ${
                 formik.touched.dueDateTime && formik.errors.dueDateTime
                   ? "border-red-500"
                   : "border-gray-300"
               }`}
             />
             {formik.touched.dueDateTime && formik.errors.dueDateTime && (
-              <p className="text-red-600 text-sm mt-1">{formik.errors.dueDateTime}</p>
+              <p className="text-red-600 text-xs mt-1">{formik.errors.dueDateTime}</p>
             )}
           </div>
 
           {/* Reminder Date/Time */}
           <div>
-            <label className="block mb-1">
+            <label className="block mb-1 text-xs">
               <RequiredLabel label="Reminder Date/Time" />
             </label>
             <input
@@ -119,33 +119,33 @@ const EditFollowUpActivity = ({ selectedData, dataList, setDataList, closeEditMo
               value={formik.values.reminderDateTime}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className={`w-full border rounded px-3 py-2 ${
+              className={`w-full text-xs border rounded px-3 py-2 ${
                 formik.touched.reminderDateTime && formik.errors.reminderDateTime
                   ? "border-red-500"
                   : "border-gray-300"
               }`}
             />
             {formik.touched.reminderDateTime && formik.errors.reminderDateTime && (
-              <p className="text-red-600 text-sm mt-1">{formik.errors.reminderDateTime}</p>
+              <p className="text-red-600 text-xs mt-1">{formik.errors.reminderDateTime}</p>
             )}
           </div>
 
           {/* Remarks */}
           <div>
-            <label className="block mb-1">Remarks</label>
+            <label className="block mb-1 text-xs">Remarks</label>
             <textarea
               name="remarks"
               value={formik.values.remarks}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="w-full border border-gray-300 rounded px-3 py-2 resize-none"
+              className="w-full border text-xs border-gray-300 rounded px-3 py-2 resize-none"
               rows={3}
             />
           </div>
 
           {/* Follow Up Status Reason */}
           <div>
-            <label className="block mb-1">
+            <label className="block mb-1 text-xs">
               <RequiredLabel label="Follow Up Status Reason" />
             </label>
             <input
@@ -154,33 +154,33 @@ const EditFollowUpActivity = ({ selectedData, dataList, setDataList, closeEditMo
               value={formik.values.followUpStatusReason}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className={`w-full border rounded px-3 py-2 ${
+              className={`w-full border text-xs rounded px-3 py-2 ${
                 formik.touched.followUpStatusReason && formik.errors.followUpStatusReason
                   ? "border-red-500"
                   : "border-gray-300"
               }`}
             />
             {formik.touched.followUpStatusReason && formik.errors.followUpStatusReason && (
-              <p className="text-red-600 text-sm mt-1">{formik.errors.followUpStatusReason}</p>
+              <p className="text-red-600 text-xs mt-1">{formik.errors.followUpStatusReason}</p>
             )}
           </div>
 
           {/* Assign Follow Up */}
           <div>
-            <label className="block mb-1">Assign Follow Up</label>
+            <label className="block mb-1 text-xs">Assign Follow Up</label>
             <input
               type="text"
               name="assignFollowUp"
               value={formik.values.assignFollowUp}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="w-full border border-gray-300 rounded px-3 py-2"
+              className="w-full text-xs border border-gray-300 rounded px-3 py-2"
             />
           </div>
 
           {/* Follow Up Activity Type */}
           <div>
-            <label className="block mb-1">
+            <label className="block mb-1 text-xs">
               <RequiredLabel label="Follow Up Activity Type" />
             </label>
             <Select
@@ -192,13 +192,13 @@ const EditFollowUpActivity = ({ selectedData, dataList, setDataList, closeEditMo
                 formik.setFieldValue("followUpActivityType", selected?.value || "")
               }
               onBlur={formik.handleBlur}
-              className="w-full"
+              className="w-full text-xs"
             />
           </div>
 
           {/* Priority */}
           <div>
-            <label className="block mb-1">
+            <label className="block mb-1 text-xs">
               <RequiredLabel label="Priority" />
             </label>
             <Select
@@ -210,13 +210,13 @@ const EditFollowUpActivity = ({ selectedData, dataList, setDataList, closeEditMo
                 formik.setFieldValue("priority", selected?.value || "")
               }
               onBlur={formik.handleBlur}
-              className="w-full"
+              className="w-full text-xs"
             />
           </div>
 
           {/* Follow Up Status */}
           <div>
-            <label className="block mb-1">
+            <label className="block mb-1 text-xs">
               <RequiredLabel label="Follow Up Status" />
             </label>
             <Select
@@ -228,7 +228,7 @@ const EditFollowUpActivity = ({ selectedData, dataList, setDataList, closeEditMo
                 formik.setFieldValue("followUpStatus", selected?.value || "")
               }
               onBlur={formik.handleBlur}
-              className="w-full"
+              className="w-full text-xs"
             />
           </div>
         </form>
@@ -239,14 +239,14 @@ const EditFollowUpActivity = ({ selectedData, dataList, setDataList, closeEditMo
         <button
           type="submit"
           form="editFollowUpForm"
-          className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+          className="px-6 py-2 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition"
         >
           Update
         </button>
         <button
           type="button"
           onClick={() => formik.resetForm()}
-          className="px-6 py-2 border border-red-600 text-red-600 rounded hover:bg-red-50 transition"
+          className="px-6 py-2 text-xs border border-red-600 text-red-600 rounded hover:bg-red-50 transition"
         >
           Reset
         </button>
