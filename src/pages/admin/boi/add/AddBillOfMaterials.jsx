@@ -12,7 +12,7 @@ import ProductDetails from "./BoiProductDetails";
 import ConsumableTable from "./BoiConsumableTable";
 import ManufacturingTable from "./BoiManufacturingTable";
 
-export default function MainProduct({ dataList, setDataList, onClose }) {
+export default function AddBillOfMaterials({ dataList, setDataList, onClose }) {
   const [productList, setProductList] = useState([]);
   const [consumableRows, setConsumableRows] = useState([]);
   const [manufacturingRows, setManufacturingRows] = useState([]);
@@ -33,8 +33,8 @@ export default function MainProduct({ dataList, setDataList, onClose }) {
     onSubmit: (values) => {
       const finalData = {
         id: Date.now(),
-        productName: values.productName,
-        productCode: values.productCode,
+        // productName: values.productName,
+        // productCode: values.productCode,
         consumables: consumableRows,
         manufacturing: manufacturingRows,
       };
@@ -57,10 +57,10 @@ export default function MainProduct({ dataList, setDataList, onClose }) {
   return (
     <div className="relative p-4 pb-24 space-y-6">
 
-      <ProductDetails
+      {/* <ProductDetails
         productList={productList}
         formik={formik}
-      />
+      /> */}
 
       <ConsumableTable
         rows={consumableRows}

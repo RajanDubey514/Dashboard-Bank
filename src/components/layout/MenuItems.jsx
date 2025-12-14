@@ -25,7 +25,7 @@ const MenuItems = [
     subItems: [
       { name: "Sales Order", path: "/sales-order" },
       { name: "Delivery Challan (D.C.)", path: "/delivery-challan" },
-      { name: "Tax Invoice / Sales Invoice", path: "/sales-invoice" },
+      { name: "Tax/Sales Invoice", path: "/sales?page=tax_Sales_invoice" },
       { name: "Sales Return", path: "/sales-return" },
     ],
   },
@@ -141,7 +141,7 @@ const MenuItems = [
       { name: "Customer", path: "/admin?page=account" },
       { name: "Supplier", path: "/admin?page=supplier" },
       { name: "User Management", path: "/admin?page=usermanagement" },
-      { name: "BOM Master", path: "/admin?page=bom" },
+      // { name: "BOM Master", path: "/admin?page=bom" },
     ],
   },
 ];

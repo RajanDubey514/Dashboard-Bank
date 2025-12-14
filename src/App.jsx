@@ -8,7 +8,8 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import MainLayout from "./layoutWraper/MainLayout";
 import Settings from "./pages/Settings";
 
-import AdminRouter from "./pages/admin/AdminRouter";   // ✅ NEW
+import AdminRouter from "./pages/admin/AdminRouter"; // ✅ NEW
+import SalesRouter from "./pages/sales/SalesRouter";
 
 // 🔒 PrivateRoute
 const PrivateRoute = ({ children }) => {
@@ -34,7 +35,13 @@ export default function App() {
       {/* Public */}
       <Route
         path="/login"
-        element={!isLoggedIn ? <Login setIsLoggedIn={setIsLoggedIn} /> : <Navigate to="/" />}
+        element={
+          !isLoggedIn ? (
+            <Login setIsLoggedIn={setIsLoggedIn} />
+          ) : (
+            <Navigate to="/" />
+          )
+        }
       />
 
       <Route
@@ -56,7 +63,7 @@ export default function App() {
 
         {/* Single admin route */}
         <Route path="admin" element={<AdminRouter />} />
-
+        <Route path="sales" element={<SalesRouter />} />
         <Route path="setting" element={<Settings />} />
       </Route>
 

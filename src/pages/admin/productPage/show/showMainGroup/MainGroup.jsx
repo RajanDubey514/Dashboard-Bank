@@ -32,6 +32,7 @@ const MainGroup = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false); // Add modal
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Edit modal
   const [selectedData, setSelectedData] = useState(null); // Edit selected row
+  const [columnSearchKeys, setColumnSearchKeys] = useState({});
 
 
 
@@ -84,21 +85,33 @@ const MainGroup = () => {
   // ===========================
   // 🔽 SORTING LOGIC
   // ===========================
-  const onSort = (key) => {
-    let direction = "asc";
+  // const onSort = (key) => {
+  //   let direction = "asc";
 
-    // If sorted already → toggle direction
-    if (sortConfig.key === key && sortConfig.direction === "asc") {
-      direction = "desc";
-    }
+  //   // If sorted already → toggle direction
+  //   if (sortConfig.key === key && sortConfig.direction === "asc") {
+  //     direction = "desc";
+  //   }
 
+  //   setSortConfig({ key, direction });
+
+  //   const sorted = [...filteredData].sort((a, b) => {
+  //     if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
+  //     if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
+  //     return 0;
+  //   });
+
+  //   setFilteredData(sorted);
+  // };
+
+    const onSort = (key) => {
+    let direction = sortConfig.key === key && sortConfig.direction === "asc" ? "desc" : "asc";
     setSortConfig({ key, direction });
 
-    const sorted = [...filteredData].sort((a, b) => {
-      if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
-      if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
-      return 0;
-    });
+    const sorted = [...filteredData].sort((a, b) =>
+      a[key] < b[key] ? (direction === "asc" ? -1 : 1) :
+      a[key] > b[key] ? (direction === "asc" ? 1 : -1) : 0
+    );
 
     setFilteredData(sorted);
   };
@@ -107,17 +120,41 @@ const MainGroup = () => {
      // ==============================
   // COLUMN SEARCH
   // ==============================
-  const handleColumnSearch = (header, value) => {
-    const updated = dataList.filter((item) =>
-      String(item[header] || "")
-        .toLowerCase()
-        .includes(value.toLowerCase())
-    );
+  // const handleColumnSearch = (header, value) => {
+  //   const updated = dataList.filter((item) =>
+  //     String(item[header] || "")
+  //       .toLowerCase()
+  //       .includes(value.toLowerCase())
+  //   );
 
-    setFilteredData(updated);
-    setCurrentPage(1);
+  //   setFilteredData(updated);
+  //   setCurrentPage(1);
+  // };
+
+
+   const handleColumnSearch = (header, keys) => {
+    const updated = { ...columnSearchKeys, [header]: keys };
+    setColumnSearchKeys(updated);
+    applyFilters(updated);
   };
 
+  const applyFilters = (keysObj) => {
+    let result = [...dataList];
+
+    Object.keys(keysObj).forEach((col) => {
+      const keys = keysObj[col];
+      if (keys?.length > 0) {
+        result = result.filter((row) =>
+          keys.every((key) =>
+            String(row[col] || "").toLowerCase().includes(key.toLowerCase())
+          )
+        );
+      }
+    });
+
+    setFilteredData(result);
+    setCurrentPage(1);
+  };
 
 
   // ===========================
@@ -225,7 +262,7 @@ const MainGroup = () => {
           sortConfig={sortConfig}
           onSort={onSort}
           onColumnSearch={handleColumnSearch}
-
+          columnSearchKeys={columnSearchKeys}
         />
       </div>
 
@@ -239,7 +276,7 @@ const MainGroup = () => {
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           totalPages={totalPages}
-          totalRecords={dataList.length}
+          totalRecords={filteredData.length}
           rowsPerPage={rowsPerPage}
           setRowsPerPage={setRowsPerPage}
         />

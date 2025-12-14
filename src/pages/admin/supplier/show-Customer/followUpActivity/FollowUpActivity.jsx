@@ -222,7 +222,7 @@ const FollowUpActivity = () => {
                      transition-all duration-300 hover:shadow-lg"
             style={{ backgroundColor: "var(--color-primary)" }}
           >
-            <PlusCircle size={16} /> Add Follow-Up Activity
+            <PlusCircle size={16} /> Add Supplier Follow-Up
           </button>
         </div>
       </div>
@@ -266,7 +266,7 @@ const FollowUpActivity = () => {
       <ModalCom
         isOpen={isAddModalOpen}
         onClose={closeAddModal}
-        title="Add Follow-Up Activity"
+        title="Add Supplier Follow-Up"
         content={
           <AddFollowUpActivity
             dataList={dataList}
@@ -281,7 +281,7 @@ const FollowUpActivity = () => {
       <ModalCom
         isOpen={isEditModalOpen}
         onClose={closeEditModal}
-        title="Edit Follow-Up Activity"
+        title="Update Supplier Follow-Up"
         content={
           <EditFollowUpActivity
             selectedData={selectedData}

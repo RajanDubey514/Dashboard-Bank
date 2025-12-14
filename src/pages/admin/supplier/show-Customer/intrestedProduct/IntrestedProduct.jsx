@@ -197,7 +197,7 @@ const IntrestedProduct = () => {
             }}
           >
             <PlusCircle size={12} />
-            Add Interested Product
+            Add Supplier Product
           </button>
         </div>
       </div>
@@ -230,7 +230,7 @@ const IntrestedProduct = () => {
       <ModalCom
         isOpen={isAddModalOpen}
         onClose={closeAddModal}
-        title="Add Interested Product"
+        title="Add Supplier Product"
         content={
           <AddIntrestedProduct
             dataList={dataList}
@@ -243,7 +243,7 @@ const IntrestedProduct = () => {
       <ModalCom
         isOpen={isEditModalOpen}
         onClose={closeEditModal}
-        title="Edit Interested Product"
+        title="Update Supplier Product"
         content={
           <EditIntrestedProduct
             selectedData={selectedData}

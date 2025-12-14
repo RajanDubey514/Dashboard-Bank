@@ -36,19 +36,25 @@ export default function MainLayout() {
 
   let title = "Dashboard";
 
-  // Case 1: Admin query-based pages
-  if (pathname === "/admin" && pageParam) {
-    title =
-      pageTitleMap[pageParam] ||
-      pageParam.charAt(0).toUpperCase() + pageParam.slice(1);
-  } else {
-    // Case 2: Normal routes
-    const parts = pathname.split("/").filter(Boolean);
-    const last = parts[parts.length - 1]?.toLowerCase() || "dashboard";
-    title =
-      fallbackTitleMap[last] ||
-      last.charAt(0).toUpperCase() + last.slice(1);
-  }
+  
+// Routes that support query-based pages
+const queryBasedRoutes = ["/admin", "/sales"];
+
+if (queryBasedRoutes.includes(pathname) && pageParam) {
+  title =
+    pageTitleMap[pageParam] ||
+    pageParam
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+} else {
+  // Normal routes
+  const parts = pathname.split("/").filter(Boolean);
+  const last = parts[parts.length - 1]?.toLowerCase() || "dashboard";
+
+  title =
+    fallbackTitleMap[last] ||
+    last.charAt(0).toUpperCase() + last.slice(1);
+}
 
   /* ------------------------------------------
       3️⃣ Layout UI

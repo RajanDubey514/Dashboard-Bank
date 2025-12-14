@@ -183,7 +183,7 @@ const BranchsDetail = () => {
           className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-xs font-semibold"
           style={{ background: "var(--color-primary)" }}
         >
-          <PlusCircle size={13} /> Add Branch
+          <PlusCircle size={13} /> Add Supplier Branch
         </button>
       </div>
 
@@ -220,7 +220,7 @@ const BranchsDetail = () => {
       <ModalCom
         isOpen={isAddModalOpen}
         onClose={closeAddModal}
-        title="Add Branch"
+        title="Add Supplier Branch"
         content={
           <AddBranchsDetail 
             dataList={dataList} 
@@ -235,7 +235,7 @@ const BranchsDetail = () => {
       <ModalCom
         isOpen={isEditModalOpen}
         onClose={closeEditModal}
-        title="Edit Branch"
+        title="Update Supplier Branch"
         content={
           <EditBranchsDetail
             selectedData={selectedData}

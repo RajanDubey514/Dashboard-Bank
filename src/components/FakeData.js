@@ -232,6 +232,9 @@ export const FakeCustomerData = [
   },
 ];
 
+
+
+
 export const FakeBranchData = [
   {
     id: 1,
@@ -933,6 +936,9 @@ export const FakeGroupData = [
   { id: 8, groupName: "Seasonal Buyers", remark: "Active during festive and seasonal sales", activeStatus: false },
   { id: 9, groupName: "Testing Group", remark: "Used for internal QA and demo purposes", activeStatus: true },
   { id: 10, groupName: "Inactive Clients", remark: "Accounts with low or no recent activity", activeStatus: false },
+  { id: 11, groupName: "North Region Dealers", remark: "Handles all northern area clients", activeStatus: true },
+  { id: 12, groupName: "North Region Dealers", remark: "Handles one northern area clients", activeStatus: true },
+ 
 ];
 
 export const FakeSubMainGroupData = [
@@ -1382,4 +1388,251 @@ export const fakeMaterialList = [
     isNew: false
   },
 ];
+
+
+
+
+
+export const fakeInvoices = [
+  {
+    id: 1,
+    invoice: {
+      invNo: "INV-001",
+      invDate: "2025-01-05",
+      dueDays: 10,
+      dueDate: "2025-01-15",
+      customerName: "Rohan Sharma",
+      mobile: "9876543210",
+      address: "Delhi, India",
+    },
+    products: [
+      {
+        code: "P001",
+        name: "Laptop",
+        qty: 1,
+        rate: 50000,
+        sgst: 9,
+        cgst: 9,
+        igst: 0,
+        discountPct: 5,
+        discountAmt: 0,
+      },
+      {
+        code: "P002",
+        name: "Mouse",
+        qty: 2,
+        rate: 500,
+        sgst: 9,
+        cgst: 9,
+        igst: 0,
+        discountPct: 0,
+        discountAmt: 50,
+      },
+      {
+        code: "P003",
+        name: "Keyboard",
+        qty: 1,
+        rate: 1200,
+        sgst: 9,
+        cgst: 9,
+        igst: 0,
+        discountPct: 0,
+        discountAmt: 0,
+      },
+    ],
+  },
+
+  {
+    id: 2,
+    invoice: {
+      invNo: "INV-002",
+      invDate: "2025-01-07",
+      dueDays: 7,
+      dueDate: "2025-01-14",
+      customerName: "Anita Verma",
+      mobile: "9988776655",
+      address: "Mumbai, India",
+    },
+    products: [
+      {
+        code: "P001",
+        name: "Laptop",
+        qty: 2,
+        rate: 48000,
+        sgst: 9,
+        cgst: 9,
+        igst: 0,
+        discountPct: 3,
+        discountAmt: 0,
+      },
+      {
+        code: "P002",
+        name: "Mouse",
+        qty: 1,
+        rate: 500,
+        sgst: 9,
+        cgst: 9,
+        igst: 0,
+        discountPct: 0,
+        discountAmt: 0,
+      },
+      {
+        code: "P003",
+        name: "Keyboard",
+        qty: 1,
+        rate: 1100,
+        sgst: 9,
+        cgst: 9,
+        igst: 0,
+        discountPct: 0,
+        discountAmt: 0,
+      },
+    ],
+  },
+
+  {
+    id: 3,
+    invoice: {
+      invNo: "INV-003",
+      invDate: "2025-01-10",
+      dueDays: 15,
+      dueDate: "2025-01-25",
+      customerName: "Suresh Patel",
+      mobile: "9123456789",
+      address: "Ahmedabad, India",
+    },
+    products: [
+      {
+        code: "P001",
+        name: "Laptop",
+        qty: 1,
+        rate: 52000,
+        sgst: 9,
+        cgst: 9,
+        igst: 0,
+        discountPct: 0,
+        discountAmt: 2000,
+      },
+      {
+        code: "P002",
+        name: "Mouse",
+        qty: 3,
+        rate: 450,
+        sgst: 9,
+        cgst: 9,
+        igst: 0,
+        discountPct: 0,
+        discountAmt: 0,
+      },
+      {
+        code: "P003",
+        name: "Keyboard",
+        qty: 1,
+        rate: 1250,
+        sgst: 9,
+        cgst: 9,
+        igst: 0,
+        discountPct: 0,
+        discountAmt: 0,
+      },
+    ],
+  },
+
+  {
+    id: 4,
+    invoice: {
+      invNo: "INV-004",
+      invDate: "2025-01-12",
+      dueDays: 5,
+      dueDate: "2025-01-17",
+      customerName: "Neha Gupta",
+      mobile: "9012345678",
+      address: "Jaipur, India",
+    },
+    products: [
+      {
+        code: "P001",
+        name: "Laptop",
+        qty: 1,
+        rate: 49000,
+        sgst: 9,
+        cgst: 9,
+        igst: 0,
+        discountPct: 2,
+        discountAmt: 0,
+      },
+      {
+        code: "P002",
+        name: "Mouse",
+        qty: 2,
+        rate: 520,
+        sgst: 9,
+        cgst: 9,
+        igst: 0,
+        discountPct: 0,
+        discountAmt: 0,
+      },
+      {
+        code: "P003",
+        name: "Keyboard",
+        qty: 2,
+        rate: 1150,
+        sgst: 9,
+        cgst: 9,
+        igst: 0,
+        discountPct: 0,
+        discountAmt: 0,
+      },
+    ],
+  },
+
+  {
+    id: 5,
+    invoice: {
+      invNo: "INV-005",
+      invDate: "2025-01-15",
+      dueDays: 12,
+      dueDate: "2025-01-27",
+      customerName: "Amit Singh",
+      mobile: "8899776655",
+      address: "Lucknow, India",
+    },
+    products: [
+      {
+        code: "P001",
+        name: "Laptop",
+        qty: 1,
+        rate: 51000,
+        sgst: 9,
+        cgst: 9,
+        igst: 0,
+        discountPct: 0,
+        discountAmt: 1000,
+      },
+      {
+        code: "P002",
+        name: "Mouse",
+        qty: 1,
+        rate: 500,
+        sgst: 9,
+        cgst: 9,
+        igst: 0,
+        discountPct: 0,
+        discountAmt: 0,
+      },
+      {
+        code: "P003",
+        name: "Keyboard",
+        qty: 1,
+        rate: 1200,
+        sgst: 9,
+        cgst: 9,
+        igst: 0,
+        discountPct: 0,
+        discountAmt: 0,
+      },
+    ],
+  },
+];
+
 

@@ -66,11 +66,11 @@ const CustomerBasic = () => {
        case "today":
          updated = updated.filter((item) => item.isNew === true);
          break;
-       case "active":
-         updated = updated.filter((item) => item.status === "Active");
+       case "activeStatus":
+         updated = updated.filter((item) => item.activeStatus === true);
          break;
        case "inactive":
-         updated = updated.filter((item) => item.status === "Inactive");
+         updated = updated.filter((item) => item.activeStatus === false);
          break;
        default:
          break; // "all"
@@ -213,7 +213,7 @@ const CustomerBasic = () => {
           className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-xs font-semibold shadow"
           style={{ background: "var(--color-primary)" }}
         >
-          <PlusCircle size={15} /> Add Customer
+          <PlusCircle size={15} /> Add Supplier
         </button>
       </div>
 
@@ -264,7 +264,7 @@ const CustomerBasic = () => {
       <ModalCom
         isOpen={isAddModalOpen}
         onClose={closeAddModal}
-        title="Add Customer"
+        title="Add Supplier"
         content={
           <AddCustomerBasic
             dataList={dataList}
@@ -279,7 +279,7 @@ const CustomerBasic = () => {
       <ModalCom
         isOpen={isEditModalOpen}
         onClose={closeEditModal}
-        title="Edit Customer"
+        title="Update Supplier"
         content={
           <EditCustomerBasic
             selectedData={selectedData}

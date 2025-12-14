@@ -60,9 +60,9 @@ export default function AdminRouter() {
       case "usermanagement":
         setCurrentComponent(<ShowuserManagment />);
         break;
-      case "bom":
-        setCurrentComponent(<ShowBillOfMaterial />);
-        break;
+      // case "bom":
+      //   setCurrentComponent(<ShowBillOfMaterial />);
+      //   break;
       case "supplier":
         setCurrentComponent(<Supplier />);
         break;
