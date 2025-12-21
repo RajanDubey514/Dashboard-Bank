@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle , CircleX} from "lucide-react";
 import Swal from "sweetalert2";
 
 import ModalCom from "../../../../../components/modalComp/ModalCom";
@@ -121,6 +121,34 @@ const handleView = (row) => {
     setFilteredData(result);
     setCurrentPage(1);
   };
+ 
+   const removeColumnFilter = (column) => {
+  const updatedKeys = { ...columnSearchKeys };
+  delete updatedKeys[column]; // ❌ remove that column filter
+
+  setColumnSearchKeys(updatedKeys);
+
+  // Re-apply remaining column filters
+  let result = [...dataList];
+
+  Object.keys(updatedKeys).forEach((col) => {
+    const keys = updatedKeys[col];
+    if (keys?.length > 0) {
+      result = result.filter((row) =>
+        keys.every((key) =>
+          String(row[col] || "")
+            .toLowerCase()
+            .includes(key.toLowerCase())
+        )
+      );
+    }
+  });
+
+  setFilteredData(result);
+  setCurrentPage(1);
+};
+
+
 
   // ==================================================================
   // 📄 PAGINATION
@@ -184,6 +212,30 @@ const handleView = (row) => {
         </button>
       </div>
 
+       {Object.keys(columnSearchKeys).length > 0 && (
+           <div className="flex gap-1 mb-1">
+          {Object.entries(columnSearchKeys).map(([column, values]) =>
+            values?.length > 0 ? (
+              <div
+                key={column}
+                className="flex items-center gap-2 px-1  bg-gray-100 border rounded-full text-xs"
+              >
+                <span className="font-semibold capitalize">{column}:</span>
+                <span>{values.join(", ")}</span>
+      
+                {/* ❌ REMOVE FILTER */}
+                <button
+                  onClick={() => removeColumnFilter(column)}
+                  className="text-red-600 font-bold hover:scale-110 transition"
+                >
+                  <CircleX size={14}/>
+                </button>
+              </div>
+            ) : null
+          )}
+        </div>
+      )}
+
       {/* TABLE */}
       <ProductEditTable
         headers={headers}
@@ -198,7 +250,7 @@ const handleView = (row) => {
         onSort={onSort}
         onColumnSearch={handleColumnSearch}
         columnSearchKeys={columnSearchKeys}
-         handleView={handleView}
+        handleView={handleView}
       />
 
       {/* PAGINATION */}

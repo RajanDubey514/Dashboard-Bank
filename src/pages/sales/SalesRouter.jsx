@@ -1,6 +1,9 @@
 import { useSearchParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import TaxSalesInvoice from "./taxSalesInvoice/show/TaxSalesInvoice";
+import DeliveryChallan from "./deliveryChallan/show/DeliveryChallan";
+import SalesOrder from "./salesOrder/show/SalesOrder";
+import SalesReturn from "./salesReturn/show/SalesReturn";
 
 
 export default function SalesRouter() {
@@ -10,21 +13,18 @@ export default function SalesRouter() {
 
   useEffect(() => {
     switch (page) {
-      case "tax_Sales_invoice":
+      case "tax_sales_invoice":
         setCurrentComponent(<TaxSalesInvoice />);
         break;
-      // case "account":
-      //   setCurrentComponent(<CustomerUrl />);
-      //   break;
-      // case "usermanagement":
-      //   setCurrentComponent(<ShowuserManagment />);
-      //   break;
-      // case "bom":
-      //   setCurrentComponent(<ShowBillOfMaterial />);
-      //   break;
-      // case "supplier":
-      //   setCurrentComponent(<Supplier />);
-      //   break;
+      case "sales_order":
+        setCurrentComponent(<SalesOrder />);
+        break;
+      case "delivery_challan":
+        setCurrentComponent(<DeliveryChallan />);
+        break;
+      case "sales_return":
+        setCurrentComponent(<SalesReturn />);
+        break;
       default:
         setCurrentComponent(
           <div className="p-4 text-center text-lg font-medium">

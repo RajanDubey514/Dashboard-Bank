@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle , CircleX } from "lucide-react";
 import Swal from "sweetalert2";
 
 // CUSTOM COMPONENTS
@@ -45,6 +45,8 @@ const FollowUpActivity = () => {
   const [selectedData, setSelectedData] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [columnSearchKeys, setColumnSearchKeys] = useState({});
+  
 
   // Inline editing (not used but needed for table props)
   const [editRowId, setEditRowId] = useState(null);
@@ -95,40 +97,71 @@ const FollowUpActivity = () => {
   // ============================================================================
   // 🔥 SORTING FUNCTION
   // ============================================================================
-  const onSort = (key) => {
-    let direction = "asc";
-    if (sortConfig.key === key && sortConfig.direction === "asc") {
-      direction = "desc";
-    }
-
+   const onSort = (key) => {
+    let direction = sortConfig.key === key && sortConfig.direction === "asc" ? "desc" : "asc";
     setSortConfig({ key, direction });
 
-    const sorted = [...filteredData].sort((a, b) => {
-      if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
-      if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
-      return 0;
-    });
+    const sorted = [...filteredData].sort((a, b) =>
+      a[key] < b[key] ? (direction === "asc" ? -1 : 1) :
+      a[key] > b[key] ? (direction === "asc" ? 1 : -1) : 0
+    );
 
     setFilteredData(sorted);
   };
 
-
-
    // ==============================
   // COLUMN SEARCH
   // ==============================
-  const handleColumnSearch = (header, value) => {
-    const updated = dataList.filter((item) =>
-      String(item[header] || "")
-        .toLowerCase()
-        .includes(value.toLowerCase())
-    );
-
-    setFilteredData(updated);
-    setCurrentPage(1);
+  const handleColumnSearch = (header, keys) => {
+    const updated = { ...columnSearchKeys, [header]: keys };
+    setColumnSearchKeys(updated);
+    applyFilters(updated);
   };
 
+  const applyFilters = (keysObj) => {
+    let result = [...dataList];
 
+    Object.keys(keysObj).forEach((col) => {
+      const keys = keysObj[col];
+      if (keys?.length > 0) {
+        result = result.filter((row) =>
+          keys.every((key) =>
+            String(row[col] || "").toLowerCase().includes(key.toLowerCase())
+          )
+        );
+      }
+    });
+
+    setFilteredData(result);
+    setCurrentPage(1);
+  };
+ 
+
+    const removeColumnFilter = (column) => {
+  const updatedKeys = { ...columnSearchKeys };
+  delete updatedKeys[column]; // ❌ remove that column filter
+
+  setColumnSearchKeys(updatedKeys);
+
+  // Re-apply remaining column filters
+  let result = [...dataList];
+
+  Object.keys(updatedKeys).forEach((col) => {
+    const keys = updatedKeys[col];
+    if (keys?.length > 0) {
+      result = result.filter((row) =>
+        keys.every((key) =>
+          String(row[col] || "")
+            .toLowerCase()
+            .includes(key.toLowerCase())
+        )
+      );
+    }
+  });
+
+  setFilteredData(result);
+  setCurrentPage(1);
+};
 
   // ============================================================================
   // 🔢 PAGINATION
@@ -227,6 +260,30 @@ const FollowUpActivity = () => {
         </div>
       </div>
 
+         {Object.keys(columnSearchKeys).length > 0 && (
+     <div className="flex gap-1 mb-1">
+    {Object.entries(columnSearchKeys).map(([column, values]) =>
+      values?.length > 0 ? (
+        <div
+          key={column}
+          className="flex items-center gap-2 px-1  bg-gray-100 border rounded-full text-xs"
+        >
+          <span className="font-semibold capitalize">{column}:</span>
+          <span>{values.join(", ")}</span>
+
+          {/* ❌ REMOVE FILTER */}
+          <button
+            onClick={() => removeColumnFilter(column)}
+            className="text-red-600 font-bold hover:scale-110 transition"
+          >
+            <CircleX size={14}/>
+          </button>
+        </div>
+      ) : null
+    )}
+  </div>
+)}
+
       {/* ============================================================= */}
       {/* 📋 TABLE SECTION */}
       {/* ============================================================= */}
@@ -242,7 +299,7 @@ const FollowUpActivity = () => {
           sortConfig={sortConfig}
           onSort={onSort}
           onColumnSearch={handleColumnSearch}
-
+          columnSearchKeys={columnSearchKeys}
         />
       </div>
 

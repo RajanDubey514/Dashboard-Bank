@@ -26,8 +26,10 @@ const UserEditableTable = ({
   handleDelete,
   sortConfig,
   onSort,
-  onColumnSearch,
   hideAction = false,
+  onColumnSearch,
+  columnSearchKeys = {},
+
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedHeader, setSelectedHeader] = useState("");
@@ -39,6 +41,8 @@ const UserEditableTable = ({
     setSelectedHeader(header);
     setModalOpen(true);
   };
+
+  
 
   const getSortIcon = (header) => {
     if (!sortConfig || sortConfig.key !== header) {
@@ -168,7 +172,9 @@ const UserEditableTable = ({
         onClose={() => setModalOpen(false)}
         header={selectedHeader}
         onSort={onSort}
-        onSearch={(header, value) => onColumnSearch(header, value)}
+        // onSearch={(header, value) => onColumnSearch(header, value)}
+         onSearch={(header, keys) => onColumnSearch(header, keys)}
+        activeKeys={columnSearchKeys[selectedHeader] || []}
       />
 
       <ModalCom

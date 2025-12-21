@@ -1636,3 +1636,504 @@ export const fakeInvoices = [
 ];
 
 
+export const fakePurchaseOrder = [
+  {
+    id: 1,
+    invoice: {
+      poNo: "PO-001",
+      poDate: "2025-01-05",
+      expectedDate: "2025-01-15",
+      paymentTerms: "10 Days",
+      supplierName: "Rohan Traders",
+      gstNo: "07ABCDE1234F1Z5",
+      deliveryLocation: "Delhi, India",
+      status: "open",
+    },
+    products: [
+      {
+        itemCode: "P001",
+        description: "Laptop",
+        qty: 1,
+        rate: 50000,
+      },
+      {
+        itemCode: "P002",
+        description: "Mouse",
+        qty: 2,
+        rate: 500,
+      },
+    ],
+  },
+
+  {
+    id: 2,
+    invoice: {
+      poNo: "PO-002",
+      poDate: "2025-01-07",
+      expectedDate: "2025-01-14",
+      paymentTerms: "7 Days",
+      supplierName: "Anita Supplies",
+      gstNo: "27ABCDE1234F1Z2",
+      deliveryLocation: "Mumbai, India",
+      status: "inprocess",
+    },
+    products: [
+      {
+        itemCode: "P001",
+        description: "Laptop",
+        qty: 2,
+        rate: 48000,
+      },
+      {
+        itemCode: "P002",
+        description: "Mouse",
+        qty: 1,
+        rate: 500,
+      },
+    ],
+  },
+
+  {
+    id: 3,
+    invoice: {
+      poNo: "PO-003",
+      poDate: "2025-01-10",
+      expectedDate: "2025-01-25",
+      paymentTerms: "15 Days",
+      supplierName: "Suresh Enterprises",
+      gstNo: "24ABCDE1234F1Z9",
+      deliveryLocation: "Ahmedabad, India",
+      status: "open",
+    },
+    products: [
+      {
+        itemCode: "P001",
+        description: "Laptop",
+        qty: 1,
+        rate: 52000,
+      },
+      {
+        itemCode: "P002",
+        description: "Mouse",
+        qty: 3,
+        rate: 450,
+      },
+    ],
+  },
+
+  {
+    id: 4,
+    invoice: {
+      poNo: "PO-004",
+      poDate: "2025-01-12",
+      expectedDate: "2025-01-17",
+      paymentTerms: "5 Days",
+      supplierName: "Neha Distributors",
+      gstNo: "08ABCDE1234F1Z3",
+      deliveryLocation: "Jaipur, India",
+      status: "fail",
+    },
+    products: [
+      {
+        itemCode: "P001",
+        description: "Laptop",
+        qty: 1,
+        rate: 49000,
+      },
+    ],
+  },
+
+  {
+    id: 5,
+    invoice: {
+      poNo: "PO-005",
+      poDate: "2025-01-15",
+      expectedDate: "2025-01-27",
+      paymentTerms: "12 Days",
+      supplierName: "Amit Tech Solutions",
+      gstNo: "09ABCDE1234F1Z7",
+      deliveryLocation: "Lucknow, India",
+      status: "open",
+    },
+    products: [
+      {
+        itemCode: "P001",
+        description: "Laptop",
+        qty: 1,
+        rate: 51000,
+      },
+    ],
+  },
+];
+
+
+export const fakePurchaseGrn = [
+  {
+    id: 1,
+    invoice: {
+      grnNo: "GRN-001",
+      vehicleNo: "DL01AB1234",
+      poNo: "PO-001",
+      receivedBy: "Rajan Dubey",
+      supplier: "Rohan Traders",
+      date: "2025-01-05",
+      status: "open",
+    },
+    products: [
+      {
+        item: "Laptop",
+        poQty: 1,
+        receivedDate: "2025-01-06",
+        accepted: true,
+        rejected: false,
+      },
+      {
+        item: "Mouse",
+        poQty: 2,
+        receivedDate: "2025-01-06",
+        accepted: true,
+        rejected: false,
+      },
+    ],
+  },
+
+  {
+    id: 2,
+    invoice: {
+      grnNo: "GRN-002",
+      vehicleNo: "MH02XY5678",
+      poNo: "PO-002",
+      receivedBy: "Anita Sharma",
+      supplier: "Anita Supplies",
+      date: "2025-01-07",
+      status: "inprocess",
+    },
+    products: [
+      {
+        item: "Laptop",
+        poQty: 2,
+        receivedDate: "2025-01-08",
+        accepted: true,
+        rejected: false,
+      },
+      {
+        item: "Mouse",
+        poQty: 1,
+        receivedDate: "2025-01-08",
+        accepted: true,
+        rejected: false,
+      },
+    ],
+  },
+
+  {
+    id: 3,
+    invoice: {
+      grnNo: "GRN-003",
+      vehicleNo: "GJ05CD4321",
+      poNo: "PO-003",
+      receivedBy: "Suresh Kumar",
+      supplier: "Suresh Enterprises",
+      date: "2025-01-10",
+      status: "open",
+    },
+    products: [
+      {
+        item: "Laptop",
+        poQty: 1,
+        receivedDate: "2025-01-11",
+        accepted: true,
+        rejected: false,
+      },
+      {
+        item: "Mouse",
+        poQty: 3,
+        receivedDate: "2025-01-11",
+        accepted: true,
+        rejected: false,
+      },
+    ],
+  },
+
+  {
+    id: 4,
+    invoice: {
+      grnNo: "GRN-004",
+      vehicleNo: "RJ14EF8765",
+      poNo: "PO-004",
+      receivedBy: "Neha Sharma",
+      supplier: "Neha Distributors",
+      date: "2025-01-12",
+      status: "fail",
+    },
+    products: [
+      {
+        item: "Laptop",
+        poQty: 1,
+        receivedDate: "2025-01-13",
+        accepted: false,
+        rejected: true,
+      },
+    ],
+  },
+
+  {
+    id: 5,
+    invoice: {
+      grnNo: "GRN-005",
+      vehicleNo: "UP32GH9876",
+      poNo: "PO-005",
+      receivedBy: "Amit Singh",
+      supplier: "Amit Tech Solutions",
+      date: "2025-01-15",
+      status: "open",
+    },
+    products: [
+      {
+        item: "Laptop",
+        poQty: 1,
+        receivedDate: "2025-01-16",
+        accepted: true,
+        rejected: false,
+      },
+    ],
+  },
+];
+
+
+export const fakePurchaseInvoice = [
+  {
+    id: 1,
+    invoice: {
+      invoiceNo: "INV-001",
+      poNo: "PO-001",
+      supplier: "Rohan Traders",
+      grnNo: "GRN-001",
+      gstNo: "07AAECR2976F1Z5",
+      date: "2025-01-05",
+    },
+    products: [
+      {
+        item: "Laptop",
+        qty: 1,
+        rate: 50000,
+        gstPercent: 18,
+        total: 59000, // 50000 + 18%
+      },
+      {
+        item: "Mouse",
+        qty: 2,
+        rate: 500,
+        gstPercent: 18,
+        total: 1180,
+      },
+    ],
+  },
+
+  {
+    id: 2,
+    invoice: {
+      invoiceNo: "INV-002",
+      poNo: "PO-002",
+      supplier: "Anita Supplies",
+      grnNo: "GRN-002",
+      gstNo: "27BBBCD1234Q1Z9",
+      date: "2025-01-07",
+    },
+    products: [
+      {
+        item: "Laptop",
+        qty: 2,
+        rate: 48000,
+        gstPercent: 18,
+        total: 113280,
+      },
+      {
+        item: "Mouse",
+        qty: 1,
+        rate: 600,
+        gstPercent: 18,
+        total: 708,
+      },
+    ],
+  },
+
+  {
+    id: 3,
+    invoice: {
+      invoiceNo: "INV-003",
+      poNo: "PO-003",
+      supplier: "Suresh Enterprises",
+      grnNo: "GRN-003",
+      gstNo: "24CCDDE4567L1Z2",
+      date: "2025-01-10",
+    },
+    products: [
+      {
+        item: "Laptop",
+        qty: 1,
+        rate: 52000,
+        gstPercent: 18,
+        total: 61360,
+      },
+      {
+        item: "Mouse",
+        qty: 3,
+        rate: 450,
+        gstPercent: 18,
+        total: 1593,
+      },
+    ],
+  },
+
+  {
+    id: 4,
+    invoice: {
+      invoiceNo: "INV-004",
+      poNo: "PO-004",
+      supplier: "Neha Distributors",
+      grnNo: "GRN-004",
+      gstNo: "08EEEFF7890M1Z3",
+      date: "2025-01-12",
+    },
+    products: [
+      {
+        item: "Laptop",
+        qty: 1,
+        rate: 47000,
+        gstPercent: 18,
+        total: 55460,
+      },
+    ],
+  },
+
+  {
+    id: 5,
+    invoice: {
+      invoiceNo: "INV-005",
+      poNo: "PO-005",
+      supplier: "Amit Tech Solutions",
+      grnNo: "GRN-005",
+      gstNo: "09GGGHH1234P1Z8",
+      date: "2025-01-15",
+    },
+    products: [
+      {
+        item: "Laptop",
+        qty: 1,
+        rate: 51000,
+        gstPercent: 18,
+        total: 60180,
+      },
+    ],
+  },
+];
+
+export const fakePurchaseReturn = [
+  {
+    id: 1,
+    invoice: {
+      returnNo: "PR-001",
+      invoiceNo: "INV-001",
+      supplier: "Rohan Traders",
+      date: "2025-01-20",
+      reason: "Damaged items received",
+    },
+    products: [
+      {
+        item: "Laptop",
+        returnQty: 1,
+        rate: 50000,
+        amount: 50000,
+      },
+      {
+        item: "Mouse",
+        returnQty: 1,
+        rate: 500,
+        amount: 500,
+      },
+    ],
+  },
+
+  {
+    id: 2,
+    invoice: {
+      returnNo: "PR-002",
+      invoiceNo: "INV-002",
+      supplier: "Anita Supplies",
+      date: "2025-01-22",
+      reason: "Excess quantity supplied",
+    },
+    products: [
+      {
+        item: "Laptop",
+        returnQty: 1,
+        rate: 48000,
+        amount: 48000,
+      },
+    ],
+  },
+
+  {
+    id: 3,
+    invoice: {
+      returnNo: "PR-003",
+      invoiceNo: "INV-003",
+      supplier: "Suresh Enterprises",
+      date: "2025-01-25",
+      reason: "Quality issue",
+    },
+    products: [
+      {
+        item: "Mouse",
+        returnQty: 2,
+        rate: 450,
+        amount: 900,
+      },
+    ],
+  },
+
+  {
+    id: 4,
+    invoice: {
+      returnNo: "PR-004",
+      invoiceNo: "INV-004",
+      supplier: "Neha Distributors",
+      date: "2025-01-27",
+      reason: "Wrong item delivered",
+    },
+    products: [
+      {
+        item: "Laptop",
+        returnQty: 1,
+        rate: 47000,
+        amount: 47000,
+      },
+    ],
+  },
+
+  {
+    id: 5,
+    invoice: {
+      returnNo: "PR-005",
+      invoiceNo: "INV-005",
+      supplier: "Amit Tech Solutions",
+      date: "2025-01-28",
+      reason: "Damaged packaging",
+    },
+    products: [
+      {
+        item: "Laptop",
+        returnQty: 1,
+        rate: 51000,
+        amount: 51000,
+      },
+    ],
+  },
+];
+
+
+
+
+
+

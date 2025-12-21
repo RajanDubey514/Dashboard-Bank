@@ -34,11 +34,10 @@ export default function MainLayout() {
       2️⃣ Title Logic (Admin + Normal paths)
   ------------------------------------------- */
 
-  let title = "Dashboard";
+let title = "Dashboard";
 
-  
 // Routes that support query-based pages
-const queryBasedRoutes = ["/admin", "/sales"];
+const queryBasedRoutes = ["/admin", "/sales", "/purchase"];
 
 if (queryBasedRoutes.includes(pathname) && pageParam) {
   title =

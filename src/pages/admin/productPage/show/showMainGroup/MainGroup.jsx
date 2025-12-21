@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle , CircleX } from "lucide-react";
 import Swal from "sweetalert2";
 
 import ModalCom from "../../../../../components/modalComp/ModalCom";
@@ -32,6 +32,7 @@ const MainGroup = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false); // Add modal
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Edit modal
   const [selectedData, setSelectedData] = useState(null); // Edit selected row
+
   const [columnSearchKeys, setColumnSearchKeys] = useState({});
 
 
@@ -85,24 +86,6 @@ const MainGroup = () => {
   // ===========================
   // 🔽 SORTING LOGIC
   // ===========================
-  // const onSort = (key) => {
-  //   let direction = "asc";
-
-  //   // If sorted already → toggle direction
-  //   if (sortConfig.key === key && sortConfig.direction === "asc") {
-  //     direction = "desc";
-  //   }
-
-  //   setSortConfig({ key, direction });
-
-  //   const sorted = [...filteredData].sort((a, b) => {
-  //     if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
-  //     if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
-  //     return 0;
-  //   });
-
-  //   setFilteredData(sorted);
-  // };
 
     const onSort = (key) => {
     let direction = sortConfig.key === key && sortConfig.direction === "asc" ? "desc" : "asc";
@@ -120,17 +103,7 @@ const MainGroup = () => {
      // ==============================
   // COLUMN SEARCH
   // ==============================
-  // const handleColumnSearch = (header, value) => {
-  //   const updated = dataList.filter((item) =>
-  //     String(item[header] || "")
-  //       .toLowerCase()
-  //       .includes(value.toLowerCase())
-  //   );
-
-  //   setFilteredData(updated);
-  //   setCurrentPage(1);
-  // };
-
+ 
 
    const handleColumnSearch = (header, keys) => {
     const updated = { ...columnSearchKeys, [header]: keys };
@@ -154,7 +127,34 @@ const MainGroup = () => {
 
     setFilteredData(result);
     setCurrentPage(1);
-  };
+  }; 
+
+
+  const removeColumnFilter = (column) => {
+  const updatedKeys = { ...columnSearchKeys };
+  delete updatedKeys[column]; // ❌ remove that column filter
+
+  setColumnSearchKeys(updatedKeys);
+
+  // Re-apply remaining column filters
+  let result = [...dataList];
+
+  Object.keys(updatedKeys).forEach((col) => {
+    const keys = updatedKeys[col];
+    if (keys?.length > 0) {
+      result = result.filter((row) =>
+        keys.every((key) =>
+          String(row[col] || "")
+            .toLowerCase()
+            .includes(key.toLowerCase())
+        )
+      );
+    }
+  });
+
+  setFilteredData(result);
+  setCurrentPage(1);
+};
 
 
   // ===========================
@@ -186,6 +186,7 @@ const MainGroup = () => {
   // 📄 PAGINATION
   // ===========================
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+
   const paginatedData = filteredData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
@@ -193,16 +194,12 @@ const MainGroup = () => {
 
   const headers = filteredData.length > 0 ? Object.keys(filteredData[0]) : [];
 
-
-
   // ===========================
   // ➕ ADD GROUP
   // ===========================
   const handleAddClick = () => {
     setIsAddModalOpen(true);
   };
-
-
 
   // ===========================
   // ✏️ EDIT GROUP
@@ -235,7 +232,7 @@ const MainGroup = () => {
       <div className="flex flex-col md:flex-row justify-end md:items-center gap-3">
         {/* Right: Download + Add */}
         <div className="flex items-center gap-3">
-          <DownloadDataButton data={dataList} fileName="GroupDetails" />
+          <DownloadDataButton data={dataList} fileName="Group Details" />
 
           <button
             onClick={handleAddClick}
@@ -247,7 +244,31 @@ const MainGroup = () => {
           </button>
         </div>
       </div>
+ 
 
+   {Object.keys(columnSearchKeys).length > 0 && (
+     <div className="flex gap-1 mb-1">
+    {Object.entries(columnSearchKeys).map(([column, values]) =>
+      values?.length > 0 ? (
+        <div
+          key={column}
+          className="flex items-center gap-2 px-1  bg-gray-100 border rounded-full text-xs"
+        >
+          <span className="font-semibold capitalize">{column}:</span>
+          <span>{values.join(", ")}</span>
+
+          {/* ❌ REMOVE FILTER */}
+          <button
+            onClick={() => removeColumnFilter(column)}
+            className="text-red-600 font-bold hover:scale-110 transition"
+          >
+            <CircleX size={14}/>
+          </button>
+        </div>
+      ) : null
+    )}
+  </div>
+)}
 
 
       {/* ===========================

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle , CircleX } from "lucide-react";
 import Swal from "sweetalert2";
 
 import ModalCom from "../../../../../components/modalComp/ModalCom";
@@ -31,6 +31,9 @@ const BranchsDetail = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [currentPage, setCurrentPage] = useState(1);
+
+      const [columnSearchKeys, setColumnSearchKeys] = useState({});
+  
 
   // ==============================
   // INITIAL DATA LOAD
@@ -76,17 +79,15 @@ const BranchsDetail = () => {
   // ==============================
   // SORT FUNCTION
   // ==============================
-  const onSort = (key, direction) => {
+
+  const onSort = (key) => {
+    let direction = sortConfig.key === key && sortConfig.direction === "asc" ? "desc" : "asc";
     setSortConfig({ key, direction });
 
-    const sorted = [...filteredData].sort((a, b) => {
-      const A = String(a[key]).toLowerCase();
-      const B = String(b[key]).toLowerCase();
-
-      if (A < B) return direction === "asc" ? -1 : 1;
-      if (A > B) return direction === "asc" ? 1 : -1;
-      return 0;
-    });
+    const sorted = [...filteredData].sort((a, b) =>
+      a[key] < b[key] ? (direction === "asc" ? -1 : 1) :
+      a[key] > b[key] ? (direction === "asc" ? 1 : -1) : 0
+    );
 
     setFilteredData(sorted);
   };
@@ -94,16 +95,55 @@ const BranchsDetail = () => {
   // ==============================
   // COLUMN SEARCH
   // ==============================
-  const handleColumnSearch = (header, value) => {
-    const updated = dataList.filter((item) =>
-      String(item[header] || "")
-        .toLowerCase()
-        .includes(value.toLowerCase())
-    );
+  const handleColumnSearch = (header, keys) => {
+    const updated = { ...columnSearchKeys, [header]: keys };
+    setColumnSearchKeys(updated);
+    applyFilters(updated);
+  };
 
-    setFilteredData(updated);
+  const applyFilters = (keysObj) => {
+    let result = [...dataList];
+
+    Object.keys(keysObj).forEach((col) => {
+      const keys = keysObj[col];
+      if (keys?.length > 0) {
+        result = result.filter((row) =>
+          keys.every((key) =>
+            String(row[col] || "").toLowerCase().includes(key.toLowerCase())
+          )
+        );
+      }
+    });
+
+    setFilteredData(result);
     setCurrentPage(1);
   };
+  
+  const removeColumnFilter = (column) => {
+  const updatedKeys = { ...columnSearchKeys };
+  delete updatedKeys[column]; // ❌ remove that column filter
+
+  setColumnSearchKeys(updatedKeys);
+
+  // Re-apply remaining column filters
+  let result = [...dataList];
+
+  Object.keys(updatedKeys).forEach((col) => {
+    const keys = updatedKeys[col];
+    if (keys?.length > 0) {
+      result = result.filter((row) =>
+        keys.every((key) =>
+          String(row[col] || "")
+            .toLowerCase()
+            .includes(key.toLowerCase())
+        )
+      );
+    }
+  });
+
+  setFilteredData(result);
+  setCurrentPage(1);
+};
 
   // ==============================
   // PAGINATION LOGIC
@@ -175,7 +215,7 @@ const BranchsDetail = () => {
       </div>
       <div className="flex flex-wrap justify-end items-center gap-3">
         {/* DOWNLOAD BUTTON */}
-        <DownloadDataButton data={dataList} fileName="BranchDetails" />
+        <DownloadDataButton data={dataList} fileName="Branch Details" />
 
         {/* ADD NEW BRANCH BUTTON */}
         <button
@@ -186,6 +226,30 @@ const BranchsDetail = () => {
           <PlusCircle size={13} /> Add Branch
         </button>
       </div>
+
+        {Object.keys(columnSearchKeys).length > 0 && (
+           <div className="flex gap-1 mb-1">
+          {Object.entries(columnSearchKeys).map(([column, values]) =>
+            values?.length > 0 ? (
+              <div
+                key={column}
+                className="flex items-center gap-2 px-1  bg-gray-100 border rounded-full text-xs"
+              >
+                <span className="font-semibold capitalize">{column}:</span>
+                <span>{values.join(", ")}</span>
+      
+                {/* ❌ REMOVE FILTER */}
+                <button
+                  onClick={() => removeColumnFilter(column)}
+                  className="text-red-600 font-bold hover:scale-110 transition"
+                >
+                  <CircleX size={14}/>
+                </button>
+              </div>
+            ) : null
+          )}
+        </div>
+      )}
 
       {/* ==============================
           TABLE
@@ -198,6 +262,8 @@ const BranchsDetail = () => {
         sortConfig={sortConfig}
         onSort={onSort}
         onColumnSearch={handleColumnSearch}
+        columnSearchKeys={columnSearchKeys}
+
       />
 
       {/* ==============================

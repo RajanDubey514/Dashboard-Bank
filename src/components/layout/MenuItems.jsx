@@ -23,10 +23,10 @@ const MenuItems = [
     name: "Sales",
     icon: Receipt,
     subItems: [
-      { name: "Sales Order", path: "/sales-order" },
-      { name: "Delivery Challan (D.C.)", path: "/delivery-challan" },
-      { name: "Tax/Sales Invoice", path: "/sales?page=tax_Sales_invoice" },
-      { name: "Sales Return", path: "/sales-return" },
+      { name: "Sales Order", path: "/sales?page=sales_order" },
+      { name: "Delivery Challan", path: "/sales?page=delivery_challan" },
+      { name: "Tax/Sales Invoice", path: "/sales?page=tax_sales_invoice" },
+      { name: "Sales Return", path: "/sales?page=sales_return" },
     ],
   },
 
@@ -34,10 +34,10 @@ const MenuItems = [
     name: "Purchase",
     icon: ShoppingCart,
     subItems: [
-      { name: "Purchase Order", path: "/purchase-order" },
-      { name: "GRN / Purchase D.C.", path: "/purchase-grn" },
-      { name: "Purchase Invoice", path: "/purchase-invoice" },
-      { name: "Purchase Return", path: "/purchase-return" },
+      { name: "Purchase Order", path: "/purchase?page=purchase_order" },
+      { name: "GRN / Purchase D.C.", path: "/purchase?page=purchase_DC_GRN" },
+      { name: "Purchase Invoice", path: "/purchase?page=purchase_invoice" },
+      { name: "Purchase Return", path: "/purchase?page=purchase_return" },
     ],
   },
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle , CircleX } from "lucide-react";
 import Swal from "sweetalert2";
 
 import InvoiceModal from "../../salesModal/InvoiceModal";
@@ -13,49 +13,57 @@ import UpdateInvoice from "../update/UpdateInvoice";
 import AddInvoice from "../add/AddInvoice";
 
 const TaxSalesInvoice = () => {
-  // ===========================
-  // STATE
-  // ===========================
+  /* ======================================================
+     STATE
+  ====================================================== */
   const [dataList, setDataList] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
-
   const [filterType, setFilterType] = useState("all");
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
+  // Table states
+  const [columnSearchKeys, setColumnSearchKeys] = useState({});
+  const [filteredTableData, setFilteredTableData] = useState([]);
+
+  // Sorting & pagination
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  // Modal states
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
 
-  const [columnSearchKeys, setColumnSearchKeys] = useState({});
+  // Add / Edit invoice states
+  const [invoiceData, setInvoiceData] = useState({});
+  const [products, setProducts] = useState([]);
+  const [resetKey, setResetKey] = useState(0);
 
-  // ===========================
-  // LOAD DATA
-  // ===========================
+  const [editInvoiceData, setEditInvoiceData] = useState({});
+  const [editProducts, setEditProducts] = useState([]);
+
+  /* ======================================================
+     LOAD DATA
+  ====================================================== */
   useEffect(() => {
     setDataList(fakeInvoices);
-    setFilteredData(fakeInvoices);
   }, []);
 
-  // ===========================
-  // FILTER
-  // ===========================
-  useEffect(() => {
+  /* ======================================================
+     FILTER BY STATUS (RAW DATA)
+  ====================================================== */
+  const filteredData = useMemo(() => {
     let updated = [...dataList];
 
     if (filterType === "active") {
       updated = updated.filter((i) => i.status === "Active");
     }
 
-    setFilteredData(updated);
-    setCurrentPage(1);
-  }, [filterType, dataList]);
+    return updated;
+  }, [dataList, filterType]);
 
-  // ===========================
-  // TRANSFORM → TABLE DATA
-  // ===========================
+  /* ======================================================
+     TRANSFORM → TABLE DATA
+  ====================================================== */
   const tableData = useMemo(() => {
     return filteredData.map((item) => {
       const sub = item.products.reduce(
@@ -82,55 +90,110 @@ const TaxSalesInvoice = () => {
     });
   }, [filteredData]);
 
-  // ===========================
-  // SORT
-  // ===========================
+  /* ======================================================
+     SYNC TABLE DATA → FILTERED TABLE DATA
+  ====================================================== */
+  useEffect(() => {
+    setFilteredTableData(tableData);
+  }, [tableData]);
+
+  /* ======================================================
+     COLUMN SEARCH (ON TABLE DATA)
+  ====================================================== */
+  const handleColumnSearch = (header, keys) => {
+    const updatedKeys = { ...columnSearchKeys, [header]: keys };
+    setColumnSearchKeys(updatedKeys);
+
+    let result = [...tableData];
+
+    Object.keys(updatedKeys).forEach((col) => {
+      const values = updatedKeys[col];
+      if (values?.length > 0) {
+        result = result.filter((row) =>
+          values.every((v) =>
+            String(row[col] ?? "")
+              .toLowerCase()
+              .includes(v.toLowerCase())
+          )
+        );
+      }
+    });
+
+    setFilteredTableData(result);
+    setCurrentPage(1);
+  };
+
+  /* ======================================================
+     SORTING (ON FILTERED TABLE DATA)
+  ====================================================== */
   const onSort = (key) => {
-    const direction =
+    let direction =
       sortConfig.key === key && sortConfig.direction === "asc"
         ? "desc"
         : "asc";
 
     setSortConfig({ key, direction });
 
-    const sorted = [...filteredData].sort((a, b) =>
-      a[key] < b[key] ? (direction === "asc" ? -1 : 1) :
-      a[key] > b[key] ? (direction === "asc" ? 1 : -1) : 0
-    );
+    const sorted = [...filteredTableData].sort((a, b) => {
+      if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
+      if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
+      return 0;
+    });
 
-    setFilteredData(sorted);
+    setFilteredTableData(sorted);
   };
 
-  // ===========================
-  // PAGINATION (ON TABLE DATA)
-  // ===========================
-  const totalPages = Math.ceil(tableData.length / rowsPerPage);
+   const removeColumnFilter = (column) => {
+  const updatedKeys = { ...columnSearchKeys };
+  delete updatedKeys[column];          // ❌ remove chip
 
-  const paginatedTableData = tableData.slice(
+  setColumnSearchKeys(updatedKeys);
+
+  // Re-apply remaining column filters on tableData
+  let result = [...tableData];
+
+  Object.keys(updatedKeys).forEach((col) => {
+    const values = updatedKeys[col];
+    if (values?.length > 0) {
+      result = result.filter((row) =>
+        values.every((v) =>
+          String(row[col] ?? "")
+            .toLowerCase()
+            .includes(v.toLowerCase())
+        )
+      );
+    }
+  });
+
+  setFilteredTableData(result);
+  setCurrentPage(1);
+};
+
+  /* ======================================================
+     PAGINATION
+  ====================================================== */
+  const totalPages = Math.ceil(filteredTableData.length / rowsPerPage);
+
+  const paginatedTableData = filteredTableData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
 
   const headers =
-    paginatedTableData.length > 0
-      ? Object.keys(paginatedTableData[0])
+    filteredTableData.length > 0
+      ? Object.keys(filteredTableData[0])
       : [];
 
-  // ===========================
-  // ACTIONS
-  // ===========================
-
-  const [editInvoiceData, setEditInvoiceData] = useState({});
-const [editProducts, setEditProducts] = useState([]);
-
- const handleEditClick = (id) => {
-   const selected = dataList.find((item) => item.id === id);
-  setSelectedData(selected);
-  setEditInvoiceData(selected.invoice);
-  console.log(selected.invoice)
-  setEditProducts(selected.products);
-  setIsEditModalOpen(true);
-};
+  /* ======================================================
+     ACTIONS
+  ====================================================== */
+  const handleEditClick = (id) => {
+    const selected = dataList.find((item) => item.id === id);
+    setSelectedData(selected);
+    setEditInvoiceData(selected.invoice);
+    setEditProducts(selected.products);
+    setIsEditModalOpen(true);
+  };
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -141,83 +204,56 @@ const [editProducts, setEditProducts] = useState([]);
       if (res.isConfirmed) {
         const updated = dataList.filter((i) => i.id !== id);
         setDataList(updated);
-        setFilteredData(updated);
       }
     });
   };
 
-
-  const [invoiceData, setInvoiceData] = useState({});
-const [products, setProducts] = useState([]);
-const [resetKey, setResetKey] = useState(0);
-
-const handleSaveInvoice = () => {
-  if (!invoiceData.invNo || products.length === 0) {
-    Swal.fire("Error", "Invoice details or products missing", "error");
-    return;
-  }
-
-  const newInvoice = {
-    id: Date.now(), // ✅ unique id
-    invoice: {
-      invNo: invoiceData.invNo,
-      invDate: invoiceData.invDate,
-      dueDate: invoiceData.dueDate,
-      customerName: invoiceData.customerName,
-      mobile: invoiceData.mobile,
-      address: invoiceData.address,
-    },
-    products: products,
-    status: "Active",
-  };
-
-  const updatedList = [newInvoice, ...dataList];
-
-  setDataList(updatedList);
-  setFilteredData(updatedList);
-
-  Swal.fire("Success", "Invoice added successfully", "success");
-
-  setIsAddModalOpen(false);
-  handleResetInvoice();
-};
-
-const handleResetInvoice = () => {
-  setInvoiceData({});
-  setProducts([]);
-  setResetKey((k) => k + 1); // 🔥 force reset
-};
-
-
- // Update invoice
-  const handleUpdateInvoice = () => {
-    if (!editInvoiceData.invNo || editProducts.length === 0) {
+  /* ======================================================
+     ADD INVOICE
+  ====================================================== */
+  const handleSaveInvoice = () => {
+    if (!invoiceData.invNo || products.length === 0) {
       Swal.fire("Error", "Invoice details or products missing", "error");
       return;
     }
 
-    const updatedList = dataList.map((item) =>
+    const newInvoice = {
+      id: Date.now(),
+      invoice: invoiceData,
+      products,
+      status: "Active",
+    };
+
+    setDataList([newInvoice, ...dataList]);
+    Swal.fire("Success", "Tax Sales Invoice added successfully", "success");
+    setIsAddModalOpen(false);
+    handleResetInvoice();
+  };
+
+  const handleResetInvoice = () => {
+    setInvoiceData({});
+    setProducts([]);
+    setResetKey((k) => k + 1);
+  };
+
+  /* ======================================================
+     UPDATE INVOICE
+  ====================================================== */
+  const handleUpdateInvoice = () => {
+    const updated = dataList.map((item) =>
       item.id === selectedData.id
-        ? {
-            ...item,
-            invoice: editInvoiceData,
-            products: editProducts,
-          }
+        ? { ...item, invoice: editInvoiceData, products: editProducts }
         : item
     );
 
-    setDataList(updatedList);
-    setFilteredData(updatedList);
-
-    console.log("Updated DataList:", updatedList);
-
-    Swal.fire("Success", "Invoice updated successfully", "success");
+    setDataList(updated);
+    Swal.fire("Success", "Tax Sales Invoice updated successfully", "success");
     setIsEditModalOpen(false);
   };
 
-  // ===========================
-  // UI
-  // ===========================
+  /* ======================================================
+     UI
+  ====================================================== */
   return (
     <div className="space-y-3 w-full">
       <SelectBoxCommon
@@ -227,7 +263,10 @@ const handleResetInvoice = () => {
       />
 
       <div className="flex justify-end gap-3">
-        <DownloadDataButton data={tableData} fileName="SalesInvoices" />
+        <DownloadDataButton
+          data={filteredTableData}
+          fileName="Tax Sales Invoice"
+        />
 
         <button
           onClick={() => setIsAddModalOpen(true)}
@@ -235,9 +274,33 @@ const handleResetInvoice = () => {
           style={{ backgroundColor: "var(--color-primary)" }}
         >
           <PlusCircle size={12} />
-          Add Sales Invoice
+          Add Tax Invoice
         </button>
       </div>
+   
+     {Object.keys(columnSearchKeys).length > 0 && (
+         <div className="flex gap-1 mb-1">
+        {Object.entries(columnSearchKeys).map(([column, values]) =>
+          values?.length > 0 ? (
+            <div
+              key={column}
+              className="flex items-center gap-2 px-1  bg-gray-100 border rounded-full text-xs"
+            >
+              <span className="font-semibold capitalize">{column}:</span>
+              <span>{values.join(", ")}</span>
+    
+              {/* ❌ REMOVE FILTER */}
+              <button
+                onClick={() => removeColumnFilter(column)}
+                className="text-red-600 font-bold hover:scale-110 transition"
+              >
+                <CircleX size={14}/>
+              </button>
+            </div>
+          ) : null
+        )}
+      </div>
+    )}
 
       <EditableTable
         headers={headers}
@@ -246,13 +309,15 @@ const handleResetInvoice = () => {
         handleDelete={handleDelete}
         sortConfig={sortConfig}
         onSort={onSort}
+        onColumnSearch={handleColumnSearch}
+        columnSearchKeys={columnSearchKeys}
       />
 
       <Pagination
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         totalPages={totalPages}
-        totalRecords={tableData.length}
+        totalRecords={filteredTableData.length}
         rowsPerPage={rowsPerPage}
         setRowsPerPage={setRowsPerPage}
       />
@@ -261,19 +326,18 @@ const handleResetInvoice = () => {
       <InvoiceModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        title="Add Sales Invoice"
+        title="Add Tax Sales Invoice"
         width="95%"
         height="90vh"
-         onSubmit={handleSaveInvoice}
-          onReset={handleResetInvoice}
+        onSubmit={handleSaveInvoice}
+        onReset={handleResetInvoice}
         content={
           <AddInvoice
-             invoiceData={invoiceData}
-             key={resetKey}
-              setInvoiceData={setInvoiceData}
-              products={products}
-              setProducts={setProducts}
-              onClose={() => setIsAddModalOpen(false)}
+            key={resetKey}
+            invoiceData={invoiceData}
+            setInvoiceData={setInvoiceData}
+            products={products}
+            setProducts={setProducts}
           />
         }
       />
@@ -282,22 +346,22 @@ const handleResetInvoice = () => {
       <InvoiceModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        title="Update Sales Invoice"
+        title="Update Tax Sales Invoice"
         width="95%"
         height="90vh"
-          onSubmit={handleUpdateInvoice}       // ✅ SUBMIT WORKS
+        onSubmit={handleUpdateInvoice}
         content={
           <UpdateInvoice
             upinvoiceData={editInvoiceData}
             setUpInvoiceData={setEditInvoiceData}
             upproducts={editProducts}
-           setUpProducts={setEditProducts}
-           onClose={() => setIsEditModalOpen(false)}
+            setUpProducts={setEditProducts}
           />
         }
-      /> 
+      />
     </div>
   );
 };
 
 export default TaxSalesInvoice;
+

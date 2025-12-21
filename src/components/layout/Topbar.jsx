@@ -68,7 +68,7 @@ export default function Topbar() {
 
   return (
     <div
-      className="relative flex items-center justify-end shadow-sm px-4  rounded-b-lg"
+      className="relative flex items-center justify-end  px-4  rounded-b-lg"
       style={{
         // backgroundColor: "var(--color-surface)",
         color: "var(--color-text)",
