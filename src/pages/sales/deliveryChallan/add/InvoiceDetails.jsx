@@ -3,28 +3,18 @@ import * as Yup from "yup";
 import { useEffect } from "react";
 
 const InvoiceSchema = Yup.object({
-  invNo: Yup.string().required("Invoice number is required"),
-  invDate: Yup.string().required("Invoice date is required"),
-  dueDays: Yup.number()
-    .typeError("Must be a number")
-    .min(0, "Invalid days"),
-  customerName: Yup.string().required("Customer name required"),
-  mobile: Yup.string().required("Mobile required"),
-  address: Yup.string().required("Address required"),
+  dcNo: Yup.string().required("DC No is required"),
+  dcDate: Yup.string().required("DC Date is required"),
+  soReference: Yup.string().required("SO Reference is required"),
+  warehouse: Yup.string().required("Warehouse is required"),
+  vehicleNo: Yup.string().required("Vehicle No is required"),
+  transporter: Yup.string().required("Transporter is required"),
 });
 
-function SyncValues({ values, onChange, setFieldValue }) {
+function SyncValues({ values, onChange }) {
   useEffect(() => {
     onChange(values);
   }, [values, onChange]);
-
-  useEffect(() => {
-    if (values.invDate && values.dueDays !== "") {
-      const d = new Date(values.invDate);
-      d.setDate(d.getDate() + Number(values.dueDays));
-      setFieldValue("dueDate", d.toISOString().slice(0, 10));
-    }
-  }, [values.invDate, values.dueDays, setFieldValue]);
 
   return null;
 }
@@ -39,123 +29,106 @@ export default function InvoiceDetails({ onChange }) {
   return (
     <Formik
       initialValues={{
-        invNo: "",
-        invDate: "",
-        dueDays: "",
-        dueDate: "",
-        customerName: "",
-        mobile: "",
-        address: "",
+        dcNo: "",
+        dcDate: "",
+        soReference: "",
+        warehouse: "",
+        vehicleNo: "",
+        transporter: "",
       }}
       validationSchema={InvoiceSchema}
       onSubmit={() => {}}
     >
-      {({ values, errors, touched, handleChange, setFieldValue }) => (
+      {({ values, errors, touched, handleChange }) => (
         <>
-          <SyncValues
-            values={values}
-            onChange={onChange}
-            setFieldValue={setFieldValue}
-          />
+          <SyncValues values={values} onChange={onChange} />
 
           <Form className="bg-white rounded-xl shadow-sm p-3">
-            <div className="grid grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
-              {/* Invoice No */}
+              {/* DC No */}
               <div>
-                <label className={label}>Invoice No</label>
+                <label className={label}>DC No</label>
                 <input
-                  name="invNo"
-                  value={values.invNo}
+                  name="dcNo"
+                  value={values.dcNo}
                   onChange={handleChange}
                   className={input}
                 />
-                {touched.invNo && errors.invNo && (
-                  <p className="text-xs text-red-500">{errors.invNo}</p>
+                {touched.dcNo && errors.dcNo && (
+                  <p className="text-xs text-red-500">{errors.dcNo}</p>
                 )}
               </div>
 
-              {/* Invoice Date */}
+              {/* DC Date */}
               <div>
-                <label className={label}>Invoice Date</label>
+                <label className={label}>DC Date</label>
                 <input
                   type="date"
-                  name="invDate"
-                  value={values.invDate}
+                  name="dcDate"
+                  value={values.dcDate}
                   onChange={handleChange}
                   className={input}
                 />
-                {touched.invDate && errors.invDate && (
-                  <p className="text-xs text-red-500">{errors.invDate}</p>
+                {touched.dcDate && errors.dcDate && (
+                  <p className="text-xs text-red-500">{errors.dcDate}</p>
                 )}
               </div>
 
-              {/* Customer Name */}
+              {/* SO Reference */}
               <div>
-                <label className={label}>Customer Name</label>
+                <label className={label}>SO Reference</label>
                 <input
-                  name="customerName"
-                  value={values.customerName}
+                  name="soReference"
+                  value={values.soReference}
                   onChange={handleChange}
                   className={input}
                 />
-                {touched.customerName && errors.customerName && (
-                  <p className="text-xs text-red-500">{errors.customerName}</p>
+                {touched.soReference && errors.soReference && (
+                  <p className="text-xs text-red-500">{errors.soReference}</p>
                 )}
               </div>
 
-              {/* Mobile */}
+              {/* Warehouse */}
               <div>
-                <label className={label}>Mobile No</label>
+                <label className={label}>Warehouse</label>
                 <input
-                  name="mobile"
-                  value={values.mobile}
+                  name="warehouse"
+                  value={values.warehouse}
                   onChange={handleChange}
                   className={input}
                 />
-                {touched.mobile && errors.mobile && (
-                  <p className="text-xs text-red-500">{errors.mobile}</p>
+                {touched.warehouse && errors.warehouse && (
+                  <p className="text-xs text-red-500">{errors.warehouse}</p>
                 )}
               </div>
 
-              {/* Address */}
-              <div className="lg:col-span-2">
-                <label className={label}>Address</label>
-                <input
-                  name="address"
-                  value={values.address}
-                  onChange={handleChange}
-                  className={input}
-                />
-                {touched.address && errors.address && (
-                  <p className="text-xs text-red-500">{errors.address}</p>
-                )}
-              </div>
-
-              {/* Due Days */}
+              {/* Vehicle No */}
               <div>
-                <label className={label}>Due Days</label>
+                <label className={label}>Vehicle No</label>
                 <input
-                  name="dueDays"
-                  value={values.dueDays}
+                  name="vehicleNo"
+                  value={values.vehicleNo}
                   onChange={handleChange}
                   className={input}
                 />
-                {touched.dueDays && errors.dueDays && (
-                  <p className="text-xs text-red-500">{errors.dueDays}</p>
+                {touched.vehicleNo && errors.vehicleNo && (
+                  <p className="text-xs text-red-500">{errors.vehicleNo}</p>
                 )}
               </div>
 
-              {/* Due Date */}
+              {/* Transporter */}
               <div>
-                <label className={label}>Due Date</label>
+                <label className={label}>Transporter</label>
                 <input
-                  type="date"
-                  name="dueDate"
-                  value={values.dueDate}
-                  readOnly
-                  className={`${input} bg-gray-100`}
+                  name="transporter"
+                  value={values.transporter}
+                  onChange={handleChange}
+                  className={input}
                 />
+                {touched.transporter && errors.transporter && (
+                  <p className="text-xs text-red-500">{errors.transporter}</p>
+                )}
               </div>
 
             </div>

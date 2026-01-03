@@ -1,44 +1,42 @@
 import { Trash2 } from "lucide-react";
 
-export default function InvoiceTable({ products, setProducts }) {
+export default function InvoiceTable({ products = [], setProducts }) {
   const update = (i, field, val) => {
-    setProducts((p) =>
-      p.map((row, idx) =>
-        idx === i ? { ...row, [field]: Number(val) || 0 } : row
+    setProducts((prev) =>
+      prev.map((row, idx) =>
+        idx === i ? { ...row, [field]: val } : row
       )
     );
   };
 
-  const remove = (i) =>
-    setProducts((p) => p.filter((_, idx) => idx !== i));
+  const remove = (i) => {
+    setProducts((prev) => prev.filter((_, idx) => idx !== i));
+  };
 
   return (
-    <div className=" rounded-lg bg-white">
+    <div className="rounded-lg bg-white">
 
       {/* 🔹 SCROLL CONTAINER */}
-      <div className="max-h-[150px] overflow-y-scroll">
+      <div className="max-h-[220px] overflow-y-auto">
 
-        <table className="w-full text-xs text-center table-fixed border-separate border-spacing-0">
+        <table className="w-full text-xs text-center border-separate border-spacing-0">
 
-          {/* 🔹 STICKY HEADER */}
-          <thead className="sticky top-0 z-20 bg-slate-700">
+          {/* 🔹 HEADER */}
+          <thead className="sticky top-0 bg-slate-700 z-20">
             <tr>
               {[
                 "#",
-                "Product",
-                "Qty",
-                "Rate",
-                "SGST",
-                "CGST",
-                "IGST",
-                "Disc %",
-                "Disc Amt",
-                "Total",
+                "Item Code",
+                "Product Name",
+                "UOM",
+                "Order Qty",
+                "Production Line",
+                "Required Date",
                 "Act",
               ].map((h) => (
                 <th
                   key={h}
-                  className="px-2 py-1 text-white font-semibold  text-xs"
+                  className="px-2 py-1 text-white font-semibold"
                 >
                   {h}
                 </th>
@@ -48,62 +46,82 @@ export default function InvoiceTable({ products, setProducts }) {
 
           {/* 🔹 BODY */}
           <tbody>
-            {products.map((p, i) => {
-              const base = p.qty * p.rate;
-              const tax =
-                (base * (p.sgst + p.cgst + p.igst)) / 100;
-              const disc =
-                p.discountPct > 0
-                  ? (base * p.discountPct) / 100
-                  : p.discountAmt;
-              const total = base + tax - disc;
+            {products.length === 0 && (
+              <tr>
+                <td colSpan={8} className="py-4 text-gray-400 italic">
+                  No products added
+                </td>
+              </tr>
+            )}
 
-              return (
-                <tr
-                  key={i}
-                  className="border-b even:bg-gray-50 hover:bg-blue-50 transition"
-                >
-                  <td className="py-1">{i + 1}</td>
-                  <td className="px-2 text-left truncate font-medium">
-                    {p.name}
-                  </td>
+            {products.map((p, i) => (
+              <tr
+                key={i}
+                className="border-b even:bg-gray-50 hover:bg-blue-50"
+              >
+                <td>{i + 1}</td>
 
-                  {[
-                    "qty",
-                    "rate",
-                    "sgst",
-                    "cgst",
-                    "igst",
-                    "discountPct",
-                    "discountAmt",
-                  ].map((f) => (
-                    <td key={f}>
-                      <input
-                        type="number"
-                        className="w-14 border rounded px-1 py-[2px] text-center
-                                   focus:ring-1 focus:ring-blue-400 focus:outline-none"
-                        value={p[f]}
-                        onChange={(e) =>
-                          update(i, f, e.target.value)
-                        }
-                      />
-                    </td>
-                  ))}
+                {/* Item Code */}
+                <td className="font-medium">{p.itemCode}</td>
 
-                  <td className="font-semibold">
-                    {total.toFixed(2)}
-                  </td>
+                {/* Product Name */}
+                <td className="text-left px-2 truncate">
+                  {p.productName}
+                </td>
 
-                  <td>
-                    <Trash2
-                      size={14}
-                      className="text-red-500 hover:text-red-700 cursor-pointer mx-auto"
-                      onClick={() => remove(i)}
-                    />
-                  </td>
-                </tr>
-              );
-            })}
+                {/* UOM */}
+                <td>{p.uom}</td>
+
+                {/* Order Qty */}
+                <td>
+                  <input
+                    type="number"
+                    min="1"
+                    className="w-16 border rounded px-1 py-[2px] text-center
+                               focus:ring-1 focus:ring-blue-400 focus:outline-none"
+                    value={p.orderQty}
+                    onChange={(e) =>
+                      update(i, "orderQty", Number(e.target.value))
+                    }
+                  />
+                </td>
+
+                {/* Production Line */}
+                <td>
+                  <input
+                    type="text"
+                    className="w-24 border rounded px-1 py-[2px] text-center
+                               focus:ring-1 focus:ring-blue-400 focus:outline-none"
+                    value={p.productionLine}
+                    onChange={(e) =>
+                      update(i, "productionLine", e.target.value)
+                    }
+                  />
+                </td>
+
+                {/* Required Date */}
+                <td>
+                  <input
+                    type="date"
+                    className="border rounded px-1 py-[2px]
+                               focus:ring-1 focus:ring-blue-400 focus:outline-none"
+                    value={p.requiredDate}
+                    onChange={(e) =>
+                      update(i, "requiredDate", e.target.value)
+                    }
+                  />
+                </td>
+
+                {/* Action */}
+                <td>
+                  <Trash2
+                    size={14}
+                    className="text-red-500 hover:text-red-700 cursor-pointer mx-auto"
+                    onClick={() => remove(i)}
+                  />
+                </td>
+              </tr>
+            ))}
           </tbody>
 
         </table>

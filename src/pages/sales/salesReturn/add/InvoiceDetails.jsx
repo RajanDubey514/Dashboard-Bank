@@ -2,34 +2,27 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useEffect } from "react";
 
-const InvoiceSchema = Yup.object({
-  invNo: Yup.string().required("Invoice number is required"),
-  invDate: Yup.string().required("Invoice date is required"),
-  dueDays: Yup.number()
-    .typeError("Must be a number")
-    .min(0, "Invalid days"),
-  customerName: Yup.string().required("Customer name required"),
-  mobile: Yup.string().required("Mobile required"),
-  address: Yup.string().required("Address required"),
+// ---------------- VALIDATION ----------------
+const ReturnSchema = Yup.object({
+  returnNo: Yup.string().required("Return No is required"),
+  returnDate: Yup.string().required("Return Date is required"),
+  invoiceRef: Yup.string().required("Invoice Reference is required"),
+  returnReason: Yup.string().required("Return Reason is required"),
+  qcRemark: Yup.string().required("QC Remark is required"),
+  returnWarehouse: Yup.string().required("Return Warehouse is required"),
 });
 
-function SyncValues({ values, onChange, setFieldValue }) {
+// ---------------- SYNC ----------------
+function SyncValues({ values, onChange }) {
   useEffect(() => {
     onChange(values);
   }, [values, onChange]);
 
-  useEffect(() => {
-    if (values.invDate && values.dueDays !== "") {
-      const d = new Date(values.invDate);
-      d.setDate(d.getDate() + Number(values.dueDays));
-      setFieldValue("dueDate", d.toISOString().slice(0, 10));
-    }
-  }, [values.invDate, values.dueDays, setFieldValue]);
-
   return null;
 }
 
-export default function InvoiceDetails({ onChange }) {
+// ---------------- COMPONENT ----------------
+export default function ReturnDetails({ onChange, value = {} }) {
   const input =
     "w-full rounded-md border border-gray-300 px-2 py-1 text-sm " +
     "focus:outline-none focus:ring-2 focus:ring-blue-500";
@@ -38,124 +31,108 @@ export default function InvoiceDetails({ onChange }) {
 
   return (
     <Formik
+      enableReinitialize
       initialValues={{
-        invNo: "",
-        invDate: "",
-        dueDays: "",
-        dueDate: "",
-        customerName: "",
-        mobile: "",
-        address: "",
+        returnNo: value.returnNo || "",
+        returnDate: value.returnDate || "",
+        invoiceRef: value.invoiceRef || "",
+        returnReason: value.returnReason || "",
+        qcRemark: value.qcRemark || "",
+        returnWarehouse: value.returnWarehouse || "",
       }}
-      validationSchema={InvoiceSchema}
+      validationSchema={ReturnSchema}
       onSubmit={() => {}}
     >
-      {({ values, errors, touched, handleChange, setFieldValue }) => (
+      {({ values, errors, touched, handleChange }) => (
         <>
-          <SyncValues
-            values={values}
-            onChange={onChange}
-            setFieldValue={setFieldValue}
-          />
+          <SyncValues values={values} onChange={onChange} />
 
-          <Form className="bg-white rounded-xl shadow-sm p-3">
-            <div className="grid grid-cols-3 lg:grid-cols-4 gap-4">
+          <Form className="bg-white rounded-xl shadow-sm p-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
-              {/* Invoice No */}
+              {/* Return No */}
               <div>
-                <label className={label}>Invoice No</label>
+                <label className={label}>Return No</label>
                 <input
-                  name="invNo"
-                  value={values.invNo}
+                  name="returnNo"
+                  value={values.returnNo}
                   onChange={handleChange}
                   className={input}
                 />
-                {touched.invNo && errors.invNo && (
-                  <p className="text-xs text-red-500">{errors.invNo}</p>
+                {touched.returnNo && errors.returnNo && (
+                  <p className="text-xs text-red-500">{errors.returnNo}</p>
                 )}
               </div>
 
-              {/* Invoice Date */}
+              {/* Return Date */}
               <div>
-                <label className={label}>Invoice Date</label>
+                <label className={label}>Return Date</label>
                 <input
                   type="date"
-                  name="invDate"
-                  value={values.invDate}
+                  name="returnDate"
+                  value={values.returnDate}
                   onChange={handleChange}
                   className={input}
                 />
-                {touched.invDate && errors.invDate && (
-                  <p className="text-xs text-red-500">{errors.invDate}</p>
+                {touched.returnDate && errors.returnDate && (
+                  <p className="text-xs text-red-500">{errors.returnDate}</p>
                 )}
               </div>
 
-              {/* Customer Name */}
+              {/* Invoice Reference */}
               <div>
-                <label className={label}>Customer Name</label>
+                <label className={label}>Invoice Reference</label>
                 <input
-                  name="customerName"
-                  value={values.customerName}
+                  name="invoiceRef"
+                  value={values.invoiceRef}
                   onChange={handleChange}
                   className={input}
                 />
-                {touched.customerName && errors.customerName && (
-                  <p className="text-xs text-red-500">{errors.customerName}</p>
+                {touched.invoiceRef && errors.invoiceRef && (
+                  <p className="text-xs text-red-500">{errors.invoiceRef}</p>
                 )}
               </div>
 
-              {/* Mobile */}
+              {/* Return Reason */}
               <div>
-                <label className={label}>Mobile No</label>
+                <label className={label}>Return Reason</label>
                 <input
-                  name="mobile"
-                  value={values.mobile}
+                  name="returnReason"
+                  value={values.returnReason}
                   onChange={handleChange}
                   className={input}
                 />
-                {touched.mobile && errors.mobile && (
-                  <p className="text-xs text-red-500">{errors.mobile}</p>
+                {touched.returnReason && errors.returnReason && (
+                  <p className="text-xs text-red-500">{errors.returnReason}</p>
                 )}
               </div>
 
-              {/* Address */}
-              <div className="lg:col-span-2">
-                <label className={label}>Address</label>
-                <input
-                  name="address"
-                  value={values.address}
-                  onChange={handleChange}
-                  className={input}
-                />
-                {touched.address && errors.address && (
-                  <p className="text-xs text-red-500">{errors.address}</p>
-                )}
-              </div>
-
-              {/* Due Days */}
+              {/* QC Remark */}
               <div>
-                <label className={label}>Due Days</label>
+                <label className={label}>QC Remark</label>
                 <input
-                  name="dueDays"
-                  value={values.dueDays}
+                  name="qcRemark"
+                  value={values.qcRemark}
                   onChange={handleChange}
                   className={input}
                 />
-                {touched.dueDays && errors.dueDays && (
-                  <p className="text-xs text-red-500">{errors.dueDays}</p>
+                {touched.qcRemark && errors.qcRemark && (
+                  <p className="text-xs text-red-500">{errors.qcRemark}</p>
                 )}
               </div>
 
-              {/* Due Date */}
+              {/* Return Warehouse */}
               <div>
-                <label className={label}>Due Date</label>
+                <label className={label}>Return Warehouse</label>
                 <input
-                  type="date"
-                  name="dueDate"
-                  value={values.dueDate}
-                  readOnly
-                  className={`${input} bg-gray-100`}
+                  name="returnWarehouse"
+                  value={values.returnWarehouse}
+                  onChange={handleChange}
+                  className={input}
                 />
+                {touched.returnWarehouse && errors.returnWarehouse && (
+                  <p className="text-xs text-red-500">{errors.returnWarehouse}</p>
+                )}
               </div>
 
             </div>

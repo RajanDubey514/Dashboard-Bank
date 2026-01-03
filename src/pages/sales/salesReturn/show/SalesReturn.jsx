@@ -6,7 +6,7 @@ import InvoiceModal from "../../salesModal/InvoiceModal";
 import EditableTable from "../../../../components/tablecomp/EditableTable";
 import Pagination from "../../../../components/pagination/Pagination";
 import DownloadDataButton from "../../../../components/DownloadData/DownloadDataButton";
-import { fakeInvoices } from "../../../../components/FakeData";
+import { fakeSalesReturn } from "../../../../components/FakeData";
 
 import SelectBoxCommon from "../../../../components/searchComp/SelectBoxCommon";
 import UpdateInvoice from "../update/UpdateInvoice";
@@ -45,7 +45,7 @@ const SalesReturn = () => {
      LOAD DATA
   ====================================================== */
   useEffect(() => {
-    setDataList(fakeInvoices);
+    setDataList(fakeSalesReturn);
   }, []);
 
   /* ======================================================
@@ -79,13 +79,13 @@ const SalesReturn = () => {
 
       return {
         id: item.id,
-        invoiceNo: item.invoice.invNo,
-        invoiceDate: item.invoice.invDate,
-        customer: item.invoice.customerName,
-        mobile: item.invoice.mobile,
-        totalQty: item.products.reduce((a, b) => a + b.qty, 0),
-        grandTotal: `₹ ${Number(sub + tax).toLocaleString("en-IN")}`,
-        status: item.status || "Active",
+        returnNo: item.invoice.returnNo,
+        returnDate: item.invoice.returnDate,
+        invoiceRef: item.invoice.invoiceRef,
+        returnReason: item.invoice.returnReason,
+          qcRemark: item.invoice.qcRemark,
+        returnWarehouse: item.invoice.returnWarehouse,
+     
       };
     });
   }, [filteredData]);

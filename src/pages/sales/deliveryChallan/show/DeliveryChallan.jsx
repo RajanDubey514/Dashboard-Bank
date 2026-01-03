@@ -1,25 +1,22 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { PlusCircle , CircleX   } from "lucide-react";
+import { PlusCircle, CircleX } from "lucide-react";
 import Swal from "sweetalert2";
 
 import InvoiceModal from "../../salesModal/InvoiceModal";
 import EditableTable from "../../../../components/tablecomp/EditableTable";
 import Pagination from "../../../../components/pagination/Pagination";
 import DownloadDataButton from "../../../../components/DownloadData/DownloadDataButton";
-import { fakeInvoices } from "../../../../components/FakeData";
+import { fakeSales } from "../../../../components/FakeData";
 
 import SelectBoxCommon from "../../../../components/searchComp/SelectBoxCommon";
 import UpdateInvoice from "../update/UpdateInvoice";
 import AddInvoice from "../add/AddInvoice";
 
 const DeliveryChallan = () => {
-  /* ======================================================
-     STATE
-  ====================================================== */
   const [dataList, setDataList] = useState([]);
   const [filterType, setFilterType] = useState("all");
 
-  // Table states
+  // Column search & table data
   const [columnSearchKeys, setColumnSearchKeys] = useState({});
   const [filteredTableData, setFilteredTableData] = useState([]);
 
@@ -41,79 +38,70 @@ const DeliveryChallan = () => {
   const [editInvoiceData, setEditInvoiceData] = useState({});
   const [editProducts, setEditProducts] = useState([]);
 
-  /* ======================================================
-     LOAD DATA
-  ====================================================== */
+  // Load fake data
   useEffect(() => {
-    setDataList(fakeInvoices);
+    setDataList(fakeSales);
   }, []);
 
-  /* ======================================================
-     FILTER BY STATUS (RAW DATA)
-  ====================================================== */
+  // Filter by status
   const filteredData = useMemo(() => {
     let updated = [...dataList];
-
     if (filterType === "active") {
       updated = updated.filter((i) => i.status === "Active");
     }
-
     return updated;
   }, [dataList, filterType]);
 
-  /* ======================================================
-     TRANSFORM → TABLE DATA
-  ====================================================== */
+  // Transform data for table → only invoice fields
   const tableData = useMemo(() => {
-    return filteredData.map((item) => {
-      const sub = item.products.reduce(
-        (sum, p) => sum + p.qty * p.rate,
-        0
-      );
-
-      const tax = item.products.reduce(
-        (sum, p) =>
-          sum + (p.qty * p.rate * (p.sgst + p.cgst + p.igst)) / 100,
-        0
-      );
-
-      return {
-        id: item.id,
-        invoiceNo: item.invoice.invNo,
-        invoiceDate: item.invoice.invDate,
-        customer: item.invoice.customerName,
-        mobile: item.invoice.mobile,
-        totalQty: item.products.reduce((a, b) => a + b.qty, 0),
-        grandTotal: `₹ ${Number(sub + tax).toLocaleString("en-IN")}`,
-        status: item.status || "Active",
-      };
-    });
+    return filteredData.map((item) => ({
+      id: item.id,
+      dcNo: item.invoice.dcNo,
+      dcDate: item.invoice.dcDate,
+      soReference: item.invoice.soReference,
+      warehouse: item.invoice.warehouse,
+      vehicleNo: item.invoice.vehicleNo,
+      transporter: item.invoice.transporter,
+    }));
   }, [filteredData]);
 
-  /* ======================================================
-     SYNC TABLE DATA → FILTERED TABLE DATA
-  ====================================================== */
   useEffect(() => {
     setFilteredTableData(tableData);
   }, [tableData]);
 
-  /* ======================================================
-     COLUMN SEARCH (ON TABLE DATA)
-  ====================================================== */
+  // Column search
   const handleColumnSearch = (header, keys) => {
     const updatedKeys = { ...columnSearchKeys, [header]: keys };
     setColumnSearchKeys(updatedKeys);
 
     let result = [...tableData];
-
     Object.keys(updatedKeys).forEach((col) => {
       const values = updatedKeys[col];
       if (values?.length > 0) {
         result = result.filter((row) =>
           values.every((v) =>
-            String(row[col] ?? "")
-              .toLowerCase()
-              .includes(v.toLowerCase())
+            String(row[col] ?? "").toLowerCase().includes(v.toLowerCase())
+          )
+        );
+      }
+    });
+    setFilteredTableData(result);
+    setCurrentPage(1);
+  };
+
+  const removeColumnFilter = (column) => {
+    const updatedKeys = { ...columnSearchKeys };
+    delete updatedKeys[column];
+
+    setColumnSearchKeys(updatedKeys);
+
+    let result = [...tableData];
+    Object.keys(updatedKeys).forEach((col) => {
+      const values = updatedKeys[col];
+      if (values?.length > 0) {
+        result = result.filter((row) =>
+          values.every((v) =>
+            String(row[col] ?? "").toLowerCase().includes(v.toLowerCase())
           )
         );
       }
@@ -122,38 +110,8 @@ const DeliveryChallan = () => {
     setFilteredTableData(result);
     setCurrentPage(1);
   };
- 
 
-
-  const removeColumnFilter = (column) => {
-  const updatedKeys = { ...columnSearchKeys };
-  delete updatedKeys[column];          // ❌ remove chip
-
-  setColumnSearchKeys(updatedKeys);
-
-  // Re-apply remaining column filters on tableData
-  let result = [...tableData];
-
-  Object.keys(updatedKeys).forEach((col) => {
-    const values = updatedKeys[col];
-    if (values?.length > 0) {
-      result = result.filter((row) =>
-        values.every((v) =>
-          String(row[col] ?? "")
-            .toLowerCase()
-            .includes(v.toLowerCase())
-        )
-      );
-    }
-  });
-
-  setFilteredTableData(result);
-  setCurrentPage(1);
-};
-
-  /* ======================================================
-     SORTING (ON FILTERED TABLE DATA)
-  ====================================================== */
+  // Sorting
   const onSort = (key) => {
     let direction =
       sortConfig.key === key && sortConfig.direction === "asc"
@@ -171,24 +129,16 @@ const DeliveryChallan = () => {
     setFilteredTableData(sorted);
   };
 
-  /* ======================================================
-     PAGINATION
-  ====================================================== */
+  // Pagination
   const totalPages = Math.ceil(filteredTableData.length / rowsPerPage);
-
   const paginatedTableData = filteredTableData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
 
-  const headers =
-    filteredTableData.length > 0
-      ? Object.keys(filteredTableData[0])
-      : [];
+  const headers = filteredTableData.length > 0 ? Object.keys(filteredTableData[0]) : [];
 
-  /* ======================================================
-     ACTIONS
-  ====================================================== */
+  // Actions
   const handleEditClick = (id) => {
     const selected = dataList.find((item) => item.id === id);
     setSelectedData(selected);
@@ -210,12 +160,10 @@ const DeliveryChallan = () => {
     });
   };
 
-  /* ======================================================
-     ADD INVOICE
-  ====================================================== */
+  // Add Invoice
   const handleSaveInvoice = () => {
-    if (!invoiceData.invNo || products.length === 0) {
-      Swal.fire("Error", "Invoice details or products missing", "error");
+    if (!invoiceData.dcNo) {
+      Swal.fire("Error", "Invoice details missing", "error");
       return;
     }
 
@@ -238,9 +186,7 @@ const DeliveryChallan = () => {
     setResetKey((k) => k + 1);
   };
 
-  /* ======================================================
-     UPDATE INVOICE
-  ====================================================== */
+  // Update Invoice
   const handleUpdateInvoice = () => {
     const updated = dataList.map((item) =>
       item.id === selectedData.id
@@ -253,9 +199,6 @@ const DeliveryChallan = () => {
     setIsEditModalOpen(false);
   };
 
-  /* ======================================================
-     UI
-  ====================================================== */
   return (
     <div className="space-y-3 w-full">
       <SelectBoxCommon
@@ -280,29 +223,28 @@ const DeliveryChallan = () => {
         </button>
       </div>
 
-        {Object.keys(columnSearchKeys).length > 0 && (
-     <div className="flex gap-1 mb-1">
-    {Object.entries(columnSearchKeys).map(([column, values]) =>
-      values?.length > 0 ? (
-        <div
-          key={column}
-          className="flex items-center gap-2 px-1  bg-gray-100 border rounded-full text-xs"
-        >
-          <span className="font-semibold capitalize">{column}:</span>
-          <span>{values.join(", ")}</span>
+      {Object.keys(columnSearchKeys).length > 0 && (
+        <div className="flex gap-1 mb-1">
+          {Object.entries(columnSearchKeys).map(([column, values]) =>
+            values?.length > 0 ? (
+              <div
+                key={column}
+                className="flex items-center gap-2 px-1 bg-gray-100 border rounded-full text-xs"
+              >
+                <span className="font-semibold capitalize">{column}:</span>
+                <span>{values.join(", ")}</span>
 
-          {/* ❌ REMOVE FILTER */}
-          <button
-            onClick={() => removeColumnFilter(column)}
-            className="text-red-600 font-bold hover:scale-110 transition"
-          >
-            <CircleX size={14}/>
-          </button>
+                <button
+                  onClick={() => removeColumnFilter(column)}
+                  className="text-red-600 font-bold hover:scale-110 transition"
+                >
+                  <CircleX size={14} />
+                </button>
+              </div>
+            ) : null
+          )}
         </div>
-      ) : null
-    )}
-  </div>
-)}
+      )}
 
       <EditableTable
         headers={headers}

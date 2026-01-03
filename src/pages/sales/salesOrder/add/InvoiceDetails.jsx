@@ -2,33 +2,28 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useEffect } from "react";
 
+// ---------------- VALIDATION ----------------
 const InvoiceSchema = Yup.object({
-  invNo: Yup.string().required("Invoice number is required"),
-  invDate: Yup.string().required("Invoice date is required"),
-  dueDays: Yup.number()
-    .typeError("Must be a number")
-    .min(0, "Invalid days"),
-  customerName: Yup.string().required("Customer name required"),
-  mobile: Yup.string().required("Mobile required"),
-  address: Yup.string().required("Address required"),
+  soNo: Yup.string().required("SO No is required"),
+  soDate: Yup.string().required("SO Date is required"),
+  salesPerson: Yup.string().required("Sales Person is required"),
+  customerName: Yup.string().required("Customer Name is required"),
+  paymentTerms: Yup.string().required("Payment Terms is required"),
+  deliveryPriority: Yup.string().required("Delivery Priority is required"),
+  billingAddress: Yup.string().required("Billing Address is required"),
+  shippingAddress: Yup.string().required("Shipping Address is required"),
 });
 
-function SyncValues({ values, onChange, setFieldValue }) {
+// ---------------- SYNC ----------------
+function SyncValues({ values, onChange }) {
   useEffect(() => {
     onChange(values);
   }, [values, onChange]);
 
-  useEffect(() => {
-    if (values.invDate && values.dueDays !== "") {
-      const d = new Date(values.invDate);
-      d.setDate(d.getDate() + Number(values.dueDays));
-      setFieldValue("dueDate", d.toISOString().slice(0, 10));
-    }
-  }, [values.invDate, values.dueDays, setFieldValue]);
-
   return null;
 }
 
+// ---------------- COMPONENT ----------------
 export default function InvoiceDetails({ onChange }) {
   const input =
     "w-full rounded-md border border-gray-300 px-2 py-1 text-sm " +
@@ -39,54 +34,65 @@ export default function InvoiceDetails({ onChange }) {
   return (
     <Formik
       initialValues={{
-        invNo: "",
-        invDate: "",
-        dueDays: "",
-        dueDate: "",
+        soNo: "",
+        soDate: "",
+        salesPerson: "",
         customerName: "",
-        mobile: "",
-        address: "",
+        paymentTerms: "",
+        deliveryPriority: "",
+        billingAddress: "",
+        shippingAddress: "",
       }}
       validationSchema={InvoiceSchema}
       onSubmit={() => {}}
     >
-      {({ values, errors, touched, handleChange, setFieldValue }) => (
+      {({ values, errors, touched, handleChange }) => (
         <>
-          <SyncValues
-            values={values}
-            onChange={onChange}
-            setFieldValue={setFieldValue}
-          />
+          <SyncValues values={values} onChange={onChange} />
 
           <Form className="bg-white rounded-xl shadow-sm p-3">
-            <div className="grid grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
-              {/* Invoice No */}
+              {/* SO No */}
               <div>
-                <label className={label}>Invoice No</label>
+                <label className={label}>SO No</label>
                 <input
-                  name="invNo"
-                  value={values.invNo}
+                  name="soNo"
+                  value={values.soNo}
                   onChange={handleChange}
                   className={input}
                 />
-                {touched.invNo && errors.invNo && (
-                  <p className="text-xs text-red-500">{errors.invNo}</p>
+                {touched.soNo && errors.soNo && (
+                  <p className="text-xs text-red-500">{errors.soNo}</p>
                 )}
               </div>
 
-              {/* Invoice Date */}
+              {/* SO Date */}
               <div>
-                <label className={label}>Invoice Date</label>
+                <label className={label}>SO Date</label>
                 <input
                   type="date"
-                  name="invDate"
-                  value={values.invDate}
+                  name="soDate"
+                  value={values.soDate}
                   onChange={handleChange}
                   className={input}
                 />
-                {touched.invDate && errors.invDate && (
-                  <p className="text-xs text-red-500">{errors.invDate}</p>
+                {touched.soDate && errors.soDate && (
+                  <p className="text-xs text-red-500">{errors.soDate}</p>
+                )}
+              </div>
+
+              {/* Sales Person */}
+              <div>
+                <label className={label}>Sales Person</label>
+                <input
+                  name="salesPerson"
+                  value={values.salesPerson}
+                  onChange={handleChange}
+                  className={input}
+                />
+                {touched.salesPerson && errors.salesPerson && (
+                  <p className="text-xs text-red-500">{errors.salesPerson}</p>
                 )}
               </div>
 
@@ -104,58 +110,66 @@ export default function InvoiceDetails({ onChange }) {
                 )}
               </div>
 
-              {/* Mobile */}
+              {/* Payment Terms */}
               <div>
-                <label className={label}>Mobile No</label>
+                <label className={label}>Payment Terms</label>
                 <input
-                  name="mobile"
-                  value={values.mobile}
+                  name="paymentTerms"
+                  value={values.paymentTerms}
                   onChange={handleChange}
                   className={input}
                 />
-                {touched.mobile && errors.mobile && (
-                  <p className="text-xs text-red-500">{errors.mobile}</p>
+                {touched.paymentTerms && errors.paymentTerms && (
+                  <p className="text-xs text-red-500">{errors.paymentTerms}</p>
                 )}
               </div>
 
-              {/* Address */}
-              <div className="lg:col-span-2">
-                <label className={label}>Address</label>
+              {/* Delivery Priority */}
+              <div>
+                <label className={label}>Delivery Priority</label>
+                <select
+                  name="deliveryPriority"
+                  value={values.deliveryPriority}
+                  onChange={handleChange}
+                  className={input}
+                >
+                  <option value="">Select</option>
+                  <option value="High">High</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Low">Low</option>
+                </select>
+                {touched.deliveryPriority && errors.deliveryPriority && (
+                  <p className="text-xs text-red-500">{errors.deliveryPriority}</p>
+                )}
+              </div>
+              
+
+              {/* Billing Address */}
+              <div className="lg:col-span-1">
+                <label className={label}>Billing Address</label>
                 <input
-                  name="address"
-                  value={values.address}
+                  name="billingAddress"
+                  value={values.billingAddress}
                   onChange={handleChange}
                   className={input}
                 />
-                {touched.address && errors.address && (
-                  <p className="text-xs text-red-500">{errors.address}</p>
+                {touched.billingAddress && errors.billingAddress && (
+                  <p className="text-xs text-red-500">{errors.billingAddress}</p>
                 )}
               </div>
 
-              {/* Due Days */}
-              <div>
-                <label className={label}>Due Days</label>
+              {/* Shipping Address */}
+              <div className="lg:col-span-1">
+                <label className={label}>Shipping Address</label>
                 <input
-                  name="dueDays"
-                  value={values.dueDays}
+                  name="shippingAddress"
+                  value={values.shippingAddress}
                   onChange={handleChange}
                   className={input}
                 />
-                {touched.dueDays && errors.dueDays && (
-                  <p className="text-xs text-red-500">{errors.dueDays}</p>
+                {touched.shippingAddress && errors.shippingAddress && (
+                  <p className="text-xs text-red-500">{errors.shippingAddress}</p>
                 )}
-              </div>
-
-              {/* Due Date */}
-              <div>
-                <label className={label}>Due Date</label>
-                <input
-                  type="date"
-                  name="dueDate"
-                  value={values.dueDate}
-                  readOnly
-                  className={`${input} bg-gray-100`}
-                />
               </div>
 
             </div>

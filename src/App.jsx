@@ -11,6 +11,7 @@ import Settings from "./pages/Settings";
 import AdminRouter from "./pages/admin/AdminRouter"; // ✅ NEW
 import SalesRouter from "./pages/sales/SalesRouter";
 import PurchaseRouter from "./pages/parchase/PurchaseRouter";
+import FinanceRouter from "./pages/finance/FinanceRouter";
 
 // 🔒 PrivateRoute
 const PrivateRoute = ({ children }) => {
@@ -61,12 +62,12 @@ export default function App() {
       >
         {/* default dashboard */}
         <Route index element={<Dashboard />} />
-
         {/* Single admin route */}
         <Route path="admin" element={<AdminRouter />} />
         <Route path="sales" element={<SalesRouter />} />
         <Route path="setting" element={<Settings />} />
         <Route path="purchase" element={<PurchaseRouter />}/>
+        <Route path="finance" element={<FinanceRouter />}/>
       </Route>
 
       {/* fallback */}

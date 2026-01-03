@@ -65,12 +65,12 @@ const MenuItems = [
     name: "Finance",
     icon: Wallet,
     subItems: [
-      { name: "Payment Voucher", path: "/payment-voucher" },
-      { name: "Receipt Voucher", path: "/receipt-voucher" },
-      { name: "Debit Note", path: "/debit-note" },
-      { name: "Credit Note", path: "/credit-note" },
-      { name: "Bank Entry", path: "/bank-entry" },
-      { name: "Petty Cash / Cash Expense", path: "/cash-expense" },
+      { name: "Payment Voucher", path: "/finance?page=payment_voucher" },
+      { name: "Receipt Voucher", path: "/finance?page=reciept_voucher" },
+      { name: "Debit Note", path: "/finance?page=debit_note" },
+      { name: "Credit Note", path: "/finance?page=credit_note" },
+      { name: "Bank Entry", path: "/finance?page=bank_entry" },
+      { name: "Petty Cash / Cash Expense", path: "/finance?page=petty_cash" },
     ],
   },
 

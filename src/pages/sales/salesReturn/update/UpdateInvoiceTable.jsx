@@ -3,50 +3,44 @@ import { Trash2 } from "lucide-react";
 export default function UpdateInvoiceTable({
   products = [],
   setProducts,
-  readOnly = false, // ✅ NEW (for future use)
+  readOnly = false,
 }) {
   const update = (i, field, val) => {
     if (readOnly) return;
 
-    setProducts((p) =>
-      p.map((row, idx) =>
-        idx === i ? { ...row, [field]: Number(val) || 0 } : row
+    setProducts((prev) =>
+      prev.map((row, idx) =>
+        idx === i ? { ...row, [field]: val } : row
       )
     );
   };
 
   const remove = (i) => {
     if (readOnly) return;
-    setProducts((p) => p.filter((_, idx) => idx !== i));
+    setProducts((prev) => prev.filter((_, idx) => idx !== i));
   };
 
   return (
     <div className="rounded-lg bg-white">
+      <div className="max-h-[250px] overflow-y-auto">
+        <table className="w-full text-xs table-fixed border-collapse">
 
-      {/* 🔹 SCROLL CONTAINER */}
-      <div className="max-h-[150px] overflow-y-scroll">
-
-        <table className="w-full text-xs text-center table-fixed border-separate border-spacing-0">
-
-          {/* 🔹 HEADER */}
-          <thead className="sticky top-0 z-20 bg-slate-700">
+          {/* ===== HEADER ===== */}
+          <thead className="sticky top-0 bg-slate-700 z-10">
             <tr>
               {[
                 "#",
-                "Product",
-                "Qty",
-                "Rate",
-                "SGST",
-                "CGST",
-                "IGST",
-                "Disc %",
-                "Disc Amt",
-                "Total",
-                "Act",
+                "Item Code",
+                "Product Name",
+                "UOM",
+                "Order Qty",
+                "Production Line",
+                "Required Date",
+                "Action",
               ].map((h) => (
                 <th
                   key={h}
-                  className="px-2 py-1 text-white font-semibold text-xs"
+                  className="px-2 py-2 text-white font-semibold text-xs"
                 >
                   {h}
                 </th>
@@ -54,80 +48,96 @@ export default function UpdateInvoiceTable({
             </tr>
           </thead>
 
-          {/* 🔹 BODY */}
+          {/* ===== BODY ===== */}
           <tbody>
             {products.length === 0 && (
               <tr>
                 <td
-                  colSpan={11}
-                  className="py-4 text-gray-400 italic"
+                  colSpan={8}
+                  className="py-4 text-center text-gray-400 italic"
                 >
-                  No products added
+                  No items added
                 </td>
               </tr>
             )}
 
-            {products.map((p, i) => {
-              const base = p.qty * p.rate;
-              const tax =
-                (base * (p.sgst + p.cgst + p.igst)) / 100;
-              const disc =
-                p.discountPct > 0
-                  ? (base * p.discountPct) / 100
-                  : p.discountAmt;
-              const total = base + tax - disc;
+            {products.map((p, i) => (
+              <tr
+                key={p.code || i}
+                className="border-b even:bg-gray-50 hover:bg-blue-50"
+              >
+                {/* Index */}
+                <td className="text-center">{i + 1}</td>
 
-              return (
-                <tr
-                  key={p.code || i}
-                  className="border-b even:bg-gray-50 hover:bg-blue-50 transition"
-                >
-                  <td>{i + 1}</td>
+                {/* Item Code */}
+                <td className="px-2 font-medium">{p.code}</td>
 
-                  <td className="px-2 text-left truncate font-medium">
-                    {p.name}
-                  </td>
+                {/* Product Name */}
+                <td className="px-2 truncate">{p.name}</td>
 
-                  {[
-                    "qty",
-                    "rate",
-                    "sgst",
-                    "cgst",
-                    "igst",
-                    "discountPct",
-                    "discountAmt",
-                  ].map((f) => (
-                    <td key={f}>
-                      <input
-                        type="number"
-                        className={`w-14 border rounded px-1 py-[2px] text-center
-                          focus:ring-1 focus:ring-blue-400 focus:outline-none
-                          ${readOnly ? "bg-gray-100 cursor-not-allowed" : ""}`}
-                        value={p[f]}
-                        disabled={readOnly}
-                        onChange={(e) =>
-                          update(i, f, e.target.value)
-                        }
-                      />
-                    </td>
-                  ))}
+                {/* UOM */}
+                <td>
+                  <input
+                    className="w-full border rounded px-1 py-1 text-xs"
+                    value={p.uom || ""}
+                    disabled={readOnly}
+                    onChange={(e) =>
+                      update(i, "uom", e.target.value)
+                    }
+                  />
+                </td>
 
-                  <td className="font-semibold">
-                    {total.toFixed(2)}
-                  </td>
+                {/* Order Qty */}
+                <td>
+                  <input
+                    type="number"
+                    min={1}
+                    className="w-20 border rounded px-1 py-1 text-center text-xs"
+                    value={p.orderQty || 1}
+                    disabled={readOnly}
+                    onChange={(e) =>
+                      update(i, "orderQty", Number(e.target.value))
+                    }
+                  />
+                </td>
 
-                  <td>
-                    {!readOnly && (
-                      <Trash2
-                        size={14}
-                        className="text-red-500 hover:text-red-700 cursor-pointer mx-auto"
-                        onClick={() => remove(i)}
-                      />
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
+                {/* Production Line */}
+                <td>
+                  <input
+                    className="w-full border rounded px-1 py-1 text-xs"
+                    value={p.productionLine || ""}
+                    disabled={readOnly}
+                    onChange={(e) =>
+                      update(i, "productionLine", e.target.value)
+                    }
+                  />
+                </td>
+
+                {/* Required Date */}
+                <td>
+                  <input
+                    type="date"
+                    className="w-full border rounded px-1 py-1 text-xs"
+                    value={p.requiredDate || ""}
+                    disabled={readOnly}
+                    onChange={(e) =>
+                      update(i, "requiredDate", e.target.value)
+                    }
+                  />
+                </td>
+
+                {/* Action */}
+                <td className="text-center">
+                  {!readOnly && (
+                    <Trash2
+                      size={14}
+                      className="text-red-500 cursor-pointer hover:text-red-700 mx-auto"
+                      onClick={() => remove(i)}
+                    />
+                  )}
+                </td>
+              </tr>
+            ))}
           </tbody>
 
         </table>

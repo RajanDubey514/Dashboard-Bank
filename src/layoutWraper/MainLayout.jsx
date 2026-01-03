@@ -37,7 +37,7 @@ export default function MainLayout() {
 let title = "Dashboard";
 
 // Routes that support query-based pages
-const queryBasedRoutes = ["/admin", "/sales", "/purchase"];
+const queryBasedRoutes = ["/admin", "/sales", "/purchase", "/finance"];
 
 if (queryBasedRoutes.includes(pathname) && pageParam) {
   title =

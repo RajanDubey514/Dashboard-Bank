@@ -2132,8 +2132,653 @@ export const fakePurchaseReturn = [
   },
 ];
 
+export const fakePaymentVouchers = [
+  {
+    id: 1,
+    voucherNo: "PV-001",
+    refNo: "REF-101",
+    date: "2025-01-05",
+    paymentType: "Cash",
+    accountNo: "CASH-001",
+    amount: 12000,
+    narration: "Office stationery purchase",
+  },
+  {
+    id: 2,
+    voucherNo: "PV-002",
+    refNo: "REF-102",
+    date: "2025-01-06",
+    paymentType: "Bank",
+    accountNo: "HDFC-4589",
+    amount: 35000,
+    narration: "Vendor payment – raw material",
+  },
+  {
+    id: 3,
+    voucherNo: "PV-003",
+    refNo: "REF-103",
+    date: "2025-01-07",
+    paymentType: "Cash",
+    accountNo: "CASH-001",
+    amount: 4500,
+    narration: "Petty cash expenses",
+  },
+  {
+    id: 4,
+    voucherNo: "PV-004",
+    refNo: "REF-104",
+    date: "2025-01-08",
+    paymentType: "Bank",
+    accountNo: "ICICI-8821",
+    amount: 82000,
+    narration: "Machine maintenance charges",
+  },
+  {
+    id: 5,
+    voucherNo: "PV-005",
+    refNo: "REF-105",
+    date: "2025-01-09",
+    paymentType: "Cash",
+    accountNo: "CASH-001",
+    amount: 6500,
+    narration: "Transport charges",
+  },
+  {
+    id: 6,
+    voucherNo: "PV-006",
+    refNo: "REF-106",
+    date: "2025-01-10",
+    paymentType: "Bank",
+    accountNo: "SBI-7744",
+    amount: 150000,
+    narration: "Advance paid to supplier",
+  },
+  {
+    id: 7,
+    voucherNo: "PV-007",
+    refNo: "REF-107",
+    date: "2025-01-11",
+    paymentType: "Cash",
+    accountNo: "CASH-001",
+    amount: 2300,
+    narration: "Office refreshments",
+  },
+  {
+    id: 8,
+    voucherNo: "PV-008",
+    refNo: "REF-108",
+    date: "2025-01-12",
+    paymentType: "Bank",
+    accountNo: "AXIS-9981",
+    amount: 42000,
+    narration: "Internet & utility bills",
+  },
+  {
+    id: 9,
+    voucherNo: "PV-009",
+    refNo: "REF-109",
+    date: "2025-01-13",
+    paymentType: "Cash",
+    accountNo: "CASH-001",
+    amount: 9800,
+    narration: "Local travel expenses",
+  },
+  {
+    id: 10,
+    voucherNo: "PV-010",
+    refNo: "REF-110",
+    date: "2025-01-14",
+    paymentType: "Bank",
+    accountNo: "PNB-6612",
+    amount: 60000,
+    narration: "Consultant fees",
+  },
+];
+
+
+export const fakeDebitNote = [
+  {
+    id: 1,
+    voucherNo: "RV-001",
+    refNo: "REF-1001",
+    date: "2025-01-02",
+    paymentType: "Cash",
+    accountNo: "CASH-001",
+    amount: 15000,
+    gstRate: 18,
+    isIgst: false,
+    narration: "Office stationery purchase",
+    isNew: true,
+  },
+  {
+    id: 2,
+    voucherNo: "RV-002",
+    refNo: "REF-1002",
+    date: "2025-01-03",
+    paymentType: "Bank",
+    accountNo: "HDFC-4589",
+    amount: 42000,
+    gstRate: 12,
+    isIgst: true,
+    narration: "Client payment received via bank",
+    isNew: false,
+  },
+  {
+    id: 3,
+    voucherNo: "RV-003",
+    refNo: "REF-1003",
+    date: "2025-01-04",
+    paymentType: "Cash",
+    accountNo: "CASH-001",
+    amount: 8000,
+    gstRate: 5,
+    isIgst: false,
+    narration: "Local transport charges",
+    isNew: false,
+  },
+  {
+    id: 4,
+    voucherNo: "RV-004",
+    refNo: "REF-1004",
+    date: "2025-01-05",
+    paymentType: "Bank",
+    accountNo: "ICICI-7781",
+    amount: 95000,
+    gstRate: 18,
+    isIgst: true,
+    narration: "Software license payment",
+    isNew: true,
+  },
+  {
+    id: 5,
+    voucherNo: "RV-005",
+    refNo: "REF-1005",
+    date: "2025-01-06",
+    paymentType: "Cash",
+    accountNo: "CASH-002",
+    amount: 12000,
+    gstRate: 0,
+    isIgst: false,
+    narration: "Petty cash expenses",
+    isNew: false,
+  },
+  {
+    id: 6,
+    voucherNo: "RV-006",
+    refNo: "REF-1006",
+    date: "2025-01-07",
+    paymentType: "Bank",
+    accountNo: "SBI-3321",
+    amount: 56000,
+    gstRate: 28,
+    isIgst: true,
+    narration: "Machinery maintenance charges",
+    isNew: false,
+  },
+  {
+    id: 7,
+    voucherNo: "RV-007",
+    refNo: "REF-1007",
+    date: "2025-01-08",
+    paymentType: "Cash",
+    accountNo: "CASH-001",
+    amount: 6700,
+    gstRate: 5,
+    isIgst: false,
+    narration: "Courier service charges",
+    isNew: false,
+  },
+  {
+    id: 8,
+    voucherNo: "RV-008",
+    refNo: "REF-1008",
+    date: "2025-01-09",
+    paymentType: "Bank",
+    accountNo: "AXIS-9090",
+    amount: 31000,
+    gstRate: 12,
+    isIgst: false,
+    narration: "Consultancy service payment",
+    isNew: true,
+  },
+  {
+    id: 9,
+    voucherNo: "RV-009",
+    refNo: "REF-1009",
+    date: "2025-01-10",
+    paymentType: "Cash",
+    accountNo: "CASH-003",
+    amount: 4500,
+    gstRate: 0,
+    isIgst: false,
+    narration: "Tea & snacks expenses",
+    isNew: false,
+  },
+  {
+    id: 10,
+    voucherNo: "RV-010",
+    refNo: "REF-1010",
+    date: "2025-01-11",
+    paymentType: "Bank",
+    accountNo: "PNB-6672",
+    amount: 78000,
+    gstRate: 18,
+    isIgst: true,
+    narration: "Annual AMC charges",
+    isNew: false,
+  },
+];
+
+
+export const fakepatty = [
+  {
+    id: 1,
+    entryNo: "INV-001",
+    date: "2025-01-01",
+    products: [
+      { itemCode: "P001", name: "Laptop", rate: 50000, qty: 1 },
+      { itemCode: "P002", name: "Mouse", rate: 500, qty: 2 },
+    ],
+  },
+  {
+    id: 2,
+    entryNo: "INV-002",
+    date: "2025-01-02",
+    products: [
+      { itemCode: "P003", name: "Keyboard", rate: 1500, qty: 1 },
+    ],
+  },
+  {
+    id: 3,
+    entryNo: "INV-003",
+    date: "2025-01-03",
+    products: [
+      { itemCode: "P001", name: "Laptop", rate: 50000, qty: 2 },
+    ],
+  },
+  {
+    id: 4,
+    entryNo: "INV-004",
+    date: "2025-01-04",
+    products: [
+      { itemCode: "P002", name: "Mouse", rate: 500, qty: 5 },
+    ],
+  },
+  {
+    id: 5,
+    entryNo: "INV-005",
+    date: "2025-01-05",
+    products: [
+      { itemCode: "P001", name: "Laptop", rate: 50000, qty: 1 },
+      { itemCode: "P003", name: "Keyboard", rate: 1500, qty: 2 },
+    ],
+  },
+  {
+    id: 6,
+    entryNo: "INV-006",
+    date: "2025-01-06",
+    products: [
+      { itemCode: "P002", name: "Mouse", rate: 500, qty: 3 },
+      { itemCode: "P003", name: "Keyboard", rate: 1500, qty: 1 },
+    ],
+  },
+  {
+    id: 7,
+    entryNo: "INV-007",
+    date: "2025-01-07",
+    products: [
+      { itemCode: "P001", name: "Laptop", rate: 50000, qty: 1 },
+    ],
+  },
+  {
+    id: 8,
+    entryNo: "INV-008",
+    date: "2025-01-08",
+    products: [
+      { itemCode: "P003", name: "Keyboard", rate: 1500, qty: 4 },
+    ],
+  },
+  {
+    id: 9,
+    entryNo: "INV-009",
+    date: "2025-01-09",
+    products: [
+      { itemCode: "P002", name: "Mouse", rate: 500, qty: 10 },
+    ],
+  },
+  {
+    id: 10,
+    entryNo: "INV-010",
+    date: "2025-01-10",
+    products: [
+      { itemCode: "P001", name: "Laptop", rate: 50000, qty: 1 },
+      { itemCode: "P002", name: "Mouse", rate: 500, qty: 1 },
+      { itemCode: "P003", name: "Keyboard", rate: 1500, qty: 1 },
+    ],
+  },
+];
+
+
+export const fakeSales = [
+  {
+    id: 1,
+    invoice: {
+
+      dcNo: "DC-202501",
+      dcDate: "2025-01-05",
+      soReference: "SO-1001",
+      warehouse: "Delhi Central",
+      vehicleNo: "DL01AB1234",
+      transporter: "FastTrans Logistics",
+    },
+    products: [
+      { item: "Laptop", batchNo: "B101", lotNo: "L101", qcStatus: "Pass", qtyDispatched: 2 },
+    ],
+  },
+
+  {
+    id: 2,
+    invoice: {
+     
+      dcNo: "DC-202502",
+      dcDate: "2025-01-07",
+      soReference: "SO-1002",
+      warehouse: "Mumbai Hub",
+      vehicleNo: "MH01XY5678",
+      transporter: "Speedy Cargo",
+     
+    },
+    products: [
+      { item: "Laptop", batchNo: "B111", lotNo: "L111", qcStatus: "Pass", qtyDispatched: 1 },
+      { item: "Mouse", batchNo: "B112", lotNo: "L112", qcStatus: "Pass", qtyDispatched: 3 },
+      { item: "Keyboard", batchNo: "B113", lotNo: "L113", qcStatus: "Fail", qtyDispatched: 2 },
+     
+    ],
+  },
+
+  {
+    id: 3,
+    invoice: {
+    
+      dcNo: "DC-202503",
+      dcDate: "2025-01-10",
+      soReference: "SO-1003",
+      warehouse: "Ahmedabad Depot",
+      vehicleNo: "GJ01CD4321",
+      transporter: "Reliable Movers",
+   
+    },
+    products: [
+      { item: "Laptop", batchNo: "B121", lotNo: "L121", qcStatus: "Pass", qtyDispatched: 3 },
+      { item: "Mouse", batchNo: "B122", lotNo: "L122", qcStatus: "Pass", qtyDispatched: 4 },
+    
+    ],
+  },
+
+ 
+];
+
+
+export const fakeSalesorder = [
+  {
+    id: 1,
+    invoice: {
+      soNo: "SO-1001",
+      soDate: "2025-01-05",
+      salesPerson: "Rohit Sharma",
+      customerName: "ABC Technologies Pvt Ltd",
+      paymentTerms: "30 Days Credit",
+      deliveryPriority: "High",
+      billingAddress: "Delhi, India",
+      shippingAddress: "Delhi Warehouse, India",
+    },
+    products: [
+      {
+        itemCode: "ITM-001",
+        productName: "Laptop",
+        uom: "Nos",
+        orderQty: 5,
+        productionLine: "Line-A",
+        requiredDate: "2025-01-15",
+      },
+    ],
+  },
+
+  {
+    id: 2,
+    invoice: {
+      soNo: "SO-1002",
+      soDate: "2025-01-07",
+      salesPerson: "Ankit Verma",
+      customerName: "XYZ Solutions",
+      paymentTerms: "Advance",
+      deliveryPriority: "Medium",
+      billingAddress: "Mumbai, India",
+      shippingAddress: "Mumbai Hub, India",
+    },
+    products: [
+      {
+        itemCode: "ITM-002",
+        productName: "Mouse",
+        uom: "Nos",
+        orderQty: 10,
+        productionLine: "Line-B",
+        requiredDate: "2025-01-18",
+      },
+      {
+        itemCode: "ITM-003",
+        productName: "Keyboard",
+        uom: "Nos",
+        orderQty: 6,
+        productionLine: "Line-B",
+        requiredDate: "2025-01-18",
+      },
+    ],
+  },
+
+  {
+    id: 3,
+    invoice: {
+      soNo: "SO-1003",
+      soDate: "2025-01-10",
+      salesPerson: "Neha Gupta",
+      customerName: "PQR Enterprises",
+      paymentTerms: "15 Days Credit",
+      deliveryPriority: "Low",
+      billingAddress: "Ahmedabad, India",
+      shippingAddress: "Ahmedabad Depot, India",
+    },
+    products: [
+      {
+        itemCode: "ITM-001",
+        productName: "Laptop",
+        uom: "Nos",
+        orderQty: 3,
+        productionLine: "Line-A",
+        requiredDate: "2025-01-20",
+      },
+      {
+        itemCode: "ITM-002",
+        productName: "Mouse",
+        uom: "Nos",
+        orderQty: 8,
+        productionLine: "Line-C",
+        requiredDate: "2025-01-20",
+      },
+    ],
+  },
+];
+
+
+export const fakeSalesInvoice = [
+  {
+    id: 1,
+    invoice: {
+      invoiceNo: "INV-1001",
+      invoiceDate: "2025-01-05",
+      dcReference: "DC-202501",
+      gstin: "07ABCDE1234F1Z5",
+      placeOfSupply: "Delhi",
+      dueDate: "2025-02-05",
+    },
+    products: [
+      {
+        item: "Laptop",
+        hsn: "8471",
+        batch: "B101",
+        qty: 5,
+        rate: 50000,
+        gstPct: 18,
+        total: 50000 * 5 * 1.18, // qty * rate * (1+GST%)
+      },
+    ],
+  },
+
+  {
+    id: 2,
+    invoice: {
+      invoiceNo: "INV-1002",
+      invoiceDate: "2025-01-07",
+      dcReference: "DC-202502",
+      gstin: "27ABCDE5678G1Z4",
+      placeOfSupply: "Mumbai",
+      dueDate: "2025-02-07",
+    },
+    products: [
+      {
+        item: "Mouse",
+        hsn: "8471",
+        batch: "B102",
+        qty: 10,
+        rate: 500,
+        gstPct: 18,
+        total: 500 * 10 * 1.18,
+      },
+      {
+        item: "Keyboard",
+        hsn: "8471",
+        batch: "B103",
+        qty: 6,
+        rate: 1200,
+        gstPct: 18,
+        total: 1200 * 6 * 1.18,
+      },
+    ],
+  },
+
+  {
+    id: 3,
+    invoice: {
+      invoiceNo: "INV-1003",
+      invoiceDate: "2025-01-10",
+      dcReference: "DC-202503",
+      gstin: "09ABCDE9876H1Z2",
+      placeOfSupply: "Ahmedabad",
+      dueDate: "2025-02-10",
+    },
+    products: [
+      {
+        item: "Laptop",
+        hsn: "8471",
+        batch: "B104",
+        qty: 3,
+        rate: 50000,
+        gstPct: 18,
+        total: 50000 * 3 * 1.18,
+      },
+      {
+        item: "Mouse",
+        hsn: "8471",
+        batch: "B105",
+        qty: 8,
+        rate: 500,
+        gstPct: 18,
+        total: 500 * 8 * 1.18,
+      },
+    ],
+  },
+];
 
 
 
+
+export const fakeSalesReturn = [
+  {
+    id: 1,
+    invoice: {
+      returnNo: "RET-1001",
+      returnDate: "2025-01-12",
+      invoiceRef: "INV-1001",
+      returnReason: "Damaged during transit",
+      qcRemark: "Screen damaged",
+      returnWarehouse: "Delhi Warehouse",
+    },
+    products: [
+      {
+        item: "Laptop",
+        batch: "B101",
+        qtySold: 5,
+        qtyReturned: 2,
+        reworkOrScrap: "Scrap",
+      },
+    ],
+  },
+
+  {
+    id: 2,
+    invoice: {
+      returnNo: "RET-1002",
+      returnDate: "2025-01-15",
+      invoiceRef: "INV-1002",
+      returnReason: "Customer complaint",
+      qcRemark: "Mouse buttons not working",
+      returnWarehouse: "Mumbai Hub",
+    },
+    products: [
+      {
+        item: "Mouse",
+        batch: "B102",
+        qtySold: 10,
+        qtyReturned: 4,
+        reworkOrScrap: "Rework",
+      },
+      {
+        item: "Keyboard",
+        batch: "B103",
+        qtySold: 6,
+        qtyReturned: 1,
+        reworkOrScrap: "Scrap",
+      },
+    ],
+  },
+
+  {
+    id: 3,
+    invoice: {
+      returnNo: "RET-1003",
+      returnDate: "2025-01-20",
+      invoiceRef: "INV-1003",
+      returnReason: "Defective units",
+      qcRemark: "Mouse scroll issue",
+      returnWarehouse: "Ahmedabad Depot",
+    },
+    products: [
+      {
+        item: "Laptop",
+        batch: "B104",
+        qtySold: 3,
+        qtyReturned: 1,
+        reworkOrScrap: "Scrap",
+      },
+      {
+        item: "Mouse",
+        batch: "B105",
+        qtySold: 8,
+        qtyReturned: 2,
+        reworkOrScrap: "Rework",
+      },
+    ],
+  },
+];
 
 

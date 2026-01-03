@@ -1,123 +1,97 @@
-import { useMemo, useState } from "react";
-import { Printer, Plus } from "lucide-react";
+import { useState } from "react";
+import { Plus, Printer } from "lucide-react";
 
 import InvoiceDetails from "./InvoiceDetails";
 import InvoiceTable from "./InvoiceTable";
 import AddProductModal from "./AddProductModal";
-import InvoiceSummary from "./InvoiceSummary";
 
+// Product master for the modal
 const productsDB = [
-  { code: "P001", name: "Laptop", rate: 50000, sgst: 9, cgst: 9, igst: 0 },
-  { code: "P002", name: "Mouse", rate: 500, sgst: 9, cgst: 9, igst: 0 },
-  { code: "P003", name: "Laptop1", rate: 50000, sgst: 9, cgst: 9, igst: 0 },
-  { code: "P004", name: "Mouse1", rate: 500, sgst: 9, cgst: 9, igst: 0 },
-  { code: "P005", name: "Laptop2", rate: 50000, sgst: 9, cgst: 9, igst: 0 },
-  { code: "P006", name: "Mouse2", rate: 500, sgst: 9, cgst: 9, igst: 0 },
+  { code: "ITM-001", name: "Laptop", hsn: "8471", rate: 50000, gstPct: 18 },
+  { code: "ITM-002", name: "Mouse", hsn: "8471", rate: 500, gstPct: 18 },
+  { code: "ITM-003", name: "Keyboard", hsn: "8471", rate: 1200, gstPct: 18 },
+  { code: "ITM-004", name: "Monitor", hsn: "8528", rate: 8000, gstPct: 18 },
+  { code: "ITM-005", name: "Printer", hsn: "8443", rate: 7000, gstPct: 18 },
 ];
 
-export default function AddInvoice({
-  invoiceData,
-  setInvoiceData,
-  products,
-  setProducts,
-}) {
+export default function AddInvoice({ invoiceData, setInvoiceData, products, setProducts }) {
   const [openModal, setOpenModal] = useState(false);
-  const [scanCode, setScanCode] = useState("");
-  const [amountPaid, setAmountPaid] = useState("");
-
-  // ---------------- TOTALS ----------------
-  const totals = useMemo(() => {
-    let sub = 0;
-    let tax = 0;
-
-    products.forEach((p) => {
-      const base = p.qty * p.rate;
-      sub += base;
-      tax += (base * (p.sgst + p.cgst + p.igst)) / 100;
-    });
-
-    return { sub, tax, grand: sub + tax };
-  }, [products]);
 
   // ---------------- ADD PRODUCT ----------------
   const addProduct = (product) => {
     setProducts((prev) => {
-      const exist = prev.find((p) => p.code === product.code);
-      if (exist) {
-        return prev.map((p) =>
-          p.code === product.code ? { ...p, qty: p.qty + 1 } : p
-        );
-      }
-      return [...prev, { ...product, qty: 1, discountPct: 0, discountAmt: 0 }];
+      const exists = prev.find((p) => p.itemCode === product.code);
+      if (exists) return prev; // avoid duplicates
+
+      return [
+        ...prev,
+        {
+          itemCode: product.code,
+          item: product.name,
+          hsn: product.hsn,
+          batch: "",
+          qty: 1,
+          rate: product.rate,
+          gstPct: product.gstPct,
+          total: product.rate * 1.18, // initial total with GST
+        },
+      ];
     });
 
-    setScanCode("");
+    setOpenModal(false);
   };
 
-  // ---------------- SCAN HANDLER ----------------
-  const handleScanChange = (e) => {
-    const value = e.target.value;
-    setScanCode(value);
+  // ---------------- UPDATE PRODUCT ----------------
+  const updateProduct = (index, field, value) => {
+    setProducts((prev) =>
+      prev.map((p, i) => {
+        if (i === index) {
+          const updated = { ...p, [field]: value };
 
-    const found = productsDB.find(
-      (p) => p.code.toLowerCase() === value.toLowerCase()
+          // Recalculate total if qty, rate, or gstPct changed
+          if (["qty", "rate", "gstPct"].includes(field)) {
+            const qty = Number(updated.qty) || 0;
+            const rate = Number(updated.rate) || 0;
+            const gst = Number(updated.gstPct) || 0;
+            updated.total = +(qty * rate * (1 + gst / 100)).toFixed(2);
+          }
+
+          return updated;
+        }
+        return p;
+      })
     );
-
-    if (found) addProduct(found);
   };
 
   return (
-    <div className="h-full flex flex-col gap-3 p-1">
+    <div className="h-full flex flex-col gap-3 p-2">
+
       {/* ===== INVOICE DETAILS ===== */}
       <InvoiceDetails onChange={setInvoiceData} />
 
-      {/* ===== SCAN + ACTION BAR ===== */}
-      <div className="flex items-end justify-between gap-4 flex-wrap">
-        <div className="flex flex-col">
-          <label className="text-[11px] font-semibold text-gray-600 mb-1">
-            Scan / Enter Product Code
-          </label>
-          <input
-            className="h-8 w-60 rounded-md border border-gray-300 px-2 text-sm
-              focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Scan / Enter Code"
-            value={scanCode}
-            onChange={handleScanChange}
-          />
-        </div>
+      {/* ===== ACTION BAR ===== */}
+      <div className="flex justify-end gap-2">
+        <button
+          className="flex items-center gap-1 rounded-md bg-blue-600
+                     px-3 py-1 text-xs font-medium text-white hover:bg-blue-700"
+          onClick={() => setOpenModal(true)}
+        >
+          <Plus size={12} /> Add Product
+        </button>
 
-        <div className="flex items-end gap-2">
-          <button
-            className="flex items-center gap-1 rounded-md bg-blue-600
-              px-2 text-xs font-medium text-white hover:bg-blue-700"
-            onClick={() => setOpenModal(true)}
-          >
-            <Plus size={12} />
-            Add Product
-          </button>
-
-          <button
-            className="flex items-center gap-1 rounded-md bg-green-600
-              px-2 text-xs font-medium text-white hover:bg-green-700"
-            onClick={() => window.print()}
-          >
-            <Printer size={12} />
-            Print
-          </button>
-        </div>
+        <button
+          className="flex items-center gap-1 rounded-md bg-green-600
+                     px-3 py-1 text-xs font-medium text-white hover:bg-green-700"
+          onClick={() => window.print()}
+        >
+          <Printer size={12} /> Print
+        </button>
       </div>
 
       {/* ===== PRODUCT TABLE ===== */}
-      <InvoiceTable products={products} setProducts={setProducts} />
-
-      {/* ===== SUMMARY ===== */}
-      <InvoiceSummary
-        totalQty={products.reduce((a, b) => a + b.qty, 0)}
-        amountPaid={amountPaid}
-        setAmountPaid={setAmountPaid}
-        sub={totals.sub}
-        tax={totals.tax}
-        grand={totals.grand}
+      <InvoiceTable
+        products={products}
+        setProducts={updateProduct} // pass updated handler for recalculation
       />
 
       {/* ===== ADD PRODUCT MODAL ===== */}

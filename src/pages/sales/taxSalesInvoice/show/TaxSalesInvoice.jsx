@@ -6,7 +6,7 @@ import InvoiceModal from "../../salesModal/InvoiceModal";
 import EditableTable from "../../../../components/tablecomp/EditableTable";
 import Pagination from "../../../../components/pagination/Pagination";
 import DownloadDataButton from "../../../../components/DownloadData/DownloadDataButton";
-import { fakeInvoices } from "../../../../components/FakeData";
+import { fakeSalesInvoice } from "../../../../components/FakeData";
 
 import SelectBoxCommon from "../../../../components/searchComp/SelectBoxCommon";
 import UpdateInvoice from "../update/UpdateInvoice";
@@ -45,7 +45,7 @@ const TaxSalesInvoice = () => {
      LOAD DATA
   ====================================================== */
   useEffect(() => {
-    setDataList(fakeInvoices);
+    setDataList(fakeSalesInvoice);
   }, []);
 
   /* ======================================================
@@ -79,13 +79,14 @@ const TaxSalesInvoice = () => {
 
       return {
         id: item.id,
-        invoiceNo: item.invoice.invNo,
-        invoiceDate: item.invoice.invDate,
-        customer: item.invoice.customerName,
-        mobile: item.invoice.mobile,
-        totalQty: item.products.reduce((a, b) => a + b.qty, 0),
-        grandTotal: `₹ ${Number(sub + tax).toLocaleString("en-IN")}`,
-        status: item.status || "Active",
+        invoiceNo: item.invoice.invoiceNo,
+        invoiceDate: item.invoice.invoiceDate,
+        dcReference: item.invoice.dcReference,
+        gstin: item.invoice.gstin,
+        placeOfSupply: item.invoice.placeOfSupply,
+        dueDate: item.invoice.dueDate,
+
+      
       };
     });
   }, [filteredData]);
@@ -343,7 +344,7 @@ const TaxSalesInvoice = () => {
       />
 
       {/* EDIT */}
-      <InvoiceModal
+      {/* <InvoiceModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         title="Update Tax Sales Invoice"
@@ -358,7 +359,7 @@ const TaxSalesInvoice = () => {
             setUpProducts={setEditProducts}
           />
         }
-      />
+      /> */}
     </div>
   );
 };
