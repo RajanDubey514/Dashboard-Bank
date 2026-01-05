@@ -1,11 +1,22 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-/* ---------------- SYNC FORM VALUES ---------------- */
+/* ---------------- SAFE SYNC ---------------- */
 function SyncValues({ values, onChange }) {
+  const prev = useRef(values);
+
   useEffect(() => {
-    onChange(values);
+    if (!onChange) return;
+
+    const changed = Object.keys(values).some(
+      (key) => values[key] !== prev.current[key]
+    );
+
+    if (changed) {
+      prev.current = values;
+      onChange(values);
+    }
   }, [values, onChange]);
 
   return null;
@@ -37,9 +48,9 @@ const InvoiceSchema = Yup.object(
 );
 
 /* ---------------- COMPONENT ---------------- */
-export default function InvoiceDetails({
-  onChange,
+export default function UpdateInvoiceDetail({
   initialValues = {},
+  onChange,
 }) {
   const inputClass =
     "w-full rounded-md border border-gray-300 px-2 py-1 text-sm " +
@@ -47,20 +58,22 @@ export default function InvoiceDetails({
 
   const labelClass = "text-xs font-semibold text-gray-600 mb-1";
 
-  const defaultValues = invoiceFields.reduce((acc, f) => {
-    acc[f.name] = initialValues[f.name] || "";
+  /* ---------- SAFE PREFILL ---------- */
+  const formInitialValues = invoiceFields.reduce((acc, f) => {
+    acc[f.name] = initialValues[f.name] ?? "";
     return acc;
   }, {});
 
   return (
     <Formik
-      initialValues={defaultValues}
+      initialValues={formInitialValues}
       validationSchema={InvoiceSchema}
       enableReinitialize
       onSubmit={() => {}}
     >
       {({ values, errors, touched, handleChange }) => (
         <>
+          {/* SYNC TO PARENT */}
           <SyncValues values={values} onChange={onChange} />
 
           <Form className="bg-white rounded-xl shadow-sm">

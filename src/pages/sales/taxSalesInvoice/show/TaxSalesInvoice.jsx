@@ -344,7 +344,7 @@ const TaxSalesInvoice = () => {
       />
 
       {/* EDIT */}
-      {/* <InvoiceModal
+      <InvoiceModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         title="Update Tax Sales Invoice"
@@ -355,11 +355,11 @@ const TaxSalesInvoice = () => {
           <UpdateInvoice
             upinvoiceData={editInvoiceData}
             setUpInvoiceData={setEditInvoiceData}
-            upproducts={editProducts}
-            setUpProducts={setEditProducts}
+            products={editProducts}
+            setProducts={setEditProducts}
           />
         }
-      /> */}
+      />
     </div>
   );
 };

@@ -1,39 +1,49 @@
-import { useState } from "react";
-import { Plus, Printer } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Plus, Printer, Package } from "lucide-react";
 
 import InvoiceDetails from "./InvoiceDetails";
 import InvoiceTable from "./InvoiceTable";
-import AddProductModal from "./AddProductModal";
+import AddProductModal from "../../salesModal/AddProductModal";
+import InvoiceSummary from "../../salesModal/InvoiceSummary";
 
-// Product master for the modal
+/* -------- PRODUCT MASTER -------- */
 const productsDB = [
-  { code: "ITM-001", name: "Laptop", hsn: "8471", rate: 50000, gstPct: 18 },
-  { code: "ITM-002", name: "Mouse", hsn: "8471", rate: 500, gstPct: 18 },
-  { code: "ITM-003", name: "Keyboard", hsn: "8471", rate: 1200, gstPct: 18 },
-  { code: "ITM-004", name: "Monitor", hsn: "8528", rate: 8000, gstPct: 18 },
-  { code: "ITM-005", name: "Printer", hsn: "8443", rate: 7000, gstPct: 18 },
+  { code: "P001", name: "Laptop" },
+  { code: "P002", name: "Mouse" },
+  { code: "P003", name: "Keyboard" },
+  { code: "P004", name: "Monitor" },
+  { code: "P005", name: "Printer" },
 ];
 
-export default function AddInvoice({ invoiceData, setInvoiceData, products, setProducts }) {
+export default function AddInvoice({
+  invoiceData,
+  setInvoiceData,
+  products,
+  setProducts,
+}) {
+  /* -------------------- LOCAL STATE -------------------- */
   const [openModal, setOpenModal] = useState(false);
+  const [scanCode, setScanCode] = useState("");
+  const [amountPaid, setAmountPaid] = useState(0);
 
-  // ---------------- ADD PRODUCT ----------------
+  /* -------------------- ADD PRODUCT -------------------- */
   const addProduct = (product) => {
     setProducts((prev) => {
-      const exists = prev.find((p) => p.itemCode === product.code);
-      if (exists) return prev; // avoid duplicates
+      if (prev.find((p) => p.itemCode === product.code)) return prev;
 
       return [
         ...prev,
         {
           itemCode: product.code,
-          item: product.name,
-          hsn: product.hsn,
-          batch: "",
+          product: product.name,
           qty: 1,
-          rate: product.rate,
-          gstPct: product.gstPct,
-          total: product.rate * 1.18, // initial total with GST
+          rate: 0,
+          sgst: 0,
+          cgst: 0,
+          igst: 0,
+          discountPercent: 0,
+          discountAmount: 0,
+          total: 0,
         },
       ];
     });
@@ -41,57 +51,128 @@ export default function AddInvoice({ invoiceData, setInvoiceData, products, setP
     setOpenModal(false);
   };
 
-  // ---------------- UPDATE PRODUCT ----------------
-  const updateProduct = (index, field, value) => {
-    setProducts((prev) =>
-      prev.map((p, i) => {
-        if (i === index) {
-          const updated = { ...p, [field]: value };
+  /* -------------------- SCAN PRODUCT -------------------- */
+  const handleScanChange = (e) => {
+    const value = e.target.value;
+    setScanCode(value);
 
-          // Recalculate total if qty, rate, or gstPct changed
-          if (["qty", "rate", "gstPct"].includes(field)) {
-            const qty = Number(updated.qty) || 0;
-            const rate = Number(updated.rate) || 0;
-            const gst = Number(updated.gstPct) || 0;
-            updated.total = +(qty * rate * (1 + gst / 100)).toFixed(2);
-          }
-
-          return updated;
-        }
-        return p;
-      })
+    const found = productsDB.find(
+      (p) => p.code.toLowerCase() === value.toLowerCase()
     );
+
+    if (found) {
+      addProduct(found);
+      setScanCode("");
+    }
   };
 
+  /* -------------------- CALCULATIONS -------------------- */
+  const totals = useMemo(() => {
+    let totalQty = 0;
+    let sub = 0;
+    let tax = 0;
+
+    products.forEach((p) => {
+      const qty = Number(p.qty) || 0;
+      const rate = Number(p.rate) || 0;
+
+      const base = qty * rate;
+      const discount = Number(p.discountAmount) || 0;
+      const taxable = base - discount;
+
+      const sgst = (taxable * (p.sgst || 0)) / 100;
+      const cgst = (taxable * (p.cgst || 0)) / 100;
+      const igst = (taxable * (p.igst || 0)) / 100;
+
+      totalQty += qty;
+      sub += taxable;
+      tax += sgst + cgst + igst;
+    });
+
+    return {
+      totalQty,
+      sub,
+      tax,
+      grand: sub + tax,
+    };
+  }, [products]);
+
+  /* -------------------- UI -------------------- */
   return (
-    <div className="h-full flex flex-col gap-3 p-2">
+    <div className="h-full flex flex-col gap-3 p-1">
 
       {/* ===== INVOICE DETAILS ===== */}
-      <InvoiceDetails onChange={setInvoiceData} />
+      <InvoiceDetails
+        invoiceData={invoiceData}
+        onChange={setInvoiceData}
+      />
 
       {/* ===== ACTION BAR ===== */}
-      <div className="flex justify-end gap-2">
+      <div className="flex justify-between gap-2 items-end">
+
+        <div className="flex flex-col">
+          <label className="text-[11px] font-semibold text-gray-600 mb-1">
+            Scan / Enter Item Code
+          </label>
+          <input
+            className="h-8 w-60 rounded-md border px-2 text-sm
+                       focus:ring-2 focus:ring-blue-500"
+            placeholder="Scan / Enter Code"
+            value={scanCode}
+            onChange={handleScanChange}
+          />
+        </div>
+          
+          <div className="flex gap-2">
+
         <button
-          className="flex items-center gap-1 rounded-md bg-blue-600
-                     px-3 py-1 text-xs font-medium text-white hover:bg-blue-700"
           onClick={() => setOpenModal(true)}
+          className="flex items-center gap-1 rounded-md bg-blue-600
+                     px-3 py-1 text-xs font-medium text-white"
         >
-          <Plus size={12} /> Add Product
+          <Plus size={12} />
+          Add Product
         </button>
 
         <button
-          className="flex items-center gap-1 rounded-md bg-green-600
-                     px-3 py-1 text-xs font-medium text-white hover:bg-green-700"
           onClick={() => window.print()}
+          className="flex items-center gap-1 rounded-md bg-green-600
+                     px-3 py-1 text-xs font-medium text-white"
         >
-          <Printer size={12} /> Print
+          <Printer size={12} />
+          Print
         </button>
+          </div>
       </div>
 
       {/* ===== PRODUCT TABLE ===== */}
       <InvoiceTable
         products={products}
-        setProducts={updateProduct} // pass updated handler for recalculation
+        setProducts={setProducts}
+      />
+
+      {/* ===== SUMMARY (DYNAMIC & REUSABLE) ===== */}
+      <InvoiceSummary
+        metrics={[
+          {
+            label: "Total Qty",
+            value: totals.totalQty,
+            icon: <Package size={18} />,
+            bg: "bg-blue-50 text-blue-700",
+          },
+        ]}
+        payment={{
+          label: "Payment",
+          value: amountPaid,
+          onChange: setAmountPaid,
+          balance: amountPaid - totals.grand,
+          balanceLabel: "Return",
+        }}
+        summary={[
+          { label: "Subtotal", value: totals.sub },
+          { label: "Tax", value: totals.tax },
+          { label: "Grand Total", value: totals.grand, bold: true },
+        ]}
       />
 
       {/* ===== ADD PRODUCT MODAL ===== */}

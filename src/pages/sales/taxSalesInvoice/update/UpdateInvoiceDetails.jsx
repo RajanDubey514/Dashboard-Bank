@@ -1,115 +1,89 @@
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { useEffect } from "react";
+import { useEffect, useRef, useMemo } from "react";
 
 // ---------------- VALIDATION ----------------
 const InvoiceSchema = Yup.object({
-  soNo: Yup.string().required("SO No is required"),
-  soDate: Yup.string().required("SO Date is required"),
-  salesPerson: Yup.string().required("Sales Person is required"),
-  customerName: Yup.string().required("Customer Name is required"),
-  paymentTerms: Yup.string().required("Payment Terms is required"),
-  deliveryPriority: Yup.string().required("Delivery Priority is required"),
+  invoiceNo: Yup.string().required("Invoice No is required"),
+  invoiceDate: Yup.string().required("Invoice Date is required"),
+  dcRef: Yup.string().required("DC Reference is required"),
+  gstin: Yup.string().required("GSTIN is required"),
+  placeOfSupply: Yup.string().required("Place of Supply is required"),
+  dueDate: Yup.string().required("Due Date is required"),
 });
 
-// ---------------- SYNC HELPER ----------------
+// ---------------- SYNC ----------------
 function SyncValues({ values, onChange }) {
+  const prevValues = useRef(values);
+
   useEffect(() => {
-    onChange(values);
+    if (!onChange) return;
+
+    // Check if any value actually changed
+    const changed = Object.keys(values).some(
+      (key) => values[key] !== prevValues.current[key]
+    );
+
+    if (changed) {
+      prevValues.current = values;
+      onChange(values);
+    }
   }, [values, onChange]);
 
   return null;
 }
 
 // ---------------- COMPONENT ----------------
-export default function UpdateInvoiceDetails({ value = {}, onChange }) {
+export default function UpdateInvoiceDetails({ onChange, initialValues = {} }) {
+  // Memoize initial values to avoid re-init loops
+  const formInitialValues = useMemo(
+    () => ({
+      invoiceNo: initialValues.invoiceNo ?? "",
+      invoiceDate: initialValues.invoiceDate ?? "",
+      dcRef: initialValues.dcRef ?? "",
+      gstin: initialValues.gstin ?? "",
+      placeOfSupply: initialValues.placeOfSupply ?? "",
+      dueDate: initialValues.dueDate ?? "",
+    }),
+    [initialValues]
+  );
+
   const input =
-    "w-full rounded-md border border-gray-300 bg-white px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500";
-  const label = "text-xs font-semibold text-gray-600 mb-1";
+    "w-full rounded-md border border-gray-300 px-2 py-1 text-sm " +
+    "focus:outline-none focus:ring-2 focus:ring-blue-500";
+  const label = "text-xs font-semibold text-gray-600 mb-1 capitalize";
 
   return (
     <Formik
       enableReinitialize
-      initialValues={{
-        soNo: value.soNo || "",
-        soDate: value.soDate || "",
-        salesPerson: value.salesPerson || "",
-        customerName: value.customerName || "",
-        paymentTerms: value.paymentTerms || "",
-        deliveryPriority: value.deliveryPriority || "",
-        billingAddress: value.billingAddress || "",
-        shippingAddress: value.shippingAddress || "",
-      }}
+      initialValues={formInitialValues}
       validationSchema={InvoiceSchema}
       onSubmit={() => {}}
     >
-      {({ values }) => (
-        <Form className="bg-white rounded-xl shadow-sm p-4">
+      {({ values, errors, touched, handleChange }) => (
+        <>
           <SyncValues values={values} onChange={onChange} />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <Form className="bg-white rounded-xl shadow-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
-            {/* SO No */}
-            <div>
-              <label className={label}>SO No</label>
-              <Field name="soNo" className={input} />
-              <ErrorMessage name="soNo" component="div" className="text-xs text-red-500" />
-            </div>
+            {Object.keys(formInitialValues).map((key) => (
+              <div key={key}>
+                <label className={label}>{key.replace(/([A-Z])/g, ' $1')}</label>
+                <input
+                  name={key}
+                  type={key.toLowerCase().includes("date") ? "date" : "text"}
+                  value={values[key]}
+                  onChange={handleChange}
+                  className={input}
+                />
+                {touched[key] && errors[key] && (
+                  <p className="text-xs text-red-500">{errors[key]}</p>
+                )}
+              </div>
+            ))}
 
-            {/* SO Date */}
-            <div>
-              <label className={label}>SO Date</label>
-              <Field type="date" name="soDate" className={input} />
-              <ErrorMessage name="soDate" component="div" className="text-xs text-red-500" />
-            </div>
-
-            {/* Sales Person */}
-            <div>
-              <label className={label}>Sales Person</label>
-              <Field name="salesPerson" className={input} />
-              <ErrorMessage name="salesPerson" component="div" className="text-xs text-red-500" />
-            </div>
-
-            {/* Customer Name */}
-            <div>
-              <label className={label}>Customer Name</label>
-              <Field name="customerName" className={input} />
-              <ErrorMessage name="customerName" component="div" className="text-xs text-red-500" />
-            </div>
-
-            {/* Payment Terms */}
-            <div>
-              <label className={label}>Payment Terms</label>
-              <Field name="paymentTerms" className={input} />
-              <ErrorMessage name="paymentTerms" component="div" className="text-xs text-red-500" />
-            </div>
-
-            {/* Delivery Priority */}
-            <div>
-              <label className={label}>Delivery Priority</label>
-              <Field as="select" name="deliveryPriority" className={input}>
-                <option value="">Select</option>
-                <option value="High">High</option>
-                <option value="Normal">Normal</option>
-                <option value="Low">Low</option>
-              </Field>
-              <ErrorMessage name="deliveryPriority" component="div" className="text-xs text-red-500" />
-            </div>
-
-            {/* Billing Address */}
-            <div className="lg:col-span-2">
-              <label className={label}>Billing Address</label>
-              <Field name="billingAddress" className={input} />
-            </div>
-
-            {/* Shipping Address */}
-            <div className="lg:col-span-2">
-              <label className={label}>Shipping Address</label>
-              <Field name="shippingAddress" className={input} />
-            </div>
-
-          </div>
-        </Form>
+          </Form>
+        </>
       )}
     </Formik>
   );

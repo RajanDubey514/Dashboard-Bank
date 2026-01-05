@@ -298,8 +298,8 @@ const DeliveryChallan = () => {
           <UpdateInvoice
             upinvoiceData={editInvoiceData}
             setUpInvoiceData={setEditInvoiceData}
-            upproducts={editProducts}
-            setUpProducts={setEditProducts}
+            products={editProducts}
+            setProducts={setEditProducts}
           />
         }
       />

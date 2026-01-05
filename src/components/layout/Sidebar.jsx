@@ -3,6 +3,7 @@ import { X, ChevronDown, ChevronUp, Settings, LogOut } from "lucide-react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import menuItems from "./MenuItems";
 import "./sidebar.css";
+import inventoryLogo from "../../assets/inventory.png";
 
 export default function Sidebar({ open, onClose, sidebarWidth = "w-60" }) {
   const [openMenu, setOpenMenu] = useState(null);
@@ -47,15 +48,36 @@ export default function Sidebar({ open, onClose, sidebarWidth = "w-60" }) {
       >
         {/* Header */}
         <div className="flex items-center justify-between h-12 px-4 border-b">
-          <div
+          {/* <div
             onClick={() => navigate("/")}
             className="text-[14px] font-semibold cursor-pointer"
           >
             Project
-          </div>
-          <button onClick={onClose} className="md:hidden text-slate-300">
+          </div> */}
+           <div
+      onClick={() => navigate("/")}
+      className="flex items-center gap-3 cursor-pointer"
+    >
+      {/* Logo */}
+      <img
+        src={inventoryLogo}
+        alt="Inventory Logo"
+        className="w-10 h-10 object-contain"
+      />
+
+      {/* Text Content */}
+      <div className="leading-tight">
+        <div className="text-[12px] text-white">
+          Inventory Management
+        </div>
+        <div className="text-[8px] text-white">
+          Pick-to-Light
+        </div>
+      </div>
+    </div>
+          {/* <button onClick={onClose} className="md:hidden text-slate-300">
             <X size={18} />
-          </button>
+          </button> */}
         </div>
 
         {/* Menu */}
