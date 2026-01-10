@@ -12,7 +12,7 @@ export default function KpiCard({ title, value }) {
         boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
       }}
     >
-      <p className="text-xs text-gray-500">{title}</p>
+      <p className="text-xs text-[var(--color-primary)]">{title}</p>
 
       <p className="text-xl font-bold mt-1 text-gray-800">
         {value}
