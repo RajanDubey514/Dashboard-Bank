@@ -35,7 +35,7 @@ import { useNavigate } from "react-router-dom";
 const kpis = [
   { title: "Total Sales", value: "₹ 1,25,000" },
   { title: "Total Purchase", value: "₹ 78,000" },
-  { title: "Net Profit", value: "₹ 47,000" },
+  { title: "Income expenses", value: "₹ 47,000" },
   { title: "Inventory Value", value: "₹ 3,40,000" },
   { title: "Work Orders", value: "12" },
 ];
@@ -238,13 +238,15 @@ function StatGrid({ data }) {
             hover:shadow-md hover:-translate-y-[1px]
           "
         >
-          <span className="text-[11px] text-gray-500">
+          
+          <div className="text-[11px] text-gray-500">
             {label}
-          </span>
-          <span className="text-sm font-semibold text-gray-800">
+          </div>
+          <div className="text-sm font-semibold text-gray-800">
             {value}
-          </span>
+          </div>
         </div>
+
       ))}
     </div>
   );
