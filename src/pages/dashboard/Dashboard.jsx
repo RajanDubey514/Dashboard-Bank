@@ -27,6 +27,7 @@ import {
   Settings,
   Trash2,
 } from "lucide-react";
+
 import { useNavigate } from "react-router-dom";
 
 /* ---------------- DATA ---------------- */
@@ -67,8 +68,9 @@ const PROD_COLORS = [
 
 export default function Dashboard() {
   const navigate = useNavigate();
+
   return (
-    <div className="bg-[var(--color-bg)] sm:p-1 space-y-3">
+    <div className="bg-[var(--color-bg)] p-2 space-y-4 transition-colors">
       {/* KPI SECTION */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         {kpis.map((kpi, i) => (
@@ -82,7 +84,7 @@ export default function Dashboard() {
         <SectionCard
           title="Accounting Overview"
           actions={
-            <div className="flex flex-wrap gap-2">
+            <>
               <ActionBtn
                 icon={<FileText size={14} />}
                 label="Invoice"
@@ -98,7 +100,7 @@ export default function Dashboard() {
                 label="Expense"
                 onClick={() => navigate("/finance?page=petty_cash")}
               />
-            </div>
+            </>
           }
         >
           <StatGrid
@@ -134,11 +136,11 @@ export default function Dashboard() {
         <SectionCard
           title="Inventory Management"
           actions={
-            <div className="flex flex-wrap gap-2">
+            <>
               <ActionBtn icon={<Package size={14} />} label="Stock" />
               <ActionBtn icon={<ArrowLeftRight size={14} />} label="Transfer" />
               <ActionBtn icon={<Sliders size={14} />} label="Adjust" />
-            </div>
+            </>
           }
         >
           <StatGrid
@@ -176,7 +178,7 @@ export default function Dashboard() {
         <SectionCard
           title="Production Status"
           actions={
-            <div className="flex flex-wrap gap-2">
+            <>
               <ActionBtn
                 icon={<Factory size={14} />}
                 label="New Order"
@@ -185,10 +187,9 @@ export default function Dashboard() {
               <ActionBtn
                 icon={<Settings size={14} />}
                 label="Assign"
-                onClick={() => navigate("/finance?page=petty_cash")}
               />
               <ActionBtn icon={<Trash2 size={14} />} label="Scrap" />
-            </div>
+            </>
           }
         >
           <StatGrid
@@ -204,10 +205,10 @@ export default function Dashboard() {
             <PieChart>
               <Pie
                 data={productionData}
+                dataKey="value"
                 innerRadius={45}
                 outerRadius={70}
                 paddingAngle={4}
-                dataKey="value"
               >
                 {productionData.map((_, i) => (
                   <Cell key={i} fill={PROD_COLORS[i]} />
@@ -233,7 +234,8 @@ function StatGrid({ data }) {
           className="
             bg-white rounded-lg border border-gray-200
             px-3 py-2 shadow-sm
-            flex flex-col justify-center
+            transition-all duration-300
+            hover:shadow-md hover:-translate-y-[1px]
           "
         >
           <span className="text-[11px] text-gray-500">
@@ -250,7 +252,11 @@ function StatGrid({ data }) {
 
 function ChartBox({ children }) {
   return (
-    <div className="h-44 mt-3">
+    <div className="
+      h-44 mt-3 rounded-lg
+      transition-all duration-300
+      hover:shadow-md
+    ">
       <ResponsiveContainer width="100%" height="100%">
         {children}
       </ResponsiveContainer>
@@ -262,7 +268,14 @@ function ActionBtn({ icon, label, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="theme-primary text-xs flex justify-center items-center gap-1"
+      className="
+        theme-primary text-xs
+        flex items-center gap-1
+        px-2 py-1 rounded
+        transition-all duration-200
+        hover:opacity-90 hover:shadow-md
+        active:scale-95
+      "
     >
       {icon}
       {label}
