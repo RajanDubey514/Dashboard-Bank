@@ -17,7 +17,7 @@ export default function AddProductModal({ open, onClose, productsDB, onAdd }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-80">
       <div className="bg-white p-4 rounded-md w-80 space-y-3">
         <h2 className="font-semibold text-lg">Add Product</h2>
 

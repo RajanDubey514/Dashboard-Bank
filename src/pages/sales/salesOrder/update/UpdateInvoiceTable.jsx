@@ -77,8 +77,8 @@ export default function InvoiceTable({ products = [], setProducts }) {
   };
 
   return (
-    <div className="rounded-lg bg-white shadow-sm">
-      <div className="max-h-[260px] overflow-auto">
+    <div className="bg-white rounded-lg p-2">
+      <div className="h-[130px] overflow-y-auto">
         <table className="w-full text-xs text-center border-separate border-spacing-0">
           {/* HEADER */}
           <thead className="sticky top-0 bg-slate-700 z-20">

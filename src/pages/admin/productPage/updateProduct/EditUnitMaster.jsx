@@ -95,21 +95,14 @@ const EditUnitMaster = ({ selectedData, dataList, setDataList, onClose }) => {
         <button
           type="button"
           onClick={() => formik.resetForm()}
-          className="px-4 py-1.5 border rounded-md text-xs font-medium text-gray-600 hover:bg-gray-100"
+         className="border bg-gray-400 text-white px-4 py-2 rounded-md  text-xs"
         >
           Reset
         </button>
-        <button
-          type="button"
-          onClick={() => onClose && onClose()}
-          className="px-4 py-1.5 border rounded-md text-xs font-medium text-gray-600 hover:bg-gray-100"
-        >
-          Cancel
-        </button>
+       
         <button
           type="submit"
-          className="px-4 py-1.5 rounded-md text-xs font-semibold text-white"
-          style={{ backgroundColor: "var(--color-primary)" }}
+          className="bg-[var(--color-primary)] text-white px-4 py-2 rounded-md text-xs"
         >
           Update
         </button>

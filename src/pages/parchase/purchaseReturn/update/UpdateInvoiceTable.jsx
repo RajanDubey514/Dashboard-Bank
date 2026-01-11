@@ -29,8 +29,8 @@ export default function UpdateInvoiceTable({
   };
 
   return (
-    <div className="rounded-lg bg-white">
-      <div className="max-h-[180px] overflow-y-auto">
+    <div className="rounded-lg bg-white p-2">
+      <div className="max-h-[130px] overflow-y-auto">
         <table className="w-full text-xs text-center table-fixed border-collapse">
 
           {/* HEADER */}

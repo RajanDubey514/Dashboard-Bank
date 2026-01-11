@@ -237,6 +237,13 @@ const TaxSalesInvoice = () => {
     setResetKey((k) => k + 1);
   };
 
+
+  const handleResetEditInvoice = () => {
+  if (!selectedData) return;
+   setEditInvoiceData({});
+  setEditProducts([]);
+};
+
   /* ======================================================
      UPDATE INVOICE
   ====================================================== */
@@ -328,6 +335,7 @@ const TaxSalesInvoice = () => {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         title="Add Tax Sales Invoice"
+         submitText="Submit"
         width="95%"
         height="90vh"
         onSubmit={handleSaveInvoice}
@@ -348,9 +356,12 @@ const TaxSalesInvoice = () => {
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         title="Update Tax Sales Invoice"
+         submitText="Update"
         width="95%"
         height="90vh"
         onSubmit={handleUpdateInvoice}
+         onReset  ={handleResetEditInvoice}
+
         content={
           <UpdateInvoice
             upinvoiceData={editInvoiceData}

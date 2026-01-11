@@ -47,7 +47,7 @@ export default function UpdateGRNDetails({ value, onChange }) {
       onSubmit={() => {}}
     >
       {({ values }) => (
-        <Form className="bg-white rounded-xl shadow-sm p-4">
+        <Form className="bg-white rounded-xl ">
           <SyncValues values={values} onChange={onChange} />
 
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">

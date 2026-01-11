@@ -2,7 +2,7 @@ export default function KpiCard({ title, value }) {
   return (
     <div
       className="
-        bg-white rounded-xl p-4
+        bg-white rounded-xl p-2
         cursor-pointer
         border-l-4 border-[var(--color-primary)]
         transition-all duration-300 ease-in-out
@@ -14,7 +14,7 @@ export default function KpiCard({ title, value }) {
     >
       <p className="text-xs text-[var(--color-primary)]">{title}</p>
 
-      <p className="text-xl font-bold mt-1 text-gray-800">
+      <p className="text-md font-bold  text-gray-800">
         {value}
       </p>
     </div>

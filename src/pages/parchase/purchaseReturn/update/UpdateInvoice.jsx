@@ -53,23 +53,29 @@ export default function UpdateInvoice({
 
       {/* ===== ACTION BAR ===== */}
       <div className="flex items-end justify-between gap-4 flex-wrap">
-        <button
-          className="flex items-center gap-1 rounded-md bg-blue-600
-            px-2 text-xs font-medium text-white hover:bg-blue-700"
-          onClick={() => setOpenModal(true)}
-        >
-          <Plus size={12} />
-          Add Item
-        </button>
+        <div className="text-sm font-semibold text-gray-700">
+          Purchase Return Items
+        </div>
 
-        <button
-          className="flex items-center gap-1 rounded-md bg-green-600
-            px-2 text-xs font-medium text-white hover:bg-green-700"
-          onClick={printInvoice}
-        >
-          <Printer size={12} />
-          Print
-        </button>
+        <div className="flex items-end gap-2">
+          <button
+            className="flex items-center gap-1 rounded-md bg-blue-600
+              px-2 text-xs font-medium text-white hover:bg-blue-700"
+            onClick={() => setOpenModal(true)}
+          >
+            <Plus size={12} />
+            Add Item
+          </button>
+
+          <button
+            className="flex items-center gap-1 rounded-md bg-green-600
+              px-2 text-xs font-medium text-white hover:bg-green-700"
+            onClick={() => window.print()}
+          >
+            <Printer size={12} />
+            Print
+          </button>
+        </div>
       </div>
 
       {/* ===== PRODUCT TABLE ===== */}

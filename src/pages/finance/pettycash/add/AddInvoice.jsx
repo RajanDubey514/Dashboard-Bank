@@ -51,7 +51,7 @@ export default function AddInvoice({ invoiceData, setInvoiceData }) {
   }, [products]);
 
   return (
-    <div className="p-4 bg-white rounded-md space-y-4">
+    <div className="p-2 bg-white rounded-md space-y-4">
       {/* HEADER FORM */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Input
@@ -71,61 +71,80 @@ export default function AddInvoice({ invoiceData, setInvoiceData }) {
       <div className="flex justify-end">
         <button
           onClick={() => setOpenModal(true)}
-          className="flex items-center gap-1 px-3 py-1.5 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700"
+          className="flex items-center gap-1 px-2 py-1 bg-blue-600 text-white text-xs rounded-md hover:bg-blue-700"
         >
-          <Plus size={14} />
+          <Plus size={12} />
           Add Product
         </button>
       </div>
 
       {/* PRODUCTS TABLE */}
-      <table className="w-full border border-gray-300 text-sm">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="border px-2 py-1">Item</th>
-            <th className="border px-2 py-1">Rate</th>
-            <th className="border px-2 py-1">Qty</th>
-            <th className="border px-2 py-1">Amount</th>
-            <th className="border px-2 py-1">Action</th>
+
+      <div className="max-h-[120px] overflow-y-auto border border-blue-300 rounded">
+  <table className="w-full border-collapse text-sm">
+    <thead className="bg-[var(--color-primary)]">
+      <tr>
+        <th className="sticky top-0  border px-2 py-1">
+          Item
+        </th>
+        <th className="sticky top-0  border px-2 py-1">
+          Rate
+        </th>
+        <th className="sticky top-0  border px-2 py-1">
+          Qty
+        </th>
+        <th className="sticky top-0  border px-2 py-1">
+          Amount
+        </th>
+        <th className="sticky top-0  border px-2 py-1">
+          Action
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {products.length === 0 ? (
+        <tr>
+          <td colSpan={5} className="text-center py-3 text-gray-400">
+            No products added
+          </td>
+        </tr>
+      ) : (
+        products.map((p, i) => (
+          <tr key={p.itemCode}>
+            <td className="border px-2 py-1">{p.name}</td>
+            <td className="border px-2 py-1">₹ {p.rate}</td>
+
+            <td className="border px-2 py-1">
+              <div className="flex items-center justify-center gap-2">
+                <button onClick={() => changeQty(i, -1)}>
+                  <Minus size={14} />
+                </button>
+                <span>{p.qty}</span>
+                <button onClick={() => changeQty(i, 1)}>
+                  <Plus size={14} />
+                </button>
+              </div>
+            </td>
+
+            <td className="border px-2 py-1">
+              ₹ {p.qty * p.rate}
+            </td>
+
+            <td className="border px-2 py-1 text-center">
+              <button
+                onClick={() => removeProduct(i)}
+                className="text-red-600"
+              >
+                <Trash2 size={14} />
+              </button>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {products.length === 0 ? (
-            <tr>
-              <td colSpan={5} className="text-center py-3 text-gray-400">
-                No products added
-              </td>
-            </tr>
-          ) : (
-            products.map((p, i) => (
-              <tr key={p.itemCode}>
-                <td className="border px-2 py-1">{p.name}</td>
-                <td className="border px-2 py-1">₹ {p.rate}</td>
-                <td className="border px-2 py-1">
-                  <div className="flex items-center justify-center gap-2">
-                    <button onClick={() => changeQty(i, -1)}>
-                      <Minus size={14} />
-                    </button>
-                    <span>{p.qty}</span>
-                    <button onClick={() => changeQty(i, 1)}>
-                      <Plus size={14} />
-                    </button>
-                  </div>
-                </td>
-                <td className="border px-2 py-1">₹ {p.qty * p.rate}</td>
-                <td className="border px-2 py-1 text-center">
-                  <button
-                    onClick={() => removeProduct(i)}
-                    className="text-red-600"
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+        ))
+      )}
+    </tbody>
+  </table>
+</div>
 
       {/* TOTAL */}
       <div className="flex justify-end text-lg font-semibold">

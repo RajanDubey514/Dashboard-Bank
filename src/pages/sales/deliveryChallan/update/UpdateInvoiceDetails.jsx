@@ -37,6 +37,13 @@ export default function UpdateInvoiceDetails({
   initialValues = {},
   onChange,
 }) {
+
+   const input =
+    "w-full rounded-md border border-gray-300 px-2 py-1 text-sm " +
+    "focus:outline-none focus:ring-2 focus:ring-blue-500";
+
+  const label = "text-xs font-semibold text-gray-600 mb-1";
+
   const formInitialValues = useMemo(
     () => ({
       dcNo: initialValues.dcNo ?? "",
@@ -60,15 +67,16 @@ export default function UpdateInvoiceDetails({
         <>
           <SyncValues values={values} onChange={onChange} />
 
-          <Form className="bg-white  rounded-xl shadow-sm grid grid-cols-1 md:grid-cols-3 gap-3">
+          <Form className="bg-white rounded-xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {Object.keys(formInitialValues).map((key) => (
               <div key={key}>
-                <label className="text-xs font-semibold capitalize">{key}</label>
+                <label className={label}>{key}</label>
                 <input
                   name={key}
                   value={values[key]}
                   onChange={handleChange}
-                  className="w-full border rounded px-2 py-1 text-sm"
+                  className={input}
                   type={key === "dcDate" ? "date" : "text"}
                 />
                 {touched[key] && errors[key] && (
@@ -76,6 +84,7 @@ export default function UpdateInvoiceDetails({
                 )}
               </div>
             ))}
+            </div>
           </Form>
         </>
       )}

@@ -31,9 +31,9 @@ export default function UpdateInvoiceTable({
   };
 
   return (
-    <div className="rounded-lg bg-white">
+    <div className="rounded-lg bg-white p-2">
       {/* 🔹 SCROLL CONTAINER */}
-      <div className="max-h-[150px] overflow-y-scroll">
+      <div className="max-h-[130px] overflow-y-scroll">
         <table className="w-full text-xs text-center table-fixed border-separate border-spacing-0">
 
           {/* 🔹 HEADER */}

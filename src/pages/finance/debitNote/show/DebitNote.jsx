@@ -157,7 +157,18 @@ const DebitNote = () => {
     );
     setIsEditModalOpen(false);
     Swal.fire("Updated", "Note Updated", "success");
-  };
+  }; 
+
+    const handleResetInvoice = () => {
+  setInvoiceData({});      // clear add form data
+  setResetKey((k) => k + 1); // force remount AddInvoice (clears internal state)
+};
+
+const handleResetEditInvoice = () => {
+  if (!editInvoiceData) return;
+  setEditInvoiceData({})
+
+};
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -239,7 +250,10 @@ const DebitNote = () => {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         title="Add Debit Note"
+        submitText="Submit"
         onSubmit={handleSaveInvoice}
+        onReset={handleResetInvoice}
+
         content={
           <AddInvoice
             key={resetKey}
@@ -254,7 +268,10 @@ const DebitNote = () => {
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         title="Update Debit Note"
+        submitText="Update"
         onSubmit={handleUpdateInvoice}
+        onReset={handleResetEditInvoice}
+
         content={
           <UpdateInvoice
             invoiceData={editInvoiceData}

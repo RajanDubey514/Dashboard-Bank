@@ -236,6 +236,12 @@ const PurchaseReturn = () => {
     setResetKey((k) => k + 1);
   };
 
+  const handleResetEditInvoice = () => {
+  if (!selectedData) return;
+   setEditInvoiceData({});
+  setEditProducts([]);
+};
+
   /* ======================================================
      UPDATE INVOICE
   ====================================================== */
@@ -327,6 +333,7 @@ const PurchaseReturn = () => {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         title="Add Purchase Return"
+        submitText="Submit"
         width="95%"
         height="90vh"
         onSubmit={handleSaveInvoice}
@@ -347,9 +354,11 @@ const PurchaseReturn = () => {
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         title="Update Purchase Return"
+        submitText="Update"
         width="95%"
         height="90vh"
         onSubmit={handleUpdateInvoice}
+        onReset={handleResetEditInvoice}
         content={
           <UpdateInvoice
             upinvoiceData={editInvoiceData}

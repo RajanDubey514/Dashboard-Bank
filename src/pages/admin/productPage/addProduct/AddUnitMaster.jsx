@@ -95,23 +95,22 @@ const AddUnitMaster = ({ dataList, setDataList, onClose }) => {
         <button
           type="button"
           onClick={handleReset}
-          className="px-4 py-1  rounded-md text-xs font-medium text-gray-600 hover:bg-gray-100"
+          className="border bg-gray-400 text-white px-4 py-2 rounded-md  text-xs"
         >
           Reset
         </button>
-        <button
+        {/* <button
           type="button"
           onClick={onClose}
           className="px-4 py-1  rounded-md text-xs font-medium text-gray-600 hover:bg-gray-100"
         >
           Cancel
-        </button>
+        </button> */}
         <button
           type="submit"
-          className="px-4 py-1 rounded-md text-xs font-semibold text-white"
-          style={{ backgroundColor: "var(--color-primary)" }}
+            className="bg-[var(--color-primary)] text-white px-4 py-2 rounded-md text-xs"
         >
-          Add UOM
+          Submit
         </button>
       </div>
     </form>

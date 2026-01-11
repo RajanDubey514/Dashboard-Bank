@@ -69,7 +69,7 @@ export default function PODetails({ onChange }) {
         <>
           <SyncValues values={values} onChange={onChange} />
 
-          <Form className="bg-white rounded-xl shadow-sm p-3">
+          <Form className="bg-white rounded-xl ">
             <div className="grid grid-cols-3 lg:grid-cols-4 gap-4">
 
               {/* PO No */}

@@ -47,7 +47,7 @@ export default function InvoiceDetails({ onChange, value = {} }) {
         <>
           <SyncValues values={values} onChange={onChange} />
 
-          <Form className="bg-white rounded-xl shadow-sm ">
+          <Form className="bg-white rounded-xl  ">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
               {/* Invoice No */}

@@ -238,6 +238,13 @@ const PurchaseOrder = () => {
     setProducts([]);
     setResetKey((k) => k + 1);
   };
+  
+
+   const handleResetEditInvoice = () => {
+  if (!selectedData) return;
+   setEditInvoiceData({});
+  setEditProducts([]);
+};
 
   /* ======================================================
      UPDATE INVOICE
@@ -330,6 +337,7 @@ const PurchaseOrder = () => {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         title="Add Purchase Order"
+        submitText="Submit"
         width="95%"
         height="90vh"
         onSubmit={handleSaveInvoice}
@@ -350,9 +358,12 @@ const PurchaseOrder = () => {
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         title="Update Purchase Order"
+        submitText="Update"
         width="95%"
         height="90vh"
         onSubmit={handleUpdateInvoice}
+        onReset={handleResetEditInvoice}
+
         content={
           <UpdateInvoice
             upinvoiceData={editInvoiceData}

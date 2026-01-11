@@ -159,6 +159,18 @@ const CreditNote = () => {
     Swal.fire("Updated", "Note Updated", "success");
   };
 
+
+    const handleResetInvoice = () => {
+  setInvoiceData({});      // clear add form data
+  setResetKey((k) => k + 1); // force remount AddInvoice (clears internal state)
+};
+
+const handleResetEditInvoice = () => {
+  if (!editInvoiceData) return;
+  setEditInvoiceData({})
+
+};
+
   const handleDelete = (id) => {
     Swal.fire({
       title: "Delete?",
@@ -239,7 +251,9 @@ const CreditNote = () => {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         title="Add Credit Note"
+        submitText="Submit"
         onSubmit={handleSaveInvoice}
+        onReset={handleResetInvoice}
         content={
           <AddInvoice
             key={resetKey}
@@ -254,7 +268,9 @@ const CreditNote = () => {
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         title="Update Credit Note"
+        submitText="Update"
         onSubmit={handleUpdateInvoice}
+        onReset={handleResetEditInvoice}
         content={
           <UpdateInvoice
             invoiceData={editInvoiceData}

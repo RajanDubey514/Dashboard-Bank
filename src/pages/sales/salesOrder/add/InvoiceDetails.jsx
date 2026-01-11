@@ -63,7 +63,7 @@ export default function InvoiceDetails({
         <>
           <SyncValues values={values} onChange={onChange} />
 
-          <Form className="bg-white rounded-xl shadow-sm">
+          <Form className="bg-white rounded-xl ">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {invoiceFields.map((field) => (
                 <div key={field.name}>

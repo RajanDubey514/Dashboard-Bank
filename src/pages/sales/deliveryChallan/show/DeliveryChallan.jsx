@@ -186,6 +186,13 @@ const DeliveryChallan = () => {
     setResetKey((k) => k + 1);
   };
 
+
+  const handleResetEditInvoice = () => {
+  if (!selectedData) return;
+   setEditInvoiceData({});
+  setEditProducts([]);
+};
+
   // Update Invoice
   const handleUpdateInvoice = () => {
     const updated = dataList.map((item) =>
@@ -271,6 +278,7 @@ const DeliveryChallan = () => {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         title="Add Delivery Challan"
+        submitText="Submit"
         width="95%"
         height="90vh"
         onSubmit={handleSaveInvoice}
@@ -291,9 +299,11 @@ const DeliveryChallan = () => {
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         title="Update Delivery Challan"
+        submitText="Update"
         width="95%"
         height="90vh"
         onSubmit={handleUpdateInvoice}
+        onReset={handleResetEditInvoice}
         content={
           <UpdateInvoice
             upinvoiceData={editInvoiceData}

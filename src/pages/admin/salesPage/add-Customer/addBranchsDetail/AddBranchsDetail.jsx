@@ -291,19 +291,20 @@ const AddBranchsDetail = ({ dataList, setDataList }) => {
       </form>
         {/* Footer Buttons */}
         <div className="p-2 bg-white flex justify-end gap-4 sticky -bottom-4">
-          <button
-            type="submit"
-            form="addBranch"
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4  rounded-md text-xs font-medium transition"
-          >
-            Submit
-          </button>
+         
           <button
             type="button"
             onClick={() => formik.resetForm()}
-            className="border border-red-500 text-red-600 hover:bg-red-50 px-4  rounded-md text-xs font-medium transition"
+            className="border bg-gray-400 text-white px-4 py-2 rounded-md  text-xs"
           >
             Reset
+          </button>
+           <button
+            type="submit"
+            form="addBranch"
+            className="bg-[var(--color-primary)] text-white px-4 py-2 rounded-md text-xs"
+          >
+            Submit
           </button>
         </div>
     </div>

@@ -45,7 +45,7 @@ export default function UpdateInvoiceDetails({ value, onChange }) {
       onSubmit={() => {}}
     >
       {({ values }) => (
-        <Form className="bg-white rounded-xl shadow-sm p-4">
+        <Form className="bg-white rounded-xl">
           <SyncValues values={values} onChange={onChange} />
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">

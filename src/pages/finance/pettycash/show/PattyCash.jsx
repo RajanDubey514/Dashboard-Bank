@@ -147,6 +147,17 @@ const PattyCash = () => {
     Swal.fire("Updated", "Petty cash updated", "success");
   };
 
+  const handleResetInvoice = () => {
+  setInvoiceData({});      // clear add form data
+  setResetKey((k) => k + 1); // force remount AddInvoice (clears internal state)
+};
+
+const handleResetEditInvoice = () => {
+  if (!editInvoiceData) return;
+  setEditInvoiceData({})
+
+};
+
   const handleDelete = (id) => {
     Swal.fire({
       title: "Delete?",
@@ -227,7 +238,10 @@ const PattyCash = () => {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         title="Add Petty Cash"
+         submitText="Submit"
         onSubmit={handleSaveInvoice}
+        onReset={handleResetInvoice}
+
         content={
           <AddInvoice
             key={resetKey}
@@ -242,7 +256,10 @@ const PattyCash = () => {
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         title="Update Petty Cash"
+        submitText="Update"
         onSubmit={handleUpdateInvoice}
+         onReset={handleResetEditInvoice}
+
         content={
           <UpdateInvoice
             initialInvoice={editInvoiceData} // updated prop name

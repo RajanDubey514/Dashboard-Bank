@@ -34,6 +34,11 @@ const EditSubMainForm = ({ selectedData, dataList, setDataList, onClose }) => {
     },
   });
 
+  const handleReset = () => {
+    formik.resetForm();
+  };
+
+
   return (
     <form
       onSubmit={formik.handleSubmit}
@@ -123,12 +128,12 @@ const EditSubMainForm = ({ selectedData, dataList, setDataList, onClose }) => {
 
       {/* Fixed bottom buttons */}
       <div className="flex justify-end gap-3 p-3  bg-white sticky -bottom-4">
-        <button
+         <button
           type="button"
-          onClick={() => onClose && onClose()}
-          className="px-4 py-1 border rounded-md text-xs text-gray-600 hover:bg-gray-100"
+          onClick={handleReset}
+          className="border bg-gray-400 text-white px-4 py-2 rounded-md  text-xs"
         >
-          Cancel
+          Reset
         </button>
         <button
           type="submit"

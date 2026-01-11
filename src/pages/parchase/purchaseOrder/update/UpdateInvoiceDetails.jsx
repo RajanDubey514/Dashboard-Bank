@@ -66,7 +66,7 @@ export default function UpdatePODetails({ value, onChange }) {
         const label = "text-xs font-semibold text-gray-600 mb-1";
 
         return (
-          <Form className="bg-white rounded-xl shadow-sm p-4">
+          <Form className="bg-white rounded-xl ">
             {/* ✅ FIX: pass values */}
             <SyncValues values={values} onChange={onChange} />
 
@@ -116,7 +116,7 @@ export default function UpdatePODetails({ value, onChange }) {
               </div>
 
               {/* Delivery Location */}
-              <div className="lg:col-span-2">
+              <div className="">
                 <label className={label}>Delivery Location</label>
                 <Field name="deliveryLocation" className={input} />
                 <ErrorMessage

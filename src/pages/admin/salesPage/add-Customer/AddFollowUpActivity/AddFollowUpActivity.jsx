@@ -226,20 +226,21 @@ const AddFollowUpActivity = ({ dataList, setDataList }) => {
 
       {/* Footer Buttons */}
       <div className="p-2 bg-white flex justify-end gap-4 sticky -bottom-4">
-        <button
-          type="submit"
-          form="addFollowUpForm"
-          className="px-6 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-        >
-          Submit
-        </button>
-        <button
+           <button
           type="button"
           onClick={() => formik.resetForm()}
-          className="px-6 text-xs border border-red-600 text-red-600 rounded hover:bg-red-50 transition"
+           className="border bg-gray-400 text-white px-4 py-2 rounded-md  text-xs"
         >
           Reset
         </button>
+        <button
+          type="submit"
+          form="addFollowUpForm"
+           className="bg-[var(--color-primary)] text-white px-4 py-2 rounded-md text-xs"
+        >
+          Submit
+        </button>
+     
       </div>
     </div>
   );

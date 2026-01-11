@@ -237,19 +237,20 @@ const EditFollowUpActivity = ({ selectedData, dataList, setDataList, closeEditMo
       {/* Footer Buttons */}
       <div className="p-2 bg-white flex justify-end gap-4 sticky -bottom-4">
         <button
-          type="submit"
-          form="editFollowUpForm"
-          className="px-6 py-2 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-        >
-          Update
-        </button>
-        <button
           type="button"
           onClick={() => formik.resetForm()}
-          className="px-6 py-2 text-xs border border-red-600 text-red-600 rounded hover:bg-red-50 transition"
+          className="border bg-gray-400 text-white px-4 py-2 rounded-md  text-xs"
         >
           Reset
         </button>
+        <button
+          type="submit"
+          form="editFollowUpForm"
+          className="bg-[var(--color-primary)] text-white px-4 py-2 rounded-md text-xs"
+        >
+          Update
+        </button>
+        
       </div>
     </div>
   );

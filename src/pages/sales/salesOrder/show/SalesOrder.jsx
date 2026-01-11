@@ -186,6 +186,12 @@ const SalesOrder = () => {
     setResetKey((k) => k + 1);
   };
 
+  const handleResetEditInvoice = () => {
+  if (!selectedData) return;
+   setEditInvoiceData({});
+  setEditProducts([]);
+};
+
   /* -------------------- UPDATE INVOICE -------------------- */
   const handleUpdateInvoice = () => {
     setDataList((prev) =>
@@ -272,6 +278,7 @@ const SalesOrder = () => {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         title="Add Sales Order"
+         submitText="Submit"
         width="95%"
         height="90vh"
         onSubmit={handleSaveInvoice}
@@ -292,9 +299,11 @@ const SalesOrder = () => {
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         title="Update Sales Order"
+         submitText="Update"
         width="95%"
         height="90vh"
         onSubmit={handleUpdateInvoice}
+         onReset  ={handleResetEditInvoice}
         content={
           <UpdateInvoice
             upinvoiceData={editInvoiceData}

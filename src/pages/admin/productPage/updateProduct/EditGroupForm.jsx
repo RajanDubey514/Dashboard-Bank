@@ -33,6 +33,10 @@ const EditGroupForm = ({ selectedData, dataList, setDataList, onClose }) => {
       if (onClose) onClose();
     },
   });
+  
+  const handleReset = () => {
+    formik.resetForm();
+  };
 
   return (
     <form
@@ -99,19 +103,19 @@ const EditGroupForm = ({ selectedData, dataList, setDataList, onClose }) => {
 
       {/* ✅ Fixed Bottom Buttons */}
       <div className="sticky -bottom-4 bg-white  flex justify-end gap-3 px-4 py-2">
-        <button
+          <button
           type="button"
-          onClick={() => onClose && onClose()}
-          className="px-4 py-1.5 border rounded-md text-xs font-medium text-gray-600 hover:bg-gray-100"
+          onClick={handleReset}
+          className="border bg-gray-400 text-white px-4 py-2 rounded-md  text-xs"
         >
-          Cancel
+          Reset
         </button>
+       
         <button
           type="submit"
-          className="px-4 py-1.5 rounded-md text-xs font-semibold text-white"
-          style={{ backgroundColor: "var(--color-primary)" }}
+        className="bg-[var(--color-primary)] text-white px-4 py-2 rounded-md text-xs"
         >
-          Save Changes
+          Update
         </button>
       </div>
     </form>

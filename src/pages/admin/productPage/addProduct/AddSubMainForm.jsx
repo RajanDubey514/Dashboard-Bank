@@ -121,19 +121,25 @@ const AddSubMainForm = ({ dataList, setDataList, onClose }) => {
 
       {/* Fixed Buttons */}
       <div className="flex justify-end gap-3 p-3  bg-white sticky -bottom-4">
-        <button
+          <button
+          type="button"
+          onClick={() => formik.resetForm()}
+           className="border bg-gray-400 text-white px-4 py-2 rounded-md  text-xs"
+        >
+          Reset
+        </button>
+        {/* <button
           type="button"
           onClick={() => onClose && onClose()}
           className="px-4 py-1 border rounded-md text-xs text-gray-600 hover:bg-gray-100"
         >
           Cancel
-        </button>
+        </button> */}
         <button
           type="submit"
-          className="px-4 py-1 rounded-md text-xs font-semibold text-white"
-          style={{ backgroundColor: "var(--color-primary)" }}
+           className="bg-[var(--color-primary)] text-white px-4 py-2 rounded-md text-xs"
         >
-          Save
+          Submit
         </button>
       </div>
     </form>

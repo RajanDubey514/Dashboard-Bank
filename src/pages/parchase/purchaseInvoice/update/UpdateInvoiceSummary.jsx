@@ -1,76 +1,150 @@
-import { Package, Wallet, Receipt } from "lucide-react";
-import { useEffect } from "react";
+// import { Package, Wallet, Receipt } from "lucide-react";
+// import { useEffect } from "react";
 
-export default function UpdateInvoiceSummary({
+// export default function UpdateInvoiceSummary({
+//   totalQty = 0,
+//   amountPaid,
+//   setAmountPaid,
+//   sub = 0,
+//   tax = 0,
+//   grand = 0,
+//   initialAmountPaid = "", // Prefill for update
+// }) {
+//   // Prefill amountPaid on UPDATE
+//   useEffect(() => {
+//     if (initialAmountPaid !== "" && amountPaid === "") {
+//       setAmountPaid(initialAmountPaid);
+//     }
+//   }, [initialAmountPaid, amountPaid, setAmountPaid]);
+
+//   const safeToFixed = (num) => (Number(num) || 0).toFixed(2);
+
+//   return (
+//     <div className="flex flex-wrap justify-between gap-3">
+
+//       {/* TOTAL QTY */}
+//       <div className="bg-blue-50 text-blue-700 rounded-md shadow px-4 py-2 flex items-center gap-3">
+//         <Package size={18} />
+//         <div>
+//           <p className="text-xs">Total Qty</p>
+//           <p className="text-lg font-bold">{totalQty}</p>
+//         </div>
+//       </div>
+
+//       {/* PAYMENT */}
+//       <div className="bg-orange-50 text-orange-700 rounded-xl shadow px-4 py-2 flex items-center gap-3">
+//         <Wallet size={18} />
+//         <div>
+//           <p className="text-xs">Payment</p>
+//           <input
+//             className="border rounded px-2 py-0.5 w-24 text-xs mt-1"
+//             placeholder="Paid"
+//             value={amountPaid}
+//             onChange={(e) => setAmountPaid(e.target.value)}
+//           />
+//           <p className="text-xs mt-1">
+//             Return:{" "}
+//             <b>{safeToFixed(Number(amountPaid || 0) - Number(grand || 0))}</b>
+//           </p>
+//         </div>
+//       </div>
+
+//       {/* BILL SUMMARY */}
+//       <div className="bg-purple-50 text-purple-700 rounded-xl shadow px-2 py-1 min-w-[220px]">
+//         <div className="flex items-center gap-2 mb-1">
+//           <Receipt size={18} />
+//           <p className="font-semibold text-sm">Bill Summary</p>
+//         </div>
+
+//         <div className="text-xs space-y-1">
+//           <div className="flex justify-between">
+//             <span>Subtotal</span>
+//             <span>{safeToFixed(sub)}</span>
+//           </div>
+//           <div className="flex justify-between">
+//             <span>Tax</span>
+//             <span>{safeToFixed(tax)}</span>
+//           </div>
+//           <div className="flex justify-between font-bold text-sm">
+//             <span>Grand Total</span>
+//             <span>{safeToFixed(grand)}</span>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+import { Package, Wallet, Receipt } from "lucide-react";
+
+export default function InvoiceSummary({
   totalQty = 0,
-  amountPaid,
+  amountPaid = 0,
   setAmountPaid,
   sub = 0,
   tax = 0,
   grand = 0,
-  initialAmountPaid = "", // Prefill for update
 }) {
-  // Prefill amountPaid on UPDATE
-  useEffect(() => {
-    if (initialAmountPaid !== "" && amountPaid === "") {
-      setAmountPaid(initialAmountPaid);
-    }
-  }, [initialAmountPaid, amountPaid, setAmountPaid]);
+  const paid = Number(amountPaid) || 0;
+  const subtotal = Number(sub) || 0;
+  const taxAmount = Number(tax) || 0;
+  const grandTotal = Number(grand) || 0;
 
-  const safeToFixed = (num) => (Number(num) || 0).toFixed(2);
+  const balance = paid - grandTotal;
 
   return (
-    <div className="flex flex-wrap justify-between gap-3">
+    <div className="w-full flex items-center justify-between gap-3 bg-white rounded-md px-2 py-1 text-sm">
 
-      {/* TOTAL QTY */}
-      <div className="bg-blue-50 text-blue-700 rounded-md shadow px-4 py-2 flex items-center gap-3">
-        <Package size={18} />
-        <div>
-          <p className="text-xs">Total Qty</p>
-          <p className="text-lg font-bold">{totalQty}</p>
+      {/* METRICS */}
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
+          <Package size={16} className="text-blue-600" />
+          <div className="leading-tight">
+            <p className="text-[11px] text-gray-500">Total Qty</p>
+            <p className="font-semibold">{totalQty}</p>
+          </div>
         </div>
       </div>
 
       {/* PAYMENT */}
-      <div className="bg-orange-50 text-orange-700 rounded-xl shadow px-4 py-2 flex items-center gap-3">
-        <Wallet size={18} />
-        <div>
-          <p className="text-xs">Payment</p>
+      <div className="flex items-center gap-2 border-l pl-3">
+        <Wallet size={16} className="text-orange-600" />
+        <div className="leading-tight">
+          <p className="text-[11px] text-gray-500">Payment</p>
           <input
-            className="border rounded px-2 py-0.5 w-24 text-xs mt-1"
+            type="number"
+            className="border rounded px-2 py-0.5 w-24 text-xs"
             placeholder="Paid"
-            value={amountPaid}
+            value={paid}
             onChange={(e) => setAmountPaid(e.target.value)}
           />
-          <p className="text-xs mt-1">
-            Return:{" "}
-            <b>{safeToFixed(Number(amountPaid || 0) - Number(grand || 0))}</b>
+          <p className="text-[11px] text-gray-500">
+            Return: <b>{balance.toFixed(2)}</b>
           </p>
         </div>
       </div>
 
-      {/* BILL SUMMARY */}
-      <div className="bg-purple-50 text-purple-700 rounded-xl shadow px-2 py-1 min-w-[220px]">
-        <div className="flex items-center gap-2 mb-1">
-          <Receipt size={18} />
-          <p className="font-semibold text-sm">Bill Summary</p>
-        </div>
-
-        <div className="text-xs space-y-1">
-          <div className="flex justify-between">
+      {/* SUMMARY */}
+      <div className="flex items-center gap-3 border-l pl-3">
+        <Receipt size={16} className="text-purple-600" />
+        <div className="space-y-0.5">
+          <div className="flex justify-between gap-6 text-xs text-gray-600">
             <span>Subtotal</span>
-            <span>{safeToFixed(sub)}</span>
+            <span>{subtotal.toFixed(2)}</span>
           </div>
-          <div className="flex justify-between">
+
+          <div className="flex justify-between gap-6 text-xs text-gray-600">
             <span>Tax</span>
-            <span>{safeToFixed(tax)}</span>
+            <span>{taxAmount.toFixed(2)}</span>
           </div>
-          <div className="flex justify-between font-bold text-sm">
+
+          <div className="flex justify-between gap-6 font-bold text-sm text-purple-700">
             <span>Grand Total</span>
-            <span>{safeToFixed(grand)}</span>
+            <span>{grandTotal.toFixed(2)}</span>
           </div>
         </div>
       </div>
+
     </div>
   );
 }

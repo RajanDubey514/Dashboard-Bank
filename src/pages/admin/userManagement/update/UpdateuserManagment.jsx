@@ -302,21 +302,23 @@ const UpdateuserManagment = ({ selectedData, dataList, setDataList }) => {
 
       {/* FOOTER BUTTONS */}
       <div className="p-3 flex justify-end gap-4 bg-white sticky -bottom-4">
+         <button
+          type="button"
+          onClick={() => formik.resetForm()}
+          className="border bg-gray-400 text-white px-4 py-2 rounded-md  text-xs"
+        >
+          Reset
+        </button>
+
         <button
           type="submit"
           form="addUserForm"
-          className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 text-xs"
+          className="bg-[var(--color-primary)] text-white px-4 py-2 rounded-md  text-xs"
         >
           {selectedData ? "Update" : "Submit"}
         </button>
 
-        <button
-          type="button"
-          onClick={() => formik.resetForm()}
-          className="border border-red-500 text-red-600 px-4 py-2 rounded-md hover:bg-red-50 text-xs"
-        >
-          Reset
-        </button>
+       
       </div>
     </div>
   );

@@ -111,7 +111,7 @@ export default function AddInvoice({
       <div className="flex justify-between gap-2 items-end">
 
         <div className="flex flex-col">
-          <label className="text-[11px] font-semibold text-gray-600 mb-1">
+          <label className="text-[11px] font-semibold text-gray-600 ">
             Scan / Enter Item Code
           </label>
           <input

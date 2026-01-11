@@ -20,11 +20,11 @@ export default function SectionCard({ title, children, actions }) {
       </div>
 
       {/* Body */}
-      <div className="p-4">
+      <div className="p-2">
         {children}
 
         {actions && (
-          <div className="flex flex-wrap gap-2 mt-4">
+          <div className="flex flex-wrap gap-2 mt-2">
             {actions}
           </div>
         )}
