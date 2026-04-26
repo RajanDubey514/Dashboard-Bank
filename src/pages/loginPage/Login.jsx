@@ -2,26 +2,38 @@ import React, { useState } from "react";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { alertSuccess } from "../../components/alert/Alert";
+import { alertSuccess , alertError} from "../../components/alert/Alert";
+
+import { useDispatch } from "react-redux";
+import { loginUser } from "../../redux/slice/auth/authSlice";
+
 
 const validationSchema = Yup.object({
   email: Yup.string().email("Enter a valid email").required("Email is required"),
   password: Yup.string()
-    .min(6, "Password should be at least 6 characters")
+    .min(8, "Password should be at least 8 characters")
     .required("Password is required"),
 });
 
 const Login = ({ setIsLoggedIn }) => {
+  const dispatch = useDispatch();
+
   const [showPassword, setShowPassword] = useState(false);
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },
     validationSchema,
-    onSubmit: (values) => {
-      localStorage.setItem("authToken", "fake-jwt-token");
-      setIsLoggedIn(true);
+     onSubmit: async (values) => {
+    try {
+     const resp =   await dispatch(loginUser(values)).unwrap();
+     console.log(resp)
       alertSuccess("Login Successful");
-    },
+      setIsLoggedIn(true);
+      formik.resetForm();
+    } catch (err) {
+      alertError(err?.message || "Login failed");
+    }
+  },
   });
 
   return (

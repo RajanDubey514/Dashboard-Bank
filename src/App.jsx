@@ -15,7 +15,7 @@ import FinanceRouter from "./pages/finance/FinanceRouter";
 
 // 🔒 PrivateRoute
 const PrivateRoute = ({ children }) => {
-  const token = localStorage.getItem("authToken");
+  const token = localStorage.getItem("accessToken");
   const location = useLocation();
 
   return token ? (
@@ -29,7 +29,7 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    setIsLoggedIn(!!localStorage.getItem("authToken"));
+    setIsLoggedIn(!!localStorage.getItem("accessToken"));
   }, []);
 
   return (
