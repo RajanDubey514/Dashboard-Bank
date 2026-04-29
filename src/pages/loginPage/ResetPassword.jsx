@@ -49,6 +49,8 @@ const ResetPassword = () => {
   });
 
   return (
+    <>
+     {loading && <Loader />}
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#43cea2] to-[#185a9d] px-4 py-8 font-poppins">
       
       <div className="bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl rounded-3xl w-full max-w-sm sm:max-w-md md:max-w-lg p-6 sm:p-8 md:p-10">
@@ -155,6 +157,7 @@ const ResetPassword = () => {
 
       </div>
     </div>
+    </>
   );
 };
 
