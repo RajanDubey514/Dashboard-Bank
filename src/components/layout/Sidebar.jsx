@@ -4,11 +4,13 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import menuItems from "./MenuItems";
 import "./sidebar.css";
 import inventoryLogo from "../../assets/inventory.png";
-
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../../redux/slice/auth/authSlice";
 export default function Sidebar({ open, onClose, sidebarWidth = "w-60" }) {
   const [openMenu, setOpenMenu] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   // Extract page parameter (for admin)
   const params = new URLSearchParams(location.search);
@@ -33,6 +35,17 @@ export default function Sidebar({ open, onClose, sidebarWidth = "w-60" }) {
   const toggleSubMenu = (name) => {
     setOpenMenu(openMenu === name ? null : name);
   };
+    
+ const handleLogout = async () => {
+  try {
+    await dispatch(logoutUser()).unwrap();
+  } catch (err) {
+    console.log(err); // optional
+  } finally {
+    navigate("/login");
+  }
+};
+
 
   return (
     <>
@@ -162,10 +175,7 @@ export default function Sidebar({ open, onClose, sidebarWidth = "w-60" }) {
           </button>
 
           <button
-            onClick={() => {
-              localStorage.removeItem("authToken");
-              window.location.href = "/login";
-            }}
+            onClick={handleLogout}
             className="hover:bg-white/10 p-1.5 rounded-lg transition"
           >
             <LogOut size={16} />

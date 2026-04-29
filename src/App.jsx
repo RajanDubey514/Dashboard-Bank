@@ -1,57 +1,59 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 import Login from "./pages/loginPage/Login";
 import Signup from "./pages/loginPage/Signup";
+import ForgotPassword from "./pages/loginPage/ForgotPassword";
+import ResetPassword from "./pages/loginPage/ResetPassword";
 
 import Dashboard from "./pages/dashboard/Dashboard";
 import MainLayout from "./layoutWraper/MainLayout";
 import Settings from "./pages/Settings";
 
-import AdminRouter from "./pages/admin/AdminRouter"; // ✅ NEW
+import AdminRouter from "./pages/admin/AdminRouter";
 import SalesRouter from "./pages/sales/SalesRouter";
 import PurchaseRouter from "./pages/parchase/PurchaseRouter";
 import FinanceRouter from "./pages/finance/FinanceRouter";
 
+import { setAuthFromToken } from "./redux/slice/auth/authSlice";
+
 // 🔒 PrivateRoute
 const PrivateRoute = ({ children }) => {
-  const token = localStorage.getItem("accessToken");
+  const { isAuthenticated } = useSelector((state) => state.auth);
   const location = useLocation();
 
-  return token ? (
+  return isAuthenticated ? (
     children
   ) : (
     <Navigate to="/login" state={{ from: location }} replace />
   );
 };
 
+// 🔓 PublicRoute (ONLY for not logged in users)
+const PublicRoute = ({ children }) => {
+  const { isAuthenticated } = useSelector((state) => state.auth);
+
+  return !isAuthenticated ? children : <Navigate to="/" replace />;
+};
+
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setIsLoggedIn(!!localStorage.getItem("accessToken"));
-  }, []);
+    dispatch(setAuthFromToken());
+  }, [dispatch]);
 
   return (
     <Routes>
-      {/* Public */}
-      <Route
-        path="/login"
-        element={
-          !isLoggedIn ? (
-            <Login setIsLoggedIn={setIsLoggedIn} />
-          ) : (
-            <Navigate to="/" />
-          )
-        }
-      />
 
-      <Route
-        path="/signup"
-        element={!isLoggedIn ? <Signup /> : <Navigate to="/" />}
-      />
+      {/* 🔓 Public Routes */}
+      <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+      <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
+      <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
+      <Route path="/reset-password/:uid" element={<PublicRoute><ResetPassword /></PublicRoute>} />
 
-      {/* Protected */}
+      {/* 🔒 Protected Routes */}
       <Route
         path="/"
         element={
@@ -60,18 +62,17 @@ export default function App() {
           </PrivateRoute>
         }
       >
-        {/* default dashboard */}
         <Route index element={<Dashboard />} />
-        {/* Single admin route */}
         <Route path="admin" element={<AdminRouter />} />
         <Route path="sales" element={<SalesRouter />} />
         <Route path="setting" element={<Settings />} />
-        <Route path="purchase" element={<PurchaseRouter />}/>
-        <Route path="finance" element={<FinanceRouter />}/>
+        <Route path="purchase" element={<PurchaseRouter />} />
+        <Route path="finance" element={<FinanceRouter />} />
       </Route>
 
-      {/* fallback */}
+      {/* ❌ Fallback LAST me hona chahiye */}
       <Route path="*" element={<Navigate to="/" replace />} />
+
     </Routes>
   );
 }

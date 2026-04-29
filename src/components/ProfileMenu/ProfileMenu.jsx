@@ -1,20 +1,27 @@
 import React from "react";
 import { LogOut, Mail, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
+import { logoutUser } from "../../redux/slice/auth/authSlice";
+import { useDispatch } from "react-redux";
 const ProfileMenu = () => {
 
   const navigate = useNavigate();
-
+const dispatch = useDispatch()
   const user = {
     name: "John Doe",
     email: "john@example.com",
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    window.location.href = "/login";
-  };
+ const handleLogout = async () => {
+  try {
+    await dispatch(logoutUser()).unwrap();
+  } catch (err) {
+    console.log(err); // optional
+  } finally {
+    navigate("/login");
+  }
+};
+
 
   const handleProfile = () =>{
     navigate("/setting") 

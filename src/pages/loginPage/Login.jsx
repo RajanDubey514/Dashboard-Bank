@@ -4,19 +4,22 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { alertSuccess , alertError} from "../../components/alert/Alert";
 
-import { useDispatch } from "react-redux";
+import { useDispatch , useSelector} from "react-redux";
 import { loginUser } from "../../redux/slice/auth/authSlice";
+import Loader from "../../components/loader/Loader";
+import { useNavigate } from "react-router-dom";
 
 
 const validationSchema = Yup.object({
   email: Yup.string().email("Enter a valid email").required("Email is required"),
   password: Yup.string()
-    .min(8, "Password should be at least 8 characters")
     .required("Password is required"),
 });
 
-const Login = ({ setIsLoggedIn }) => {
+const Login = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { loading } = useSelector((state) => state.auth);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -25,18 +28,19 @@ const Login = ({ setIsLoggedIn }) => {
     validationSchema,
      onSubmit: async (values) => {
     try {
-     const resp =   await dispatch(loginUser(values)).unwrap();
-     console.log(resp)
+     await dispatch(loginUser(values)).unwrap();
       alertSuccess("Login Successful");
-      setIsLoggedIn(true);
+      navigate("/", { replace: true });
       formik.resetForm();
     } catch (err) {
-      alertError(err?.message || "Login failed");
+      alertError(err?.message || err?.data?.message || "Login failed");
     }
   },
   });
-
+ 
   return (
+    <>
+    {loading && <Loader />}
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#43cea2] to-[#185a9d] px-4 sm:px-6 py-8 font-poppins">
       <div className="bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl rounded-3xl w-full max-w-sm sm:max-w-md md:max-w-lg p-6 sm:p-8 md:p-10">
         <h2 className="text-3xl sm:text-4xl font-bold text-center text-white mb-2 tracking-wide">
@@ -111,37 +115,28 @@ const Login = ({ setIsLoggedIn }) => {
           {/* Submit Button */}
           <button
             type="submit"
+            disabled={loading}
             className="w-full py-3 text-base sm:text-lg font-semibold rounded-lg bg-gradient-to-r from-teal-400 to-blue-600 text-white shadow-lg hover:shadow-teal-500/40 transform hover:-translate-y-1 transition-all duration-300"
           >
-            Sign In
+           {loading ? "Signing In..." : "Sign In"}
           </button>
         </form>
 
         {/* Divider */}
         <div className="flex items-center justify-center mt-6">
           <div className="h-px bg-white/20 w-1/4"></div>
-          <span className="mx-3 text-white/60 text-sm">OR</span>
+         <span 
+            onClick={() => navigate("/forgot-password")}
+            className="mx-3 text-white/60 text-sm cursor-pointer hover:text-white transition"
+          >
+            Forget Password?
+          </span>
           <div className="h-px bg-white/20 w-1/4"></div>
         </div>
 
-        {/* Google Button */}
-        <div className="mt-5">
-          <button className="w-full py-2 rounded-lg bg-white/20 text-white/90 hover:bg-white/30 transition font-medium text-sm sm:text-base">
-            Continue with Google
-          </button>
-        </div>
-
-        <p className="text-center text-white/70 mt-6 text-sm sm:text-base">
-          Don’t have an account?{" "}
-          <a
-            href="/signup"
-            className="text-teal-300 hover:underline hover:text-teal-200"
-          >
-            Sign up
-          </a>
-        </p>
       </div>
     </div>
+    </>
   );
 };
 
