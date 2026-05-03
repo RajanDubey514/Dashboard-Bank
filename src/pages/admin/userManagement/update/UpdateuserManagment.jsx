@@ -1,13 +1,12 @@
 import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { alertSuccess } from "../../../../components/alert/Alert";
-
-import {
-  fakeDepartments,
-  fakeUserRoles,
-  fakeStatuses,
-} from "../../../../components/FakeData";
+import { alertSuccess , alertError} from "../../../../components/alert/Alert";
+import { useDispatch , useSelector} from "react-redux";
+import { getUsersData , updateUserAccount} from "../../../../redux/slice/userAccount/UserAccountSlice";
+import { getUsersRole } from "../../../../redux/slice/role/RoleSlice";
+import { getUsersAccountStatus } from "../../../../redux/slice/accountStatus/AccountStatusSlice";
+import { getUsersDepartment } from "../../../../redux/slice/department/DepartmentSlice";
 
 const RequiredLabel = ({ label }) => (
   <label className="text-xs font-medium text-gray-700">
@@ -25,70 +24,73 @@ const validationSchema = Yup.object({
 
   department: Yup.string().required("Department is required"),
   role: Yup.string().required("User role is required"),
-  status: Yup.string().required("Account status is required"),
+  accountStatus: Yup.string().required("Account status is required"),
 
   username: Yup.string().required("Username is required"),
-
-  // password fields are optional in UPDATE mode
-  password: Yup.string().min(6, "Minimum 6 characters"),
-  confirmPassword: Yup.string().oneOf(
-    [Yup.ref("password"), null],
-    "Passwords must match"
-  ),
-
-  expiryDate: Yup.date().required("Account expiry date is required"),
+  // password: Yup.string().min(6, "Minimum 6 characters").required("Password is required"),
+  // confirmPassword: Yup.string()
+  //   .oneOf([Yup.ref("password"), null], "Passwords must match")
+  //   .required("Confirm password is required"),
 });
 
-const UpdateuserManagment = ({ selectedData, dataList, setDataList }) => {
+const AdduserManagment = ({selectedData , onClose}) => {
+  console.log(selectedData)
+
+const dispatch = useDispatch();
+const {roleList } = useSelector((state) => state.roleUse);
+const {departmentList } = useSelector((state) => state.departmentUse);
+const {accStatusList } = useSelector((state) => state.accountStatusUse);
+
+const getIdByName = (name, list) => {
+  if (!name) return "";
+
+  const found = list.find((item) => item.name === name);
+  return found?._id || "";
+};
+
+    useEffect(()=>{
+      dispatch(getUsersRole());
+      dispatch(getUsersAccountStatus());
+      dispatch(getUsersDepartment());
+    } ,[dispatch])
+ 
+    // console.log(departmentList)
   const formik = useFormik({
     initialValues: {
-      fullName: "",
-      email: "",
-      phone: "",
-      department: "",
-      role: "",
-      status: "",
-      username: "",
-      password: "",
-      confirmPassword: "",
-      expiryDate: "",
+      fullName: selectedData?.fullName,
+      email: selectedData?.email,
+      phone: selectedData?.phone,
+      department: selectedData?.department,
+      role: selectedData?.role,
+      accountStatus: selectedData?.accountStatus,
+      username: selectedData?.username,
+      // password: "",
+      // confirmPassword: "",
     },
     validationSchema,
-    enableReinitialize: true, // IMPORTANT
-    onSubmit: (values, { resetForm }) => {
-      // If editing → replace record, else add new
-      if (selectedData) {
-        setDataList((prev) =>
-          prev.map((item) =>
-            item.id === selectedData.id ? { ...selectedData, ...values } : item
-          )
-        );
-        alertSuccess("User updated successfully!");
-      } else {
-        setDataList?.((prev) => [...prev, { ...values, id: Date.now() }]);
-        alertSuccess("User saved successfully!");
-      }
-      resetForm();
+    onSubmit: async (values, { resetForm }) => {
+     try {
+    const payload = {
+      ...values,
+      department: getIdByName(values.department, departmentList),
+      role: getIdByName(values.role, roleList),
+      accountStatus: getIdByName(values.accountStatus, accStatusList),
+    };
+
+
+    const resp = await dispatch(updateUserAccount({
+            id: selectedData._id, 
+            payload: payload,      
+    })).unwrap();
+    alertSuccess(resp.message);
+    await dispatch(getUsersData());
+    onClose();
+    resetForm();
+    } catch (error) {
+      alertError(error.message);
+    }
     },
   });
-
-  // PREFILL FORM FROM selectedData
-  useEffect(() => {
-    if (selectedData) {
-      formik.setValues({
-        fullName: selectedData.fullName || "",
-        email: selectedData.email || "",
-        phone: selectedData.phone || "",
-        department: selectedData.department || "",
-        role: selectedData.role || selectedData.userRole || "",
-        status: selectedData.status || "",
-        username: selectedData.username || "",
-        expiryDate: selectedData.expiryDate || "",
-        password: "",
-        confirmPassword: "",
-      });
-    }
-  }, [selectedData]);
 
   return (
     <div className="bg-white rounded-md h-full flex flex-col">
@@ -99,9 +101,7 @@ const UpdateuserManagment = ({ selectedData, dataList, setDataList }) => {
       >
         {/* PERSONAL INFORMATION */}
         <fieldset className="border rounded-lg p-4">
-          <legend className="font-semibold text-indigo-600 px-2">
-            Personal Information
-          </legend>
+          <legend className="font-semibold text-indigo-600 px-2">Personal Information</legend>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
@@ -157,9 +157,7 @@ const UpdateuserManagment = ({ selectedData, dataList, setDataList }) => {
 
         {/* DEPARTMENT & ROLE */}
         <fieldset className="border rounded-lg p-4">
-          <legend className="font-semibold text-indigo-600 px-2">
-            Department & Role
-          </legend>
+          <legend className="font-semibold text-indigo-600 px-2">Department & Role</legend>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
@@ -174,8 +172,10 @@ const UpdateuserManagment = ({ selectedData, dataList, setDataList }) => {
                 onBlur={formik.handleBlur}
               >
                 <option value="">Select department</option>
-                {fakeDepartments.map((d) => (
-                  <option key={d} value={d}>{d}</option>
+                {departmentList.map((d) => (
+                  <option key={d._id} value={d.name}>
+                    {d.name}
+                  </option>
                 ))}
               </select>
               {formik.touched.department && formik.errors.department && (
@@ -183,7 +183,7 @@ const UpdateuserManagment = ({ selectedData, dataList, setDataList }) => {
               )}
             </div>
 
-            {/* Role */}
+            {/* User Role */}
             <div className="flex flex-col gap-1">
               <RequiredLabel label="User Role" />
               <select
@@ -194,8 +194,10 @@ const UpdateuserManagment = ({ selectedData, dataList, setDataList }) => {
                 onBlur={formik.handleBlur}
               >
                 <option value="">Select role</option>
-                {fakeUserRoles.map((r) => (
-                  <option key={r} value={r}>{r}</option>
+                {roleList.map((r) => (
+                  <option key={r._id} value={r.name}>
+                    {r.name}
+                  </option>
                 ))}
               </select>
               {formik.touched.role && formik.errors.role && (
@@ -207,19 +209,21 @@ const UpdateuserManagment = ({ selectedData, dataList, setDataList }) => {
             <div className="flex flex-col gap-1">
               <RequiredLabel label="Account Status" />
               <select
-                name="status"
+                name="accountStatus"
                 className="border border-gray-300 rounded-md px-3 py-2 text-xs"
-                value={formik.values.status}
+                value={formik.values.accountStatus}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               >
                 <option value="">Select status</option>
-                {fakeStatuses.map((s) => (
-                  <option key={s} value={s}>{s}</option>
+                {accStatusList.map((s) => (
+                  <option key={s._id} value={s.name}>
+                    {s.name}
+                  </option>
                 ))}
               </select>
-              {formik.touched.status && formik.errors.status && (
-                <p className="text-xs text-red-500">{formik.errors.status}</p>
+              {formik.touched.accountStatus && formik.errors.accountStatus && (
+                <p className="text-xs text-red-500">{formik.errors.accountStatus}</p>
               )}
             </div>
           </div>
@@ -227,9 +231,7 @@ const UpdateuserManagment = ({ selectedData, dataList, setDataList }) => {
 
         {/* LOGIN CREDENTIALS */}
         <fieldset className="border rounded-lg p-4">
-          <legend className="font-semibold text-indigo-600 px-2">
-            Login Credentials
-          </legend>
+          <legend className="font-semibold text-indigo-600 px-2">Login Credentials</legend>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
@@ -250,7 +252,7 @@ const UpdateuserManagment = ({ selectedData, dataList, setDataList }) => {
             </div>
 
             {/* Password */}
-            <div className="flex flex-col gap-1">
+            {/* <div className="flex flex-col gap-1">
               <RequiredLabel label="Password" />
               <input
                 type="password"
@@ -263,10 +265,10 @@ const UpdateuserManagment = ({ selectedData, dataList, setDataList }) => {
               {formik.touched.password && formik.errors.password && (
                 <p className="text-xs text-red-500">{formik.errors.password}</p>
               )}
-            </div>
+            </div> */}
 
             {/* Confirm Password */}
-            <div className="flex flex-col gap-1">
+            {/* <div className="flex flex-col gap-1">
               <RequiredLabel label="Confirm Password" />
               <input
                 type="password"
@@ -279,49 +281,34 @@ const UpdateuserManagment = ({ selectedData, dataList, setDataList }) => {
               {formik.touched.confirmPassword && formik.errors.confirmPassword && (
                 <p className="text-xs text-red-500">{formik.errors.confirmPassword}</p>
               )}
-            </div>
+            </div> */}
 
-            {/* Expiry Date */}
-            <div className="flex flex-col gap-1">
-              <RequiredLabel label="Account Expiry Date" />
-              <input
-                type="date"
-                name="expiryDate"
-                className="border border-gray-300 rounded-md px-3 py-2 text-xs"
-                value={formik.values.expiryDate}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched.expiryDate && formik.errors.expiryDate && (
-                <p className="text-xs text-red-500">{formik.errors.expiryDate}</p>
-              )}
-            </div>
           </div>
         </fieldset>
       </form>
 
       {/* FOOTER BUTTONS */}
       <div className="p-3 flex justify-end gap-4 bg-white sticky -bottom-4">
-         <button
+
+          <button
           type="button"
           onClick={() => formik.resetForm()}
           className="border bg-gray-400 text-white px-4 py-2 rounded-md  text-xs"
         >
           Reset
         </button>
-
         <button
           type="submit"
           form="addUserForm"
-          className="bg-[var(--color-primary)] text-white px-4 py-2 rounded-md  text-xs"
+          className="bg-[var(--color-primary)] text-white px-4 py-2 rounded-md text-xs"
         >
-          {selectedData ? "Update" : "Submit"}
+          Submit
         </button>
 
-       
+      
       </div>
     </div>
   );
 };
 
-export default UpdateuserManagment;
+export default AdduserManagment;

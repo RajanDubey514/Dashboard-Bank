@@ -5,6 +5,7 @@ import ProductUrl from "./productPage/ProductUrl";
 import ShowBillOfMaterial from "./boi/show/ShowBillOfMaterial";
 import ShowuserManagment from "./userManagement/show/ShowuserManagment";
 import Supplier from "./supplier/Supplier"
+import UtilsUrl from "./utils/UtilsUrl";
 
 export default function AdminRouter() {
   const [params] = useSearchParams();
@@ -22,9 +23,9 @@ export default function AdminRouter() {
       case "usermanagement":
         setCurrentComponent(<ShowuserManagment />);
         break;
-      // case "bom":
-      //   setCurrentComponent(<ShowBillOfMaterial />);
-      //   break;
+      case "utils":
+        setCurrentComponent(<UtilsUrl />);
+        break;
       case "supplier":
         setCurrentComponent(<Supplier />);
         break;

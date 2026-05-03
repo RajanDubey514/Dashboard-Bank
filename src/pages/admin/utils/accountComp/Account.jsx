@@ -1,37 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { PlusCircle , CircleX} from "lucide-react";
 import Swal from "sweetalert2";
+import { useDispatch , useSelector} from "react-redux";
+import { getUsersAccountStatus , deleteUserAccountStatus } from "../../../../redux/slice/accountStatus/AccountStatusSlice";
+import { alertSuccess , alertError, alertConfirm} from "../../../../components/alert/Alert";
+
+import Loader from '../../../../components/loader/Loader'
 
 import ModalCom from "../../../../components/modalComp/ModalCom";
 import Pagination from "../../../../components/pagination/Pagination";
 import DownloadDataButton from "../../../../components/DownloadData/DownloadDataButton";
 
-
-import { useDispatch , useSelector} from "react-redux";
-import { getUsersData } from "../../../../redux/slice/userAccount/UserAccountSlice";
-import Loader from '../../../../components/loader/Loader'
-
 // Common Components
 import SelectBoxCommon from "../../../../components/searchComp/SelectBoxCommon";
-import UserEditableTable from "../../../../components/tablecomp/UserEditableTable";
-import AdduserManagment from "../add/AdduserManagment";
-import UpdateuserManagment from "../update/UpdateuserManagment";
+import AddAccount from './AddAccount'
+import EditableTable from "../../../../components/tablecomp/EditableTable";
+import UpdateAccount from "./UpdateAccount";
 
-import { useFilter } from "../../../../components/customHook/useFilter";
-import { useSort } from "../../../../components/customHook/useSort";
-import { usePagination } from "../../../../components/customHook/usePagination";
-import { useColumnFilter } from "../../../../components/customHook/useColumnFilter";
-
-const ShowuserManagment = () => {
+const Account = () => {
+    const dispatch = useDispatch();
+  const {accStatusList, loading } = useSelector((state) => state.accountStatusUse);
   // 🔥 MAIN STATES
-
-     const dispatch = useDispatch();
-    const {userAccountList, loading } = useSelector((state) => state.UserAccountUse);
-
-  const [dataList, setDataList] = useState([]);        // all data
-  const [filteredData, setFilteredData] = useState([]); // filtered + searched result
-  const [searchQuery, setSearchQuery] = useState("");   // search input
-  const [filterType, setFilterType] = useState("all");  // filter dropdown
+  const [dataList, setDataList] = useState([]); 
+  const [filteredData, setFilteredData] = useState([]); 
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
   // Pagination
@@ -41,62 +32,22 @@ const ShowuserManagment = () => {
   // Modals
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [selectedData, setSelectedData] = useState(null); // row to edit
-
-    const [columnSearchKeys, setColumnSearchKeys] = useState({});
+  const [selectedData, setSelectedData] = useState(); 
+  const [columnSearchKeys, setColumnSearchKeys] = useState({});
   
-
-  // ----------------------------------------------------------------------
-  // 🚀 LOAD INITIAL DATA
-  // ----------------------------------------------------------------------
-
-  useEffect(() => {
-    dispatch(getUsersData())
+    useEffect(() => {
+    dispatch(getUsersAccountStatus())
   }, [dispatch]);
-    
 
-  useEffect(() => {
-    if (userAccountList && Array.isArray(userAccountList)) {
-      setDataList(userAccountList);
-      setFilteredData(userAccountList);
-    } else {
-      setDataList([]);
-      setFilteredData([]);
-    }
-  }, [userAccountList]);
-
-
-  // ----------------------------------------------------------------------
-  // 🔍 FILTER + SEARCH LOGIC
-  // ----------------------------------------------------------------------
- /** -------------------- FILTER + SEARCH -------------------- **/
-   useEffect(() => {
-  let updated = [...dataList];
-
-  const selectedFilter = filterConfig.find(
-    (f) => f.value === filterType
-  );
-
-  if (selectedFilter) {
-    updated = updated.filter(selectedFilter.filterFn);
+ useEffect(() => {
+  if (accStatusList && Array.isArray(accStatusList)) {
+    setDataList(accStatusList);
+    setFilteredData(accStatusList);
+  } else {
+    setDataList([]);
+    setFilteredData([]);
   }
-
-  // 🔍 Search
-  if (searchQuery) {
-    const q = searchQuery.toLowerCase();
-    updated = updated.filter((item) =>
-      Object.values(item).some(
-        (val) =>
-          typeof val === "string" &&
-          val.toLowerCase().includes(q)
-      )
-    );
-  }
-
-  setFilteredData(updated);
-  setCurrentPage(1);
-}, [filterType, searchQuery, dataList]);
-
+}, [accStatusList]);
 
   // ----------------------------------------------------------------------
   // ↕️ SORTING LOGIC
@@ -110,19 +61,15 @@ const ShowuserManagment = () => {
       a[key] < b[key] ? (direction === "asc" ? -1 : 1) :
       a[key] > b[key] ? (direction === "asc" ? 1 : -1) : 0
     );
-
     setFilteredData(sorted);
   };
 
-
-  // ==============================
-  // COLUMN SEARCH
-  // ==============================
  const handleColumnSearch = (header, keys) => {
     const updated = { ...columnSearchKeys, [header]: keys };
     setColumnSearchKeys(updated);
     applyFilters(updated);
   };
+
 
   const applyFilters = (keysObj) => {
     let result = [...dataList];
@@ -173,25 +120,18 @@ const ShowuserManagment = () => {
   // ----------------------------------------------------------------------
   // ❌ DELETE ROW WITH CONFIRMATION
   // ----------------------------------------------------------------------
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "This product type will be permanently deleted!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#16a34a",
-      cancelButtonColor: "#dc2626",
-      confirmButtonText: "Yes, delete it!",
-    }).then((res) => {
-      if (res.isConfirmed) {
-        const updated = dataList.filter((item) => item.id !== id);
-        setDataList(updated);
-        setFilteredData(updated);
-
-        Swal.fire("Deleted!", "Product type deleted successfully.", "success");
-      }
-    });
-  };
+ const handleDelete = async (id) => {
+  const res = await alertConfirm("This Account Status will be permanently deleted!");
+  if (res.isConfirmed) {
+    try {
+      const resp = await dispatch(deleteUserAccountStatus(id)).unwrap();
+      await dispatch(getUsersAccountStatus());
+      alertSuccess(resp?.message || "Account Status deleted successfully");
+    } catch (error) {
+      alertError(error?.message || "Delete failed");
+    }
+  }
+};
 
   // ----------------------------------------------------------------------
   // 📄 PAGINATION
@@ -216,75 +156,23 @@ const ShowuserManagment = () => {
   // ✏️ OPEN EDIT MODAL
   // ----------------------------------------------------------------------
   const handleEditClick = (id) => {
-    const selected = dataList.find((item) => item._id === id);
+    console.log(accStatusList)
+    const selected = accStatusList.find((item) => item._id === id);
+    console.log(selected)
     setSelectedData(selected);
     setIsEditModalOpen(true);
   };
-
-
-  const isToday = (dateString) => {
-  if (!dateString) return false;
-
-  const today = new Date();
-  const date = new Date(dateString);
-
-  return (
-    date.getDate() === today.getDate() &&
-    date.getMonth() === today.getMonth() &&
-    date.getFullYear() === today.getFullYear()
-  );
-};
-
-  const filterConfig = [
-  {
-    label: "All",
-    value: "all",
-    filterFn: () => true,
-  },
-  {
-    label: "New",
-    value: "today",
-     filterFn: (item) => isToday(item.createdAt), 
-  },
-  {
-    label: "Active",
-    value: "ACTIVE",
-    filterFn: (item) => item.accountStatus === "ACTIVE",
-  },
-  {
-    label: "Inactive",
-    value: "INACTIVE",
-    filterFn: (item) => item.accountStatus === "INACTIVE",
-  },
-];
-
 
   // ----------------------------------------------------------------------
   // UI RENDER
   // ----------------------------------------------------------------------
   return (
     <div className="space-y-2 w-full">
-
-      {/* ------------------------------------------------------------------ */}
-      {/* 🔍 FILTER + SEARCH + ADD BUTTON */}
-      {/* ------------------------------------------------------------------ */}
-
-        {/* LEFT — Filter + Search */}
-        <div className="">
-          {/* Filter Select Box */}
-          <SelectBoxCommon
-           value={filterType}
-            onChange={setFilterType}
-            dataList={dataList}
-            filterConfig={filterConfig}
-          />
-        </div>
-
       <div className="flex flex-col md:flex-row justify-end md:items-center gap-3">
 
         {/* RIGHT — Download + Add */}
         <div className="flex items-center gap-3">
-          <DownloadDataButton data={filteredData} fileName="User List"/>
+          <DownloadDataButton data={dataList} fileName="User Status List"/>
 
           <button
             onClick={handleAddClick}
@@ -292,11 +180,12 @@ const ShowuserManagment = () => {
             style={{ backgroundColor: "var(--color-primary)" }}
           >
             <PlusCircle size={12} />
-            Add User
+            Add Status
           </button>
         </div>
       </div>
 
+      
         {Object.keys(columnSearchKeys).length > 0 && (
      <div className="flex gap-1 mb-1">
     {Object.entries(columnSearchKeys).map(([column, values]) =>
@@ -325,20 +214,22 @@ const ShowuserManagment = () => {
       {/* 📋 TABLE */}
       {/* ------------------------------------------------------------------ */}
       <div className="overflow-x-auto">
-         {loading ? (
+       <div className="overflow-x-auto">
+          {loading ? (
             <Loader />
           ) : (
-        <UserEditableTable
-          headers={headers}
-          rows={paginatedData}
-          handleEdit={handleEditClick}
-          handleDelete={handleDelete}
-          sortConfig={sortConfig}
-          onSort={onSort}
-          onColumnSearch={handleColumnSearch}
-          columnSearchKeys={columnSearchKeys}
-        />
+            <EditableTable
+              headers={headers}
+              rows={paginatedData}
+              handleEdit={handleEditClick}
+              handleDelete={handleDelete}
+              sortConfig={sortConfig}
+              onSort={onSort}
+              onColumnSearch={handleColumnSearch}
+              columnSearchKeys={columnSearchKeys}
+            />
           )}
+        </div>
       </div>
 
       {/* ------------------------------------------------------------------ */}
@@ -349,7 +240,7 @@ const ShowuserManagment = () => {
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           totalPages={totalPages}
-          totalRecords={dataList.length}
+          totalRecords={filteredData.length}
           rowsPerPage={rowsPerPage}
           setRowsPerPage={setRowsPerPage}
         />
@@ -361,11 +252,9 @@ const ShowuserManagment = () => {
       <ModalCom
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        title="Add User"
+        title="Add User Status"
         content={
-          <AdduserManagment
-            dataList={dataList}
-            setDataList={setDataList}
+          <AddAccount
             onClose={() => setIsAddModalOpen(false)}
           />
         }
@@ -377,9 +266,9 @@ const ShowuserManagment = () => {
       <ModalCom
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        title="Update User"
+        title="Update User Status"
         content={
-          <UpdateuserManagment
+          <UpdateAccount
             selectedData={selectedData}
             onClose={() => setIsEditModalOpen(false)}
           />
@@ -390,4 +279,4 @@ const ShowuserManagment = () => {
   );
 };
 
-export default ShowuserManagment;
+export default Account;

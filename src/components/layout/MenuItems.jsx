@@ -143,7 +143,7 @@ const MenuItems = [
       { name: "Customer", path: "/admin?page=account" },
       { name: "Supplier", path: "/admin?page=supplier" },
       { name: "User Management", path: "/admin?page=usermanagement" },
-      // { name: "BOM Master", path: "/admin?page=bom" },
+      { name: "Utils", path: "/admin?page=utils" },
     ],
   },
 ];

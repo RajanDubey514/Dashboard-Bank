@@ -1,13 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { alertSuccess } from "../../../../components/alert/Alert";
-
-import {
-  fakeDepartments,
-  fakeUserRoles,
-  fakeStatuses,
-} from "../../../../components/FakeData";
+import { alertSuccess , alertError} from "../../../../components/alert/Alert";
+import { useDispatch , useSelector} from "react-redux";
+import { getUsersData , createUserAccount} from "../../../../redux/slice/userAccount/UserAccountSlice";
+import { getUsersRole } from "../../../../redux/slice/role/RoleSlice";
+import { getUsersAccountStatus } from "../../../../redux/slice/accountStatus/AccountStatusSlice";
+import { getUsersDepartment } from "../../../../redux/slice/department/DepartmentSlice";
 
 const RequiredLabel = ({ label }) => (
   <label className="text-xs font-medium text-gray-700">
@@ -25,18 +24,29 @@ const validationSchema = Yup.object({
 
   department: Yup.string().required("Department is required"),
   role: Yup.string().required("User role is required"),
-  status: Yup.string().required("Account status is required"),
+  accountStatus: Yup.string().required("Account status is required"),
 
   username: Yup.string().required("Username is required"),
   password: Yup.string().min(6, "Minimum 6 characters").required("Password is required"),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password"), null], "Passwords must match")
     .required("Confirm password is required"),
-
-  expiryDate: Yup.date().required("Account expiry date is required"),
 });
 
-const AdduserManagment = ({ dataList, setDataList }) => {
+const AdduserManagment = () => {
+
+const dispatch = useDispatch();
+const {roleList } = useSelector((state) => state.roleUse);
+const {departmentList } = useSelector((state) => state.departmentUse);
+const {accStatusList } = useSelector((state) => state.accountStatusUse);
+
+    useEffect(()=>{
+      dispatch(getUsersRole());
+      dispatch(getUsersAccountStatus());
+      dispatch(getUsersDepartment());
+    } ,[dispatch])
+ 
+    // console.log(departmentList)
   const formik = useFormik({
     initialValues: {
       fullName: "",
@@ -44,17 +54,21 @@ const AdduserManagment = ({ dataList, setDataList }) => {
       phone: "",
       department: "",
       role: "",
-      status: "",
+      accountStatus: "",
       username: "",
       password: "",
       confirmPassword: "",
-      expiryDate: "",
     },
     validationSchema,
-    onSubmit: (values, { resetForm }) => {
-      setDataList?.((prev) => [...prev, values]);
-      alertSuccess("User saved successfully!");
-      resetForm();
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        const resp = await dispatch(createUserAccount(values)).unwrap();
+         alertSuccess(resp.message);
+         await dispatch(getUsersData())
+         resetForm();
+      } catch (error) {
+        alertError(error.message)
+      }
     },
   });
 
@@ -138,9 +152,9 @@ const AdduserManagment = ({ dataList, setDataList }) => {
                 onBlur={formik.handleBlur}
               >
                 <option value="">Select department</option>
-                {fakeDepartments.map((d) => (
-                  <option key={d} value={d}>
-                    {d}
+                {departmentList.map((d) => (
+                  <option key={d._id} value={d._id}>
+                    {d.name}
                   </option>
                 ))}
               </select>
@@ -160,9 +174,9 @@ const AdduserManagment = ({ dataList, setDataList }) => {
                 onBlur={formik.handleBlur}
               >
                 <option value="">Select role</option>
-                {fakeUserRoles.map((r) => (
-                  <option key={r} value={r}>
-                    {r}
+                {roleList.map((r) => (
+                  <option key={r._id} value={r._id}>
+                    {r.name}
                   </option>
                 ))}
               </select>
@@ -175,21 +189,21 @@ const AdduserManagment = ({ dataList, setDataList }) => {
             <div className="flex flex-col gap-1">
               <RequiredLabel label="Account Status" />
               <select
-                name="status"
+                name="accountStatus"
                 className="border border-gray-300 rounded-md px-3 py-2 text-xs"
-                value={formik.values.status}
+                value={formik.values.accountStatus}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               >
                 <option value="">Select status</option>
-                {fakeStatuses.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
+                {accStatusList.map((s) => (
+                  <option key={s._id} value={s._id}>
+                    {s.name}
                   </option>
                 ))}
               </select>
-              {formik.touched.status && formik.errors.status && (
-                <p className="text-xs text-red-500">{formik.errors.status}</p>
+              {formik.touched.accountStatus && formik.errors.accountStatus && (
+                <p className="text-xs text-red-500">{formik.errors.accountStatus}</p>
               )}
             </div>
           </div>
@@ -249,21 +263,6 @@ const AdduserManagment = ({ dataList, setDataList }) => {
               )}
             </div>
 
-            {/* Expiry Date */}
-            <div className="flex flex-col gap-1">
-              <RequiredLabel label="Account Expiry Date" />
-              <input
-                type="date"
-                name="expiryDate"
-                className="border border-gray-300 rounded-md px-3 py-2 text-xs"
-                value={formik.values.expiryDate}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched.expiryDate && formik.errors.expiryDate && (
-                <p className="text-xs text-red-500">{formik.errors.expiryDate}</p>
-              )}
-            </div>
           </div>
         </fieldset>
       </form>

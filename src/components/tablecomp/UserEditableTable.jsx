@@ -42,6 +42,15 @@ const UserEditableTable = ({
     setModalOpen(true);
   };
 
+  const formatDateOnly = (value) => {
+  if (!value) return "-";
+
+  const date = new Date(value);
+  if (isNaN(date)) return value; // agar date nahi hai to original dikha
+
+  return date.toISOString().split("T")[0];
+};
+
   
 
   const getSortIcon = (header) => {
@@ -105,13 +114,25 @@ const UserEditableTable = ({
                     `}
                       title={row[header]}
                     >
-                      {row[header] === true ? (
+                      {/* {row[header] === true ? (
                         <Check size={16} className="text-green-600 mx-auto" />
                       ) : row[header] === false ? (
                         <X size={16} className="text-red-500 mx-auto" />
                       ) : (
                         String(row[header] ?? "-")
-                      )}
+                      )
+                      } */}
+                      {row[header] === true ? (
+                      <Check size={16} className="text-green-600 mx-auto" />
+                    ) : row[header] === false ? (
+                      <X size={16} className="text-red-500 mx-auto" />
+                    ) : ["createdAt", "updatedAt"].includes(header) ? (
+                      formatDateOnly(row[header])
+                    ) : (
+                      String(row[header] ?? "-")
+                    )}
+
+                      
                     </td>
                   ))}
 
@@ -121,7 +142,7 @@ const UserEditableTable = ({
                       <div className="flex items-center justify-center ">
                         {/* EDIT */}
                         <button
-                          onClick={() => handleEdit(row.id)}
+                          onClick={() => handleEdit(row._id)}
                           className="text-blue-600 text-xs hover:text-blue-800"
                           title="Edit"
                         >
@@ -140,13 +161,13 @@ const UserEditableTable = ({
                           <Eye size={15} />
                         </button>
                         {/* DELETE */}
-                        <button
-                          onClick={() => handleDelete(row.id)}
+                        {/* <button
+                          onClick={() => handleDelete(row._id)}
                           className="text-red-600 text-xs hover:text-red-800"
                           title="Delete"
                         >
                           <Trash2 size={15} />
-                        </button>
+                        </button> */}
                       </div>
                     </td>
                   )}

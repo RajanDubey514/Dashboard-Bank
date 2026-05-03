@@ -11,8 +11,14 @@ export const alertSuccess = (message) => {
     showConfirmButton: false,
     timer: 3000,
     timerProgressBar: true,
+
+    customClass: {
+      popup: "success-toast",
+    },
+
     showClass: { popup: "toastShow" },
     hideClass: { popup: "toastHide" },
+
     didOpen: (toast) => {
       toast.addEventListener("mouseenter", Swal.stopTimer);
       toast.addEventListener("mouseleave", Swal.resumeTimer);
@@ -24,14 +30,20 @@ export const alertSuccess = (message) => {
 export const alertError = (message) => {
   Swal.fire({
     icon: "error",
-    text: message || "Something went wrong. Please try again.",
+    text: message || "Something went wrong",
     toast: true,
     position: "top-end",
     showConfirmButton: false,
-    timer: 6000,
+    timer: 4000,
     timerProgressBar: true,
+
+    customClass: {
+      popup: "error-toast",
+    },
+
     showClass: { popup: "toastShow" },
     hideClass: { popup: "toastHide" },
+
     didOpen: (toast) => {
       toast.addEventListener("mouseenter", Swal.stopTimer);
       toast.addEventListener("mouseleave", Swal.resumeTimer);
@@ -39,7 +51,7 @@ export const alertError = (message) => {
   });
 };
 
-// ✅ Confirmation Dialog
+// ✅ Confirm Dialog
 export const alertConfirm = async (message) => {
   return await Swal.fire({
     title: message || "Are you sure?",
@@ -47,8 +59,5 @@ export const alertConfirm = async (message) => {
     showCancelButton: true,
     confirmButtonText: "Yes",
     cancelButtonText: "No",
-    customClass: {
-      popup: "swal2-custom-popup",
-    },
   });
 };
