@@ -3,14 +3,12 @@ import { LogOut, Mail, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../../redux/slice/auth/authSlice";
 import { useDispatch } from "react-redux";
-const ProfileMenu = () => {
+const ProfileMenu = ({profileDataList}) => {
+  // console.log(profileDataList)
 
   const navigate = useNavigate();
 const dispatch = useDispatch()
-  const user = {
-    name: "John Doe",
-    email: "john@example.com",
-  };
+
 
  const handleLogout = async () => {
   try {
@@ -22,6 +20,17 @@ const dispatch = useDispatch()
   }
 };
 
+ const getInitial = (name) =>{
+  console.log(name)
+  if(!name) return "";
+  return name.charAt(0)?.toUpperCase();
+ }
+ 
+ const capitalizeFirst = (name) =>{
+  if(!name) return "";
+  return name.charAt(0)?.toUpperCase()+name.slice(1)
+ }
+
 
   const handleProfile = () =>{
     navigate("/setting") 
@@ -31,11 +40,11 @@ const dispatch = useDispatch()
     <div className="absolute right-0 mt-2 w-56 bg-white border border-slate-200 shadow-lg rounded-lg z-20 animate-fadeIn">
       <div className="flex items-center gap-3 p-3 border-b border-slate-100">
         <div className="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white text-sm font-medium">
-          {user.name.charAt(0)}
+          {profileDataList?.username.charAt(0).toUpperCase()}
         </div>
         <div>
-          <p className="text-sm font-semibold text-slate-700">{user.name}</p>
-          <p className="text-xs text-slate-500">{user.email}</p>
+          <p className="text-sm font-semibold text-slate-700">{capitalizeFirst(profileDataList?.fullName)}</p>
+          <p className="text-xs text-slate-500">{profileDataList?.email}</p>
         </div>
       </div>
 

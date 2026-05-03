@@ -21,9 +21,9 @@ export const deleteData = (url) => {
 };
 
 // FILE UPLOAD
-export const uploadFile = (url, file, fieldName = "file") => {
+export const uploadFile = (url, file, fieldName = "avatar") => {
   const formData = new FormData();
-  formData.append(fieldName, file);
+  formData.append(fieldName, file); // ✅ yaha actual file
 
   return API.patch(url, formData, {
     headers: {

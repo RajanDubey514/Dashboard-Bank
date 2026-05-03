@@ -4,6 +4,7 @@ import RoleSlice from "./slice/role/RoleSlice"
 import DepartmentSlice from "./slice/department/DepartmentSlice"
 import AccountStatusSlice from "./slice/accountStatus/AccountStatusSlice"
 import UserAccountSlice from "./slice/userAccount/UserAccountSlice"
+import PersonalInfoSlice from "./slice/personalInfo/PersonalInfoSlice"
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     roleUse : RoleSlice,
     departmentUse : DepartmentSlice,
     accountStatusUse : AccountStatusSlice,
-    UserAccountUse : UserAccountSlice
+    UserAccountUse : UserAccountSlice,
+    PersonalInfoUse : PersonalInfoSlice
   },
 });

@@ -3,8 +3,14 @@ import { Bell, User2, Building2, Palette } from "lucide-react";
 import NotificationDropdown from "../notification/NotificationDropdown";
 import ProfileMenu from "../ProfileMenu/ProfileMenu";
 import Tooltip from "../tooltip/Tooltip";
+import { getUserInfo } from "../../redux/slice/personalInfo/PersonalInfoSlice";
+import { useDispatch , useSelector} from "react-redux";
+
 
 export default function Topbar() {
+      const dispatch = useDispatch();
+    const {profileDataList, loading } = useSelector((state) => state.PersonalInfoUse);
+
   const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showPersonSelect, setShowPersonSelect] = useState(false);
@@ -24,6 +30,10 @@ export default function Topbar() {
     { name: "Emerald", class: "theme-emerald", color: "#047857" },
     { name: "Dark", class: "theme-dark", color: "#0ea5e9" },
   ];
+ 
+   useEffect(()=>{
+    dispatch(getUserInfo())
+   },[dispatch])
 
   // 🧠 Load theme on mount
   useEffect(() => {
@@ -65,7 +75,17 @@ export default function Topbar() {
     localStorage.setItem("theme", themeClass);
     setShowThemeSelect(false);
   };
-
+  
+ const getInitial = (name) =>{
+  console.log(name)
+  if(!name) return "";
+  return name.charAt(0)?.toUpperCase();
+ }
+ 
+ const capitalizeFirst = (name) =>{
+  if(!name) return "";
+  return name.charAt(0)?.toUpperCase()+name.slice(1)
+ }
   return (
     <div
       className="relative flex items-center justify-end  px-4  rounded-b-lg"
@@ -252,15 +272,15 @@ export default function Topbar() {
               }}
             >
               <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-sm font-medium">
-                J
+               {getInitial(profileDataList?.username)}
               </div>
               <span className="hidden md:inline text-sm font-medium ">
-                John
+                 {capitalizeFirst(profileDataList?.username)}
               </span>
             </div>
           </Tooltip>
 
-          {showUserMenu && <ProfileMenu />}
+          {showUserMenu && <ProfileMenu profileDataList={profileDataList} />}
         </div>
       </div>
     </div>
