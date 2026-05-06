@@ -31,3 +31,11 @@ export const uploadFile = (url, file, fieldName = "avatar") => {
     },
   });
 };
+
+
+export const uploadFilePost = (url, file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  return API.post(url, formData);
+};

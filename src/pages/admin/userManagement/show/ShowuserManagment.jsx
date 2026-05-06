@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { PlusCircle , CircleX} from "lucide-react";
+import React, { useEffect, useState , useRef} from "react";
+import { PlusCircle , CircleX , Upload } from "lucide-react";
 import Swal from "sweetalert2";
 
 import ModalCom from "../../../../components/modalComp/ModalCom";
 import Pagination from "../../../../components/pagination/Pagination";
 import DownloadDataButton from "../../../../components/DownloadData/DownloadDataButton";
 
-
 import { useDispatch , useSelector} from "react-redux";
-import { getUsersData } from "../../../../redux/slice/userAccount/UserAccountSlice";
+import { getUsersData , bulkRegisterUsers} from "../../../../redux/slice/userAccount/UserAccountSlice";
 import Loader from '../../../../components/loader/Loader'
 
 // Common Components
@@ -16,23 +15,21 @@ import SelectBoxCommon from "../../../../components/searchComp/SelectBoxCommon";
 import UserEditableTable from "../../../../components/tablecomp/UserEditableTable";
 import AdduserManagment from "../add/AdduserManagment";
 import UpdateuserManagment from "../update/UpdateuserManagment";
+import { alertError, alertSuccess } from "../../../../components/alert/Alert";
 
-import { useFilter } from "../../../../components/customHook/useFilter";
-import { useSort } from "../../../../components/customHook/useSort";
-import { usePagination } from "../../../../components/customHook/usePagination";
-import { useColumnFilter } from "../../../../components/customHook/useColumnFilter";
 
 const ShowuserManagment = () => {
   // 🔥 MAIN STATES
 
-     const dispatch = useDispatch();
-    const {userAccountList, loading } = useSelector((state) => state.UserAccountUse);
+  const dispatch = useDispatch();
+  const {userAccountList, loading } = useSelector((state) => state.UserAccountUse);
 
   const [dataList, setDataList] = useState([]);        // all data
   const [filteredData, setFilteredData] = useState([]); // filtered + searched result
   const [searchQuery, setSearchQuery] = useState("");   // search input
   const [filterType, setFilterType] = useState("all");  // filter dropdown
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+  const fileInputRef = useRef();
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -171,29 +168,6 @@ const ShowuserManagment = () => {
   
 
   // ----------------------------------------------------------------------
-  // ❌ DELETE ROW WITH CONFIRMATION
-  // ----------------------------------------------------------------------
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "This product type will be permanently deleted!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#16a34a",
-      cancelButtonColor: "#dc2626",
-      confirmButtonText: "Yes, delete it!",
-    }).then((res) => {
-      if (res.isConfirmed) {
-        const updated = dataList.filter((item) => item.id !== id);
-        setDataList(updated);
-        setFilteredData(updated);
-
-        Swal.fire("Deleted!", "Product type deleted successfully.", "success");
-      }
-    });
-  };
-
-  // ----------------------------------------------------------------------
   // 📄 PAGINATION
   // ----------------------------------------------------------------------
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
@@ -259,6 +233,51 @@ const ShowuserManagment = () => {
 ];
 
 
+const handleExcelUpload = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  // 🔥 Confirmation popup
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: `Do you want to upload "${file.name}" ?`,
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "var(--color-primary)",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, Upload",
+    cancelButtonText: "Cancel",
+  });
+
+  // ❌ user cancelled
+  if (!result.isConfirmed) {
+    e.target.value = null; // reset input
+    return;
+  }
+
+  try {
+    const res = await dispatch(bulkRegisterUsers(file)).unwrap();
+
+    // ✅ Success alert
+    await Swal.fire({
+      title: "Success",
+      text: res.message || "Users uploaded successfully",
+      icon: "success",
+      confirmButtonColor: "var(--color-primary)",
+    });
+
+    dispatch(getUsersData());
+  } catch (err) {
+    Swal.fire({
+      title: "Error",
+      text: err?.message || "Upload failed",
+      icon: "error",
+    });
+  }
+
+  e.target.value = null;
+};
+
   // ----------------------------------------------------------------------
   // UI RENDER
   // ----------------------------------------------------------------------
@@ -283,9 +302,30 @@ const ShowuserManagment = () => {
       <div className="flex flex-col md:flex-row justify-end md:items-center gap-3">
 
         {/* RIGHT — Download + Add */}
-        <div className="flex items-center gap-3">
+       <div className="flex items-center gap-3">
+
           <DownloadDataButton data={filteredData} fileName="User List"/>
 
+          {/* 📤 BULK UPLOAD BUTTON */}
+          <button
+            onClick={() => fileInputRef.current.click()}
+            className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-xs font-semibold shadow transition-all duration-300 hover:shadow-lg"
+            style={{ backgroundColor: "var(--color-primary)" }}
+          >
+            <Upload size={12} />
+            Export Multi User
+          </button>
+
+          {/* hidden file input */}
+          <input
+            type="file"
+            accept=".xlsx, .xls"
+            ref={fileInputRef}
+            hidden
+            onChange={handleExcelUpload}
+          />
+
+          {/* ADD BUTTON */}
           <button
             onClick={handleAddClick}
             className="flex items-center gap-2 px-4 py-1 rounded-lg text-white text-xs font-semibold shadow transition-all duration-300 hover:shadow-lg"
@@ -294,6 +334,7 @@ const ShowuserManagment = () => {
             <PlusCircle size={12} />
             Add User
           </button>
+
         </div>
       </div>
 
@@ -332,7 +373,7 @@ const ShowuserManagment = () => {
           headers={headers}
           rows={paginatedData}
           handleEdit={handleEditClick}
-          handleDelete={handleDelete}
+          // handleDelete={handleDelete}
           sortConfig={sortConfig}
           onSort={onSort}
           onColumnSearch={handleColumnSearch}

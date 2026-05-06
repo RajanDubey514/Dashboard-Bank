@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { deleteData, getData, patchData, postData } from "../../../services/apiMethods";
+import { deleteData, getData, patchData, postData, uploadFilePost } from "../../../services/apiMethods";
 
 // 🔹 GET department (API CALL)
 export const getUsersData = createAsyncThunk(
@@ -42,6 +42,22 @@ export const updateUserAccount = createAsyncThunk(
     } catch (err) {
       return thunkAPI.rejectWithValue(
         err?.response?.data || { message: "Failed to create Account" }
+      );
+    }
+  }
+);
+
+
+// multiuser create with file 
+export const bulkRegisterUsers = createAsyncThunk(
+  "userAccount/bulkRegisterUsers",
+  async (file, thunkAPI) => {
+    try {
+      const res = await uploadFilePost("/users/bulk-register", file);
+      return res.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err?.response?.data || { message: "Bulk upload failed" }
       );
     }
   }
@@ -124,6 +140,20 @@ const UserAccountSlice = createSlice({
         );
         })
       .addCase(updateUserAccount.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(bulkRegisterUsers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      .addCase(bulkRegisterUsers.fulfilled, (state, action) => {
+        state.loading = false;
+
+      })
+
+      .addCase(bulkRegisterUsers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
